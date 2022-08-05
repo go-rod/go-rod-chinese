@@ -22,13 +22,13 @@ import (
 	"github.com/go-rod/rod/lib/utils"
 )
 
-// CDPClient is usually used to make rod side-effect free. Such as proxy all IO of rod.
+// CDPClient 通常被用来使rod不受副作用影响。例如，代理所有rod的IO。
 type CDPClient interface {
 	Event() <-chan *cdp.Event
 	Call(ctx context.Context, sessionID, method string, params interface{}) ([]byte, error)
 }
 
-// Message represents a cdp.Event
+// Message 代表一个cdp.Event
 type Message struct {
 	SessionID proto.TargetSessionID
 	Method    string
@@ -38,7 +38,7 @@ type Message struct {
 	event reflect.Value
 }
 
-// Load data into e, returns true if e matches the event type.
+// 将数据加载到 e 中，如果 e 符合事件类型，则返回 true。
 func (msg *Message) Load(e proto.Event) bool {
 	if msg.Method != e.ProtoEvent() {
 		return false
@@ -63,25 +63,24 @@ func (msg *Message) Load(e proto.Event) bool {
 	return true
 }
 
-// DefaultLogger for rod
+// rod的默认Logger
 var DefaultLogger = log.New(os.Stdout, "[rod] ", log.LstdFlags)
 
-// DefaultSleeper generates the default sleeper for retry, it uses backoff to grow the interval.
-// The growth looks like:
+// DefaultSleeper为重试生成默认的睡眠器，它使用backoff来增长间隔时间。
+// 增长情况如下:
 //     A(0) = 100ms, A(n) = A(n-1) * random[1.9, 2.1), A(n) < 1s
-// Why the default is not RequestAnimationFrame or DOM change events is because of if a retry never
-// ends it can easily flood the program. But you can always easily config it into what you want.
+// 为什么默认值不是RequestAnimationFrame或DOM更改事件，是因为如果重试从未结束，它很容易淹没程序。但您可以随时轻松地将其配置为所需内容。
 var DefaultSleeper = func() utils.Sleeper {
 	return utils.BackoffSleeper(100*time.Millisecond, time.Second, nil)
 }
 
-// PagePool to thread-safely limit the number of pages at the same time.
-// It's a common practice to use a channel to limit concurrency, it's not special for rod.
-// This helper is more like an example to use Go Channel.
-// Reference: https://golang.org/doc/effective_go#channels
+// PagePool以线程安全的方式限制同一时间内的页面数量。
+// 使用通道来限制并发性是一种常见的做法，对于rod来说并不特殊。
+// 这个helper程序更像是一个使用Go Channel的例子。
+// 参考: https://golang.org/doc/effective_go#channels
 type PagePool chan *Page
 
-// NewPagePool instance
+// NewPagePool实例
 func NewPagePool(limit int) PagePool {
 	pp := make(chan *Page, limit)
 	for i := 0; i < limit; i++ {
@@ -90,7 +89,7 @@ func NewPagePool(limit int) PagePool {
 	return pp
 }
 
-// Get a page from the pool. Use the PagePool.Put to make it reusable later.
+// 从池中获取一个页面。使用PagePool.Put来使它以后可以重复使用。
 func (pp PagePool) Get(create func() *Page) *Page {
 	p := <-pp
 	if p == nil {
@@ -99,12 +98,12 @@ func (pp PagePool) Get(create func() *Page) *Page {
 	return p
 }
 
-// Put a page back to the pool
+// 把一个页面放回池中
 func (pp PagePool) Put(p *Page) {
 	pp <- p
 }
 
-// Cleanup helper
+// 清理 helper
 func (pp PagePool) Cleanup(iteratee func(*Page)) {
 	for i := 0; i < cap(pp); i++ {
 		p := <-pp
@@ -114,13 +113,13 @@ func (pp PagePool) Cleanup(iteratee func(*Page)) {
 	}
 }
 
-// BrowserPool to thread-safely limit the number of browsers at the same time.
-// It's a common practice to use a channel to limit concurrency, it's not special for rod.
-// This helper is more like an example to use Go Channel.
-// Reference: https://golang.org/doc/effective_go#channels
+// 浏览器池（BrowserPool）以线程安全的方式限制同一时间内的浏览器数量。
+// 使用通道来限制并发性是一种常见的做法，这对rod来说并不特别。
+// 这个helper程序更像是一个使用Go Channel的例子。
+// 参考: https://golang.org/doc/effective_go#channels
 type BrowserPool chan *Browser
 
-// NewBrowserPool instance
+// NewBrowserPool 实例
 func NewBrowserPool(limit int) BrowserPool {
 	pp := make(chan *Browser, limit)
 	for i := 0; i < limit; i++ {
@@ -129,7 +128,7 @@ func NewBrowserPool(limit int) BrowserPool {
 	return pp
 }
 
-// Get a browser from the pool. Use the BrowserPool.Put to make it reusable later.
+// 从池中获取一个浏览器。使用BrowserPool.Put来使它以后可以重复使用。
 func (bp BrowserPool) Get(create func() *Browser) *Browser {
 	p := <-bp
 	if p == nil {
@@ -138,12 +137,12 @@ func (bp BrowserPool) Get(create func() *Browser) *Browser {
 	return p
 }
 
-// Put a browser back to the pool
+// 将一个浏览器放回池中
 func (bp BrowserPool) Put(p *Browser) {
 	bp <- p
 }
 
-// Cleanup helper
+// 清理 helper
 func (bp BrowserPool) Cleanup(iteratee func(*Browser)) {
 	for i := 0; i < cap(bp); i++ {
 		p := <-bp
@@ -155,7 +154,7 @@ func (bp BrowserPool) Cleanup(iteratee func(*Browser)) {
 
 var _ io.ReadCloser = &StreamReader{}
 
-// StreamReader for browser data stream
+// 浏览器数据流的StreamReader
 type StreamReader struct {
 	Offset *int
 
@@ -164,7 +163,7 @@ type StreamReader struct {
 	buf    *bytes.Buffer
 }
 
-// NewStreamReader instance
+// NewStreamReader实例
 func NewStreamReader(c proto.Client, h proto.IOStreamHandle) *StreamReader {
 	return &StreamReader{
 		c:      c,
@@ -199,12 +198,12 @@ func (sr *StreamReader) Read(p []byte) (n int, err error) {
 	return sr.buf.Read(p)
 }
 
-// Close the stream, discard any temporary backing storage.
+// 关闭流，丢弃任何临时性的备份存储。
 func (sr *StreamReader) Close() error {
 	return proto.IOClose{Handle: sr.handle}.Call(sr.c)
 }
 
-// Try try fn with recover, return the panic as rod.ErrTry
+// 试着用recover来尝试fn，将panic作为rod.ErrTry返回。
 func Try(fn func()) (err error) {
 	defer func() {
 		if val := recover(); val != nil {

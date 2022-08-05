@@ -21,16 +21,16 @@ import (
 	"github.com/ysmood/goob"
 )
 
-// Browser implements these interfaces
+// Browser 实现了这些接口
 var _ proto.Client = &Browser{}
 var _ proto.Contextable = &Browser{}
 
-// Browser represents the browser.
-// It doesn't depends on file system, it should work with remote browser seamlessly.
-// To check the env var you can use to quickly enable options from CLI, check here:
+// Browser 代表的是 browser.
+// 它不依赖于文件系统，它可以与远程浏览器无缝工作。
+// 要检查可用于从CLI快速启用选项的环境变量，请检查此处：
 // https://pkg.go.dev/github.com/go-rod/rod/lib/defaults
 type Browser struct {
-	// BrowserContextID is the id for incognito window
+	// BrowserContextID是隐身窗口的id。
 	BrowserContextID proto.BrowserBrowserContextID
 
 	e eFunc
@@ -41,26 +41,24 @@ type Browser struct {
 
 	logger utils.Logger
 
-	slowMotion time.Duration // see defaults.slow
-	trace      bool          // see defaults.Trace
+	slowMotion time.Duration // 查看 defaults.slow
+	trace      bool          // 查看 defaults.Trace
 	monitor    string
 
 	defaultDevice devices.Device
 
 	controlURL  string
 	client      CDPClient
-	event       *goob.Observable // all the browser events from cdp client
+	event       *goob.Observable // 来自cdp客户端的所有浏览器事件
 	targetsLock *sync.Mutex
 
-	// stores all the previous cdp call of same type. Browser doesn't have enough API
-	// for us to retrieve all its internal states. This is an workaround to map them to local.
-	// For example you can't use cdp API to get the current position of mouse.
+	// 存储之前所有相同类型的cdp调用。浏览器没有足够的API让我们检索它所有的内部状态。这是一个变通办法，把它们映射到本地。
+	// 例如，你不能使用cdp API来获取鼠标的当前位置。
 	states *sync.Map
 }
 
-// New creates a controller.
-// DefaultDevice to emulate is set to devices.LaptopWithMDPIScreen.Landescape(), it can make the actual view area
-// smaller than the browser window on headful mode, you can use NoDefaultDevice to disable it.
+// 新创建一个浏览器控制器.
+// 模拟设备的DefaultDevice被设置为devices.LaptopWithMDPIScreen.Landescape()，它可以使实际视图区域 小于浏览器窗口，你可以使用NoDefaultDevice来禁用它。
 func New() *Browser {
 	return (&Browser{
 		ctx:           context.Background(),
@@ -76,7 +74,7 @@ func New() *Browser {
 	}).WithPanic(utils.Panic)
 }
 
-// Incognito creates a new incognito browser
+// Incognito 创建了一个无痕浏览器
 func (b *Browser) Incognito() (*Browser, error) {
 	res, err := proto.TargetCreateBrowserContext{}.Call(b)
 	if err != nil {
@@ -89,45 +87,45 @@ func (b *Browser) Incognito() (*Browser, error) {
 	return &incognito, nil
 }
 
-// ControlURL set the url to remote control browser.
+// ControlURL设置远程控制浏览器的URL。
 func (b *Browser) ControlURL(url string) *Browser {
 	b.controlURL = url
 	return b
 }
 
-// SlowMotion set the delay for each control action, such as the simulation of the human inputs
+// SlowMotion设置每个控制动作的延迟，如模拟人的输入。
 func (b *Browser) SlowMotion(delay time.Duration) *Browser {
 	b.slowMotion = delay
 	return b
 }
 
-// Trace enables/disables the visual tracing of the input actions on the page
+// Trace 启用/禁用 页面上输入动作的视觉追踪。
 func (b *Browser) Trace(enable bool) *Browser {
 	b.trace = enable
 	return b
 }
 
-// Monitor address to listen if not empty. Shortcut for Browser.ServeMonitor
+// 要侦听的监视器地址（如果不为空）。Browser.ServeMonitor的快捷方式
 func (b *Browser) Monitor(url string) *Browser {
 	b.monitor = url
 	return b
 }
 
-// Logger overrides the default log functions for tracing
+// Logger覆盖了默认的日志功能，用于追踪
 func (b *Browser) Logger(l utils.Logger) *Browser {
 	b.logger = l
 	return b
 }
 
-// Client set the cdp client
+// Client 设置cdp的客户端
 func (b *Browser) Client(c CDPClient) *Browser {
 	b.client = c
 	return b
 }
 
-// DefaultDevice sets the default device for new page to emulate in the future.
-// Default is devices.LaptopWithMDPIScreen .
-// Set it to devices.Clear to disable it.
+// DefaultDevice为将来要模拟的新页面设置默认设备。
+// 默认值是devices.LaptopWithMDPIScreen。
+// 将其设置为devices.Clear来禁用它。
 func (b *Browser) DefaultDevice(d devices.Device) *Browser {
 	b.defaultDevice = d
 	return b
@@ -138,8 +136,8 @@ func (b *Browser) NoDefaultDevice() *Browser {
 	return b.DefaultDevice(devices.Clear)
 }
 
-// Connect to the browser and start to control it.
-// If fails to connect, try to launch a local browser, if local browser not found try to download one.
+// Connect 用于连接浏览器并且控制浏览器.
+// 如果连接失败，尝试启动一个本地浏览器，如果没有找到本地浏览器，尝试下载一个。
 func (b *Browser) Connect() error {
 	if b.client == nil {
 		u := b.controlURL
@@ -167,7 +165,7 @@ func (b *Browser) Connect() error {
 	return proto.TargetSetDiscoverTargets{Discover: true}.Call(b)
 }
 
-// Close the browser
+// Close 关闭浏览器
 func (b *Browser) Close() error {
 	if b.BrowserContextID == "" {
 		return proto.BrowserClose{}.Call(b)
@@ -175,7 +173,7 @@ func (b *Browser) Close() error {
 	return proto.TargetDisposeBrowserContext{BrowserContextID: b.BrowserContextID}.Call(b)
 }
 
-// Page creates a new browser tab. If opts.URL is empty, the default target will be "about:blank".
+// Page 创建一个新的浏览器标签。如果opts.URL为空，默认值将是 "about:blank"。
 func (b *Browser) Page(opts proto.TargetCreateTarget) (p *Page, err error) {
 	req := opts
 	req.BrowserContextID = b.BrowserContextID
@@ -186,7 +184,7 @@ func (b *Browser) Page(opts proto.TargetCreateTarget) (p *Page, err error) {
 		return nil, err
 	}
 	defer func() {
-		// If Navigate or PageFromTarget fails we should close the target to prevent leak
+		// 如果Navigate或PageFromTarget失败，我们应该关闭目标以防止泄漏
 		if err != nil {
 			_, _ = proto.TargetCloseTarget{TargetID: target.TargetID}.Call(b)
 		}
@@ -206,7 +204,7 @@ func (b *Browser) Page(opts proto.TargetCreateTarget) (p *Page, err error) {
 	return
 }
 
-// Pages retrieves all visible pages
+// Pages 检索所有可见页面
 func (b *Browser) Pages() (Pages, error) {
 	list, err := proto.TargetGetTargets{}.Call(b)
 	if err != nil {
@@ -229,7 +227,7 @@ func (b *Browser) Pages() (Pages, error) {
 	return pageList, nil
 }
 
-// Call raw cdp interface directly
+// Call 用于直接调用原始cdp接口
 func (b *Browser) Call(ctx context.Context, sessionID, methodName string, params interface{}) (res []byte, err error) {
 	res, err = b.client.Call(ctx, sessionID, methodName, params)
 	if err != nil {
@@ -240,7 +238,7 @@ func (b *Browser) Call(ctx context.Context, sessionID, methodName string, params
 	return
 }
 
-// PageFromSession is used for low-level debugging
+// PageFromSession 用于底层调试
 func (b *Browser) PageFromSession(sessionID proto.TargetSessionID) *Page {
 	sessionCtx, cancel := context.WithCancel(b.ctx)
 	return &Page{
@@ -253,7 +251,7 @@ func (b *Browser) PageFromSession(sessionID proto.TargetSessionID) *Page {
 	}
 }
 
-// PageFromTarget gets or creates a Page instance.
+// PageFromTarget 获取或创建一个Page实例。
 func (b *Browser) PageFromTarget(targetID proto.TargetTargetID) (*Page, error) {
 	b.targetsLock.Lock()
 	defer b.targetsLock.Unlock()
@@ -265,7 +263,7 @@ func (b *Browser) PageFromTarget(targetID proto.TargetTargetID) (*Page, error) {
 
 	session, err := proto.TargetAttachToTarget{
 		TargetID: targetID,
-		Flatten:  true, // if it's not set no response will return
+		Flatten:  true, // 如果没有设置，将不返回任何响应。
 	}.Call(b)
 	if err != nil {
 		return nil, err
@@ -301,24 +299,24 @@ func (b *Browser) PageFromTarget(targetID proto.TargetTargetID) (*Page, error) {
 
 	page.initEvents()
 
-	// If we don't enable it, it will cause a lot of unexpected browser behavior.
-	// Such as proto.PageAddScriptToEvaluateOnNewDocument won't work.
+	// 如果我们不启用它，就会造成很多意想不到的浏览器行为。
+	// 如proto.PageAddScriptToEvaluateOnNewDocument就不能工作。
 	page.EnableDomain(&proto.PageEnable{})
 
 	return page, nil
 }
 
-// EachEvent is similar to Page.EachEvent, but catches events of the entire browser.
+// EachEvent与Page.EachEvent类似，但可以捕获整个浏览器的事件。
 func (b *Browser) EachEvent(callbacks ...interface{}) (wait func()) {
 	return b.eachEvent("", callbacks...)
 }
 
-// WaitEvent waits for the next event for one time. It will also load the data into the event object.
+// WaitEvent 等待下一个事件的发生，时间为一次。它也会将数据加载到事件对象中。
 func (b *Browser) WaitEvent(e proto.Event) (wait func()) {
 	return b.waitEvent("", e)
 }
 
-// waits for the next event for one time. It will also load the data into the event object.
+// 等待下一个事件的发生，等待一次。它也会将数据加载到事件对象中。
 func (b *Browser) waitEvent(sessionID proto.TargetSessionID, e proto.Event) (wait func()) {
 	valE := reflect.ValueOf(e)
 	valTrue := reflect.ValueOf(true)
@@ -327,7 +325,7 @@ func (b *Browser) waitEvent(sessionID proto.TargetSessionID, e proto.Event) (wai
 		valE = reflect.New(valE.Type())
 	}
 
-	// dynamically creates a function on runtime:
+	// 在运行时动态地创建一个函数:
 	//
 	// func(ee proto.Event) bool {
 	//   *e = *ee
@@ -342,8 +340,8 @@ func (b *Browser) waitEvent(sessionID proto.TargetSessionID, e proto.Event) (wai
 	return b.eachEvent(sessionID, fnVal.Interface())
 }
 
-// If the any callback returns true the event loop will stop.
-// It will enable the related domains if not enabled, and restore them after wait ends.
+// 如果任何回调返回true，事件循环将停止。
+// 如果没有启用相关的domain，它将启用相domain，并在等待结束后恢复这些domain。
 func (b *Browser) eachEvent(sessionID proto.TargetSessionID, callbacks ...interface{}) (wait func()) {
 	cbMap := map[string]reflect.Value{}
 	restores := []func(){}
@@ -354,9 +352,9 @@ func (b *Browser) eachEvent(sessionID proto.TargetSessionID, callbacks ...interf
 		name := reflect.New(eType.Elem()).Interface().(proto.Event).ProtoEvent()
 		cbMap[name] = cbVal
 
-		// Only enabled domains will emit events to cdp client.
-		// We enable the domains for the event types if it's not enabled.
-		// We restore the domains to their previous states after the wait ends.
+		// 只有启用的domain才会向cdp客户端发出事件。
+		// 如果没有启用相关domain，我们就为事件类型启用domain。
+		// 在等待结束后，我们将domain恢复到它们之前的状态。
 		domain, _ := proto.ParseMethodName(name)
 		if req := proto.GetType(domain + ".enable"); req != nil {
 			enable := reflect.New(req).Interface().(proto.Request)
@@ -403,7 +401,7 @@ func (b *Browser) eachEvent(sessionID proto.TargetSessionID, callbacks ...interf
 	}
 }
 
-// Event of the browser
+// Event 浏览器事件
 func (b *Browser) Event() <-chan *Message {
 	src := b.event.Subscribe(b.ctx)
 	dst := make(chan *Message)
@@ -454,12 +452,12 @@ func (b *Browser) pageInfo(id proto.TargetTargetID) (*proto.TargetTargetInfo, er
 	return res.TargetInfo, nil
 }
 
-// IgnoreCertErrors switch. If enabled, all certificate errors will be ignored.
+// IgnoreCertErrors 开关。如果启用，所有证书错误将被忽略。
 func (b *Browser) IgnoreCertErrors(enable bool) error {
 	return proto.SecuritySetIgnoreCertificateErrors{Ignore: enable}.Call(b)
 }
 
-// GetCookies from the browser
+// GetCookies 从浏览器获取Cookie
 func (b *Browser) GetCookies() ([]*proto.NetworkCookie, error) {
 	res, err := proto.StorageGetCookies{BrowserContextID: b.BrowserContextID}.Call(b)
 	if err != nil {
@@ -468,7 +466,7 @@ func (b *Browser) GetCookies() ([]*proto.NetworkCookie, error) {
 	return res.Cookies, nil
 }
 
-// SetCookies to the browser. If the cookies is nil it will clear all the cookies.
+// SetCookies 为浏览器设置Cookie，如果Cookie为nil则将所有Cookie清零
 func (b *Browser) SetCookies(cookies []*proto.NetworkCookieParam) error {
 	if cookies == nil {
 		return proto.StorageClearCookies{BrowserContextID: b.BrowserContextID}.Call(b)
@@ -480,8 +478,8 @@ func (b *Browser) SetCookies(cookies []*proto.NetworkCookieParam) error {
 	}.Call(b)
 }
 
-// WaitDownload returns a helper to get the next download file.
-// The file path will be:
+// WaitDownload 返回一个helper，以获得下一个下载文件。
+// 文件路径:
 //     filepath.Join(dir, info.GUID)
 func (b *Browser) WaitDownload(dir string) func() (info *proto.PageDownloadWillBegin) {
 	var oldDownloadBehavior proto.BrowserSetDownloadBehavior
@@ -519,7 +517,7 @@ func (b *Browser) WaitDownload(dir string) func() (info *proto.PageDownloadWillB
 	}
 }
 
-// Version info of the browser
+// Version 获取浏览器的版本信息
 func (b *Browser) Version() (*proto.BrowserGetVersionResult, error) {
 	return proto.BrowserGetVersion{}.Call(b)
 }

@@ -18,12 +18,12 @@ import (
 	"github.com/go-rod/rod/lib/utils"
 )
 
-// Element implements these interfaces
+// Element 实现了这些接口
 var _ proto.Client = &Element{}
 var _ proto.Contextable = &Element{}
 var _ proto.Sessionable = &Element{}
 
-// Element represents the DOM element
+// Element 代表DOM中的元素
 type Element struct {
 	Object *proto.RuntimeRemoteObject
 
@@ -36,23 +36,23 @@ type Element struct {
 	page *Page
 }
 
-// GetSessionID interface
+// GetSessionID 接口
 func (el *Element) GetSessionID() proto.TargetSessionID {
 	return el.page.SessionID
 }
 
-// String interface
+// String 接口
 func (el *Element) String() string {
 	return fmt.Sprintf("<%s>", el.Object.Description)
 }
 
-// Page of the element
+// Page 元素所在的页面
 func (el *Element) Page() *Page {
 	return el.page
 }
 
-// Focus sets focus on the specified element.
-// Before the action, it will try to scroll to the element.
+// Focus 设置指定元素的焦点
+// 在执行之前，它将尝试滚动到该元素。
 func (el *Element) Focus() error {
 	err := el.ScrollIntoView()
 	if err != nil {
@@ -63,8 +63,7 @@ func (el *Element) Focus() error {
 	return err
 }
 
-// ScrollIntoView scrolls the current element into the visible area of the browser
-// window if it's not already within the visible area.
+// ScrollIntoView 将当前元素滚动到浏览器窗口的可见区域中（如果它尚未在可见区域内）。
 func (el *Element) ScrollIntoView() error {
 	defer el.tryTrace(TraceTypeInput, "scroll into view")()
 	el.page.browser.trySlowmotion()
@@ -77,8 +76,8 @@ func (el *Element) ScrollIntoView() error {
 	return proto.DOMScrollIntoViewIfNeeded{ObjectID: el.id()}.Call(el)
 }
 
-// Hover the mouse over the center of the element.
-// Before the action, it will try to scroll to the element and wait until it's interactable.
+// Hover 将鼠标停在元素的中心
+// 在执行该操作之前，它将尝试滚动到该元素并等待其可交互。
 func (el *Element) Hover() error {
 	pt, err := el.WaitInteractable()
 	if err != nil {
@@ -88,7 +87,7 @@ func (el *Element) Hover() error {
 	return el.page.Mouse.Move(pt.X, pt.Y, 1)
 }
 
-// MoveMouseOut of the current element
+// MoveMouseOut 将鼠标移出当前元素
 func (el *Element) MoveMouseOut() error {
 	shape, err := el.Shape()
 	if err != nil {
@@ -98,9 +97,8 @@ func (el *Element) MoveMouseOut() error {
 	return el.page.Mouse.Move(box.X+box.Width, box.Y, 1)
 }
 
-// Click will press then release the button just like a human.
-// Before the action, it will try to scroll to the element, hover the mouse over it,
-// wait until the it's interactable and enabled.
+// Click 会像人一样按下然后释放按钮。
+// 在执行操作之前，它将尝试滚动到元素，将鼠标悬停在该元素上，等待该元素可交互并启用。
 func (el *Element) Click(button proto.InputMouseButton) error {
 	err := el.Hover()
 	if err != nil {
@@ -117,8 +115,8 @@ func (el *Element) Click(button proto.InputMouseButton) error {
 	return el.page.Mouse.Click(button)
 }
 
-// Tap will scroll to the button and tap it just like a human.
-// Before the action, it will try to scroll to the element and wait until it's interactable and enabled.
+// Tap 将滚动到按钮并像人类一样点击它。
+// 在执行此操作之前，它将尝试滚动到元素，并等待其可交互并启用。
 func (el *Element) Tap() error {
 	err := el.ScrollIntoView()
 	if err != nil {
@@ -140,9 +138,9 @@ func (el *Element) Tap() error {
 	return el.page.Touch.Tap(pt.X, pt.Y)
 }
 
-// Interactable checks if the element is interactable with cursor.
-// The cursor can be mouse, finger, stylus, etc.
-// If not interactable err will be ErrNotInteractable, such as when covered by a modal,
+// Interactable 检查该元素是否可以与光标交互。
+// 光标可以是鼠标、手指、手写笔等。
+// 如果不是可交互的，Err将是ErrNotInteractable，例如当被一个模态框覆盖时。
 func (el *Element) Interactable() (pt *proto.Point, err error) {
 	noPointerEvents, err := el.Eval(`() => getComputedStyle(this).pointerEvents === 'none'`)
 	if err != nil {
@@ -191,9 +189,9 @@ func (el *Element) Interactable() (pt *proto.Point, err error) {
 	return
 }
 
-// Shape of the DOM element content. The shape is a group of 4-sides polygons (4-gons).
-// A 4-gon is not necessary a rectangle. 4-gons can be apart from each other.
-// For example, we use 2 4-gons to describe the shape below:
+// Shape DOM元素内容的形状。该形状是一组4边多边形（4角）。
+// 4-gon不一定是一个长方形。4-gon可以彼此分开。
+// 例如，我们使用2个4角来描述以下形状：
 //
 //       ____________          ____________
 //      /        ___/    =    /___________/    +     _________
@@ -203,8 +201,8 @@ func (el *Element) Shape() (*proto.DOMGetContentQuadsResult, error) {
 	return proto.DOMGetContentQuads{ObjectID: el.id()}.Call(el)
 }
 
-// Type is similar with Keyboard.Type.
-// Before the action, it will try to scroll to the element and focus on it.
+// Type 与Keyboard.Type类似。
+// 在执行操作之前，它将尝试滚动到该元素并将焦点集中在该元素上。
 func (el *Element) Type(keys ...input.Key) error {
 	err := el.Focus()
 	if err != nil {
@@ -213,8 +211,8 @@ func (el *Element) Type(keys ...input.Key) error {
 	return el.page.Keyboard.Type(keys...)
 }
 
-// KeyActions is similar with Page.KeyActions.
-// Before the action, it will try to scroll to the element and focus on it.
+// KeyActions 与Page.KeyActions类似。
+// 在执行操作之前，它将尝试滚动到该元素并将焦点集中在该元素上。
 func (el *Element) KeyActions() (*KeyActions, error) {
 	err := el.Focus()
 	if err != nil {
@@ -224,8 +222,8 @@ func (el *Element) KeyActions() (*KeyActions, error) {
 	return el.page.KeyActions(), nil
 }
 
-// SelectText selects the text that matches the regular expression.
-// Before the action, it will try to scroll to the element and focus on it.
+// SelectText 选择与正则表达式匹配的文本。
+// 在执行操作之前，它将尝试滚动到该元素并将焦点集中在该元素上。
 func (el *Element) SelectText(regex string) error {
 	err := el.Focus()
 	if err != nil {
@@ -239,8 +237,8 @@ func (el *Element) SelectText(regex string) error {
 	return err
 }
 
-// SelectAllText selects all text
-// Before the action, it will try to scroll to the element and focus on it.
+// SelectAllText 选择所有文本
+// 在执行操作之前，它将尝试滚动到该元素并将焦点集中在该元素上。
 func (el *Element) SelectAllText() error {
 	err := el.Focus()
 	if err != nil {
@@ -254,9 +252,9 @@ func (el *Element) SelectAllText() error {
 	return err
 }
 
-// Input focuses on the element and input text to it.
-// Before the action, it will scroll to the element, wait until it's visible, enabled and writable.
-// To empty the input you can use something like el.SelectAllText().MustInput("")
+// Input 聚焦在该元素上并输入文本.
+// 在执行操作之前，它将滚动到元素，等待其可见、启用和可写。
+// 要清空输入，可以使用el.SelectAllText（）.MustInput（“”）之类的命令
 func (el *Element) Input(text string) error {
 	err := el.Focus()
 	if err != nil {
@@ -278,9 +276,9 @@ func (el *Element) Input(text string) error {
 	return err
 }
 
-// InputTime focuses on the element and input time to it.
-// Before the action, it will scroll to the element, wait until it's visible, enabled and writable.
-// It will wait until the element is visible, enabled and writable.
+// InputTime 聚焦该元素及其输入时间。
+// 在执行操作之前，它将滚动到元素，等待其可见、启用和可写。
+// 它将等待元素可见、启用和可写。
 func (el *Element) InputTime(t time.Time) error {
 	err := el.Focus()
 	if err != nil {
@@ -303,15 +301,15 @@ func (el *Element) InputTime(t time.Time) error {
 	return err
 }
 
-// Blur is similar to the method Blur
+// Blur 类似于方法 Blur
 func (el *Element) Blur() error {
 	_, err := el.Evaluate(Eval("() => this.blur()").ByUser())
 	return err
 }
 
-// Select the children option elements that match the selectors.
-// Before the action, it will scroll to the element, wait until it's visible.
-// If no option matches the selectors, it will return ErrElementNotFound.
+// Select 选择与选择器匹配的子选项元素。
+// 在操作之前，它将滚动到元素，等待它可见。
+// 如果没有与选择器匹配的选项，它将返回ErrElementNotFound。
 func (el *Element) Select(selectors []string, selected bool, t SelectorType) error {
 	err := el.Focus()
 	if err != nil {
@@ -331,7 +329,7 @@ func (el *Element) Select(selectors []string, selected bool, t SelectorType) err
 	return nil
 }
 
-// Matches checks if the element can be selected by the css selector
+// Matches 检查css选择器是否可以选择元素
 func (el *Element) Matches(selector string) (bool, error) {
 	res, err := el.Eval(`s => this.matches(s)`, selector)
 	if err != nil {
@@ -340,7 +338,7 @@ func (el *Element) Matches(selector string) (bool, error) {
 	return res.Value.Bool(), nil
 }
 
-// Attribute of the DOM object.
+// Attribute DOM对象的属性
 // Attribute vs Property: https://stackoverflow.com/questions/6003819/what-is-the-difference-between-properties-and-attributes-in-html
 func (el *Element) Attribute(name string) (*string, error) {
 	attr, err := el.Eval("(n) => this.getAttribute(n)", name)
@@ -356,7 +354,7 @@ func (el *Element) Attribute(name string) (*string, error) {
 	return &s, nil
 }
 
-// Property of the DOM object.
+// Property DOM对象的属性
 // Property vs Attribute: https://stackoverflow.com/questions/6003819/what-is-the-difference-between-properties-and-attributes-in-html
 func (el *Element) Property(name string) (gson.JSON, error) {
 	prop, err := el.Eval("(n) => this[n]", name)
@@ -367,7 +365,7 @@ func (el *Element) Property(name string) (gson.JSON, error) {
 	return prop.Value, nil
 }
 
-// SetFiles of the current file input element
+// SetFiles 设置当前文件输入元素的文件
 func (el *Element) SetFiles(paths []string) error {
 	absPaths := []string{}
 	for _, p := range paths {
@@ -387,12 +385,10 @@ func (el *Element) SetFiles(paths []string) error {
 	return err
 }
 
-// Describe the current element. The depth is the maximum depth at which children should be retrieved, defaults to 1,
-// use -1 for the entire subtree or provide an integer larger than 0.
-// The pierce decides whether or not iframes and shadow roots should be traversed when returning the subtree.
-// The returned proto.DOMNode.NodeID will always be empty, because NodeID is not stable (when proto.DOMDocumentUpdated
-// is fired all NodeID on the page will be reassigned to another value)
-// we don't recommend using the NodeID, instead, use the BackendNodeID to identify the element.
+// Describe 描述当前元素。深度是应检索子级的最大深度，默认为1，对整个子树使用-1，或提供大于0的整数。
+// pierce决定在返回子树时是否要遍历iframes和影子根。
+// 返回的proto.DOMNode。NodeID将始终为空，因为NodeID不稳定（当proto.DOMDocumentUpdated被触发时，
+// 页面上的所有NodeID都将被重新分配到另一个值）。我们不建议使用NodeID，而是使用BackendNodeID来标识元素。
 func (el *Element) Describe(depth int, pierce bool) (*proto.DOMNode, error) {
 	val, err := proto.DOMDescribeNode{ObjectID: el.id(), Depth: gson.Int(depth), Pierce: pierce}.Call(el)
 	if err != nil {
@@ -401,14 +397,14 @@ func (el *Element) Describe(depth int, pierce bool) (*proto.DOMNode, error) {
 	return val.Node, nil
 }
 
-// ShadowRoot returns the shadow root of this element
+// ShadowRoot ShadowRoot返回此元素的影子根
 func (el *Element) ShadowRoot() (*Element, error) {
 	node, err := el.Describe(1, false)
 	if err != nil {
 		return nil, err
 	}
 
-	// though now it's an array, w3c changed the spec of it to be a single.
+	// 虽然现在它是一个数组，但w3c将其规范更改为单个数组。
 	id := node.ShadowRoots[0].BackendNodeID
 
 	shadowNode, err := proto.DOMResolveNode{BackendNodeID: id}.Call(el)
@@ -419,7 +415,7 @@ func (el *Element) ShadowRoot() (*Element, error) {
 	return el.page.ElementFromObject(shadowNode.Object)
 }
 
-// Frame creates a page instance that represents the iframe
+// Frame 创建一个表示iframe的页面实例
 func (el *Element) Frame() (*Page, error) {
 	node, err := el.Describe(1, false)
 	if err != nil {
@@ -435,7 +431,7 @@ func (el *Element) Frame() (*Page, error) {
 	return &clone, nil
 }
 
-// ContainsElement check if the target is equal or inside the element.
+// ContainesElement 检查目标是否是或在元素内。
 func (el *Element) ContainsElement(target *Element) (bool, error) {
 	res, err := el.Evaluate(evalHelper(js.ContainsElement, target.Object))
 	if err != nil {
@@ -444,7 +440,7 @@ func (el *Element) ContainsElement(target *Element) (bool, error) {
 	return res.Value.Bool(), nil
 }
 
-// Text that the element displays
+// Text 元素显示的文本
 func (el *Element) Text() (string, error) {
 	str, err := el.Evaluate(evalHelper(js.Text))
 	if err != nil {
@@ -453,7 +449,7 @@ func (el *Element) Text() (string, error) {
 	return str.Value.String(), nil
 }
 
-// HTML of the element
+// HTML 元素的HTML
 func (el *Element) HTML() (string, error) {
 	res, err := proto.DOMGetOuterHTML{ObjectID: el.Object.ObjectID}.Call(el)
 	if err != nil {
@@ -462,7 +458,7 @@ func (el *Element) HTML() (string, error) {
 	return res.OuterHTML, nil
 }
 
-// Visible returns true if the element is visible on the page
+// Visible 如果元素在页面上可见，则返回true
 func (el *Element) Visible() (bool, error) {
 	res, err := el.Evaluate(evalHelper(js.Visible))
 	if err != nil {
@@ -471,16 +467,16 @@ func (el *Element) Visible() (bool, error) {
 	return res.Value.Bool(), nil
 }
 
-// WaitLoad for element like <img>
+// WaitLoad 类似于＜img＞元素的等待加载
 func (el *Element) WaitLoad() error {
 	defer el.tryTrace(TraceTypeWait, "load")()
 	_, err := el.Evaluate(evalHelper(js.WaitLoad).ByPromise())
 	return err
 }
 
-// WaitStable waits until no shape or position change for d duration.
-// Be careful, d is not the max wait timeout, it's the least stable time.
-// If you want to set a timeout you can use the "Element.Timeout" function.
+// WaitStable 等待直到在d持续时间内没有形状或位置变化。
+// 小心，d不是最大等待超时，它是最不稳定的时间。
+// 如果要设置超时，可以使用“Element.timeout”函数。
 func (el *Element) WaitStable(d time.Duration) error {
 	err := el.WaitVisible()
 	if err != nil {
@@ -515,9 +511,9 @@ func (el *Element) WaitStable(d time.Duration) error {
 	return nil
 }
 
-// WaitStableRAF waits until no shape or position change for 2 consecutive animation frames.
-// If you want to wait animation that is triggered by JS not CSS, you'd better use Element.WaitStable.
-// About animation frame: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+// WaitStableRAF 等待直到连续两个动画帧的形状或位置没有变化。
+// 如果要等待由JS而不是CSS触发的动画，最好使用Element.WaitStable。
+// 关于 animation frame: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
 func (el *Element) WaitStableRAF() error {
 	err := el.WaitVisible()
 	if err != nil {
@@ -546,14 +542,14 @@ func (el *Element) WaitStableRAF() error {
 	return nil
 }
 
-// WaitInteractable waits for the element to be interactable.
-// It will try to scroll to the element on each try.
+// WaitInteractable 等待元素可交互。
+// 它将在每次尝试时尝试滚动到元素。
 func (el *Element) WaitInteractable() (pt *proto.Point, err error) {
 	defer el.tryTrace(TraceTypeWait, "interactable")()
 
 	err = utils.Retry(el.ctx, el.sleeper(), func() (bool, error) {
-		// For lazy loading page the element can be outside of the viewport.
-		// If we don't scroll to it, it will never be available.
+		// 对于延迟加载页面，元素可以在视口之外。
+		// 如果我们不滚动到它，它将永远不可用。
 		err := el.ScrollIntoView()
 		if err != nil {
 			return true, err
@@ -568,40 +564,40 @@ func (el *Element) WaitInteractable() (pt *proto.Point, err error) {
 	return
 }
 
-// Wait until the js returns true
+// Wait 等待js返回true
 func (el *Element) Wait(opts *EvalOptions) error {
 	return el.page.Context(el.ctx).Sleeper(el.sleeper).Wait(opts.This(el.Object))
 }
 
-// WaitVisible until the element is visible
+// WaitVisible 直到元素可见
 func (el *Element) WaitVisible() error {
 	defer el.tryTrace(TraceTypeWait, "visible")()
 	return el.Wait(evalHelper(js.Visible))
 }
 
-// WaitEnabled until the element is not disabled.
+// WaitEnabled 直到该元素未被禁用。
 // Doc for readonly: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/readonly
 func (el *Element) WaitEnabled() error {
 	defer el.tryTrace(TraceTypeWait, "enabled")()
 	return el.Wait(Eval(`() => !this.disabled`))
 }
 
-// WaitWritable until the element is not readonly.
+// WaitWritable 直到该元素不是只读的。
 // Doc for disabled: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/disabled
 func (el *Element) WaitWritable() error {
 	defer el.tryTrace(TraceTypeWait, "writable")()
 	return el.Wait(Eval(`() => !this.readonly`))
 }
 
-// WaitInvisible until the element invisible
+// WaitInvisible 直到元件不可见
 func (el *Element) WaitInvisible() error {
 	defer el.tryTrace(TraceTypeWait, "invisible")()
 	return el.Wait(evalHelper(js.Invisible))
 }
 
-// CanvasToImage get image data of a canvas.
-// The default format is image/png.
-// The default quality is 0.92.
+// CanvastoiImage 获取画布的图像数据。
+// 默认格式为image/png。
+// 默认质量为0.92。
 // doc: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
 func (el *Element) CanvasToImage(format string, quality float64) ([]byte, error) {
 	res, err := el.Eval(`(format, quality) => this.toDataURL(format, quality)`, format, quality)
@@ -613,7 +609,7 @@ func (el *Element) CanvasToImage(format string, quality float64) ([]byte, error)
 	return bin, nil
 }
 
-// Resource returns the "src" content of current element. Such as the jpg of <img src="a.jpg">
+// Resource 返回当前元素的“src”内容。例如<img src=“a.jpg”>的jpg
 func (el *Element) Resource() ([]byte, error) {
 	src, err := el.Evaluate(evalHelper(js.Resource).ByPromise())
 	if err != nil {
@@ -623,7 +619,7 @@ func (el *Element) Resource() ([]byte, error) {
 	return el.page.GetResource(src.Value.String())
 }
 
-// BackgroundImage returns the css background-image of the element
+// BackgroundImage 返回元素的css背景图像
 func (el *Element) BackgroundImage() ([]byte, error) {
 	res, err := el.Eval(`() => window.getComputedStyle(this).backgroundImage.replace(/^url\("/, '').replace(/"\)$/, '')`)
 	if err != nil {
@@ -635,7 +631,7 @@ func (el *Element) BackgroundImage() ([]byte, error) {
 	return el.page.GetResource(u)
 }
 
-// Screenshot of the area of the element
+// Screenshot 元素区域的屏幕截图
 func (el *Element) Screenshot(format proto.PageCaptureScreenshotFormat, quality int) ([]byte, error) {
 	err := el.ScrollIntoView()
 	if err != nil {
@@ -652,7 +648,7 @@ func (el *Element) Screenshot(format proto.PageCaptureScreenshotFormat, quality 
 		return nil, err
 	}
 
-	// so that it won't clip the css-transformed element
+	// 这样它就不会剪切css转换后的元素
 	shape, err := el.Shape()
 	if err != nil {
 		return nil, err
@@ -669,12 +665,12 @@ func (el *Element) Screenshot(format proto.PageCaptureScreenshotFormat, quality 
 	)
 }
 
-// Release is a shortcut for Page.Release(el.Object)
+// Release 是Page.Release（el.Object）的快捷方式
 func (el *Element) Release() error {
 	return el.page.Context(el.ctx).Release(el.Object)
 }
 
-// Remove the element from the page
+// Remove 从页面中删除元素
 func (el *Element) Remove() error {
 	_, err := el.Eval(`() => this.remove()`)
 	if err != nil {
@@ -683,22 +679,22 @@ func (el *Element) Remove() error {
 	return el.Release()
 }
 
-// Call implements the proto.Client
+// Call 实现proto.Client
 func (el *Element) Call(ctx context.Context, sessionID, methodName string, params interface{}) (res []byte, err error) {
 	return el.page.Call(ctx, sessionID, methodName, params)
 }
 
-// Eval is a shortcut for Element.Evaluate with AwaitPromise, ByValue and AutoExp set to true.
+// Eval 是Element.Evaluate的一个快捷方式，其中AwaitPromise、ByValue和AutoExp设置为 "true"。
 func (el *Element) Eval(js string, params ...interface{}) (*proto.RuntimeRemoteObject, error) {
 	return el.Evaluate(Eval(js, params...).ByPromise())
 }
 
-// Evaluate is just a shortcut of Page.Evaluate with This set to current element.
+// Evaluate 只是Page.Evaluate的一个快捷方式，This设置为当前元素。
 func (el *Element) Evaluate(opts *EvalOptions) (*proto.RuntimeRemoteObject, error) {
 	return el.page.Context(el.ctx).Evaluate(opts.This(el.Object))
 }
 
-// Equal checks if the two elements are equal.
+// Equal 检查两个元素是否相等。
 func (el *Element) Equal(elm *Element) (bool, error) {
 	res, err := el.Eval(`elm => this === elm`, elm.Object)
 	return res.Value.Bool(), err
