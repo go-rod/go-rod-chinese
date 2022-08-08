@@ -18,26 +18,38 @@ import (
 )
 
 // Page implements these interfaces
+// Page 实现的接口
 var _ proto.Client = &Page{}
 var _ proto.Contextable = &Page{}
 var _ proto.Sessionable = &Page{}
 
 // Page represents the webpage.
+// Page 代表网页页面
 // We try to hold as less states as possible.
+// 我们会尽可能减少页面所拥有的状态
 // When a page is closed by Rod or not all the ongoing operations an events on it will abort.
+// 当一个页面被Rod关闭或不是所有正在进行的操作时，它上的事件将中止。
 type Page struct {
 	// TargetID is a unique ID for a remote page.
+	// TargetID 每个页面独有的ID
 	// It's usually used in events sent from the browser to tell which page an event belongs to.
+	// 它通常用于从浏览器发送的事件中，以说明事件属于哪个页面。
 	TargetID proto.TargetTargetID
 
 	// FrameID is a unique ID for a browsing context.
+	// FrameID 是浏览器 ctx 的独有ID
 	// Usually, different FrameID means different javascript execution context.
+	// 通常，不同的FrameID 意味着不同的JS执行ctx
 	// Such as an iframe and the page it belongs to will have the same TargetID but different FrameIDs.
+	// 如一个iframe和它所属的页面有相同的TargetID，但不同的FrameID。
 	FrameID proto.PageFrameID
 
 	// SessionID is a unique ID for a page attachment to a controller.
+	// SessionID 是指向控制器的页面附件的唯一ID。
 	// It's usually used in transport layer to tell which page to send the control signal.
+	// 它通常用于传输层，告诉哪个页面要发送控制信号。
 	// A page can attached to multiple controllers, the browser uses it distinguish controllers.
+	// 一个页面可以附加到多个控制器，浏览器使用它来区分控制器。
 	SessionID proto.TargetSessionID
 
 	e eFunc
@@ -45,6 +57,7 @@ type Page struct {
 	ctx context.Context
 
 	// Used to abort all ongoing actions when a page closes.
+	// 用于在页面关闭时中止所有正在进行的操作。
 	sessionCancel func()
 
 	root *Page
@@ -54,7 +67,7 @@ type Page struct {
 	browser *Browser
 	event   *goob.Observable
 
-	// devices
+	// devices // 页面中的设备
 	Mouse    *Mouse
 	Keyboard *Keyboard
 	Touch    *Touch
@@ -62,7 +75,7 @@ type Page struct {
 	element *Element // iframe only
 
 	jsCtxLock   *sync.Mutex
-	jsCtxID     *proto.RuntimeRemoteObjectID // use pointer so that page clones can share the change
+	jsCtxID     *proto.RuntimeRemoteObjectID // use pointer so that page clones can share the change  // 使用指针，以便于页面克隆时可以共享更改
 	helpersLock *sync.Mutex
 	helpers     map[proto.RuntimeRemoteObjectID]map[string]proto.RuntimeRemoteObjectID
 }
@@ -77,26 +90,31 @@ func (p *Page) String() string {
 }
 
 // IsIframe tells if it's iframe
+// IsIframe 用于判断页面是否是一个iframe
 func (p *Page) IsIframe() bool {
 	return p.element != nil
 }
 
 // GetSessionID interface
+// 获取 SessionID 的接口
 func (p *Page) GetSessionID() proto.TargetSessionID {
 	return p.SessionID
 }
 
 // Browser of the page
+// 页面所属的浏览器对象
 func (p *Page) Browser() *Browser {
 	return p.browser
 }
 
 // Info of the page, such as the URL or title of the page
+// 打印页面的信息，例页面的URL，标题等。
 func (p *Page) Info() (*proto.TargetTargetInfo, error) {
 	return p.browser.pageInfo(p.TargetID)
 }
 
 // HTML of the page
+// 获取页面的HTML代码
 func (p *Page) HTML() (string, error) {
 	el, err := p.Element("html")
 	if err != nil {
@@ -106,7 +124,9 @@ func (p *Page) HTML() (string, error) {
 }
 
 // Cookies returns the page cookies. By default it will return the cookies for current page.
+// 用于返回当前页面的Cookies。默认返回当前页面的Cookies。
 // The urls is the list of URLs for which applicable cookies will be fetched.
+// urls 是获取Cookies的URL列表
 func (p *Page) Cookies(urls []string) ([]*proto.NetworkCookie, error) {
 	if len(urls) == 0 {
 		info, err := p.Info()
@@ -124,6 +144,7 @@ func (p *Page) Cookies(urls []string) ([]*proto.NetworkCookie, error) {
 }
 
 // SetCookies is similar to Browser.SetCookies .
+// SetCookies 类似于 Browser.SetCookies .
 func (p *Page) SetCookies(cookies []*proto.NetworkCookieParam) error {
 	if cookies == nil {
 		return proto.NetworkClearBrowserCookies{}.Call(p)
@@ -132,6 +153,7 @@ func (p *Page) SetCookies(cookies []*proto.NetworkCookieParam) error {
 }
 
 // SetExtraHeaders whether to always send extra HTTP headers with the requests from this page.
+// SetExtraHeaders 是否总是从这个页面的请求中发送额外的HTTP头信息。用于向页面中的请求添加额外的请求头。
 func (p *Page) SetExtraHeaders(dict []string) (func(), error) {
 	headers := proto.NetworkHeaders{}
 
@@ -143,7 +165,9 @@ func (p *Page) SetExtraHeaders(dict []string) (func(), error) {
 }
 
 // SetUserAgent (browser brand, accept-language, etc) of the page.
+// 用于设置页面中的UserAgent
 // If req is nil, a default user agent will be used, a typical mac chrome.
+// 如果 req 的值是 nil 将会使用默认的 UserAgent，典型的例如 mac chrome
 func (p *Page) SetUserAgent(req *proto.NetworkSetUserAgentOverride) error {
 	if req == nil {
 		req = devices.LaptopWithMDPIScreen.UserAgentEmulation()
@@ -152,13 +176,16 @@ func (p *Page) SetUserAgent(req *proto.NetworkSetUserAgentOverride) error {
 }
 
 // Navigate to the url. If the url is empty, "about:blank" will be used.
+// 导航至 url 地址，如果 url 是空的，则默认使用 "about:blank"
 // It will return immediately after the server responds the http header.
+// 在接收到服务器HTTP响应头后，立即返回。
 func (p *Page) Navigate(url string) error {
 	if url == "" {
 		url = "about:blank"
 	}
 
 	// try to stop loading
+	// 尝试停止加载页面
 	_ = p.StopLoading()
 
 	res, err := proto.PageNavigate{URL: url}.Call(p)
@@ -175,20 +202,25 @@ func (p *Page) Navigate(url string) error {
 }
 
 // NavigateBack history.
+// 返回到历史页面
 func (p *Page) NavigateBack() error {
 	// Not using cdp API because it doesn't work for iframe
+	// 注意：因为不适用于 iframe 所以才使用了 cdp API
 	_, err := p.Evaluate(Eval(`() => history.back()`).ByUser())
 	return err
 }
 
 // NavigateForward history.
+// 前进到历史页面
 func (p *Page) NavigateForward() error {
 	// Not using cdp API because it doesn't work for iframe
+	// 注意：因为不适用于 iframe 所以才使用了 cdp API
 	_, err := p.Evaluate(Eval(`() => history.forward()`).ByUser())
 	return err
 }
 
 // Reload page.
+// 刷新页面
 func (p *Page) Reload() error {
 	p, cancel := p.WithCancel()
 	defer cancel()
@@ -198,6 +230,7 @@ func (p *Page) Reload() error {
 	})
 
 	// Not using cdp API because it doesn't work for iframe
+	// 注意：因为不适用于 iframe 所以才使用了 cdp API
 	_, err := p.Evaluate(Eval(`() => location.reload()`).ByUser())
 	if err != nil {
 		return err
@@ -211,6 +244,7 @@ func (p *Page) Reload() error {
 }
 
 // Activate (focuses) the page
+// 激活页面
 func (p *Page) Activate() (*Page, error) {
 	err := proto.TargetActivateTarget{TargetID: p.TargetID}.Call(p.browser)
 	return p, err
@@ -225,6 +259,7 @@ func (p *Page) getWindowID() (proto.BrowserWindowID, error) {
 }
 
 // GetWindow position and size info
+// 获取页面窗口大小信息
 func (p *Page) GetWindow() (*proto.BrowserBounds, error) {
 	id, err := p.getWindowID()
 	if err != nil {
@@ -240,6 +275,7 @@ func (p *Page) GetWindow() (*proto.BrowserBounds, error) {
 }
 
 // SetWindow location and size
+// 设置窗口位置和大小
 func (p *Page) SetWindow(bounds *proto.BrowserBounds) error {
 	id, err := p.getWindowID()
 	if err != nil {
@@ -251,6 +287,7 @@ func (p *Page) SetWindow(bounds *proto.BrowserBounds) error {
 }
 
 // SetViewport overrides the values of device screen dimensions
+// SetViewport覆盖设备屏幕尺寸的值
 func (p *Page) SetViewport(params *proto.EmulationSetDeviceMetricsOverride) error {
 	if params == nil {
 		return proto.EmulationClearDeviceMetricsOverride{}.Call(p)
@@ -259,6 +296,7 @@ func (p *Page) SetViewport(params *proto.EmulationSetDeviceMetricsOverride) erro
 }
 
 // SetDocumentContent sets the page document html content
+// 在页面中添加 HTML 内容
 func (p *Page) SetDocumentContent(html string) error {
 	return proto.PageSetDocumentContent{
 		FrameID: p.FrameID,
@@ -267,6 +305,7 @@ func (p *Page) SetDocumentContent(html string) error {
 }
 
 // Emulate the device, such as iPhone9. If device is devices.Clear, it will clear the override.
+// 模拟设备，例如 IPhone9,。如果 devices是devcs.Clear，将会清除覆盖
 func (p *Page) Emulate(device devices.Device) error {
 	err := p.SetViewport(device.MetricsEmulation())
 	if err != nil {
@@ -282,11 +321,13 @@ func (p *Page) Emulate(device devices.Device) error {
 }
 
 // StopLoading forces the page stop navigation and pending resource fetches.
+// 强制停止页面的加载以及资源的请求
 func (p *Page) StopLoading() error {
 	return proto.PageStopLoading{}.Call(p)
 }
 
 // Close tries to close page, running its beforeunload hooks, if has any.
+// 尝试关闭页面，如果有的话，它会运行 beforeunload 钩子函数。
 func (p *Page) Close() error {
 	p.browser.targetsLock.Lock()
 	defer p.browser.targetsLock.Unlock()
@@ -328,7 +369,9 @@ func (p *Page) Close() error {
 }
 
 // HandleDialog accepts or dismisses next JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
+// HandleDialog 接受或驳回下一个JavaScript发起的对话框（警报、确认、提示或onbeforeunload）。
 // Because modal dialog will block js, usually you have to trigger the dialog in another goroutine.
+// 由于模态对话框将阻塞js，通常您必须在另一个goroutine中触发对话框。
 // For example:
 //
 //     wait, handle := page.MustHandleDialog()
@@ -355,6 +398,7 @@ func (p *Page) HandleDialog() (
 }
 
 // Screenshot captures the screenshot of current page.
+// 捕获当前页面的截图
 func (p *Page) Screenshot(fullpage bool, req *proto.PageCaptureScreenshot) ([]byte, error) {
 	if req == nil {
 		req = &proto.PageCaptureScreenshot{}
@@ -394,6 +438,7 @@ func (p *Page) Screenshot(fullpage bool, req *proto.PageCaptureScreenshot) ([]by
 }
 
 // PDF prints page as PDF
+// 将页面保存为 PDF
 func (p *Page) PDF(req *proto.PagePrintToPDF) (*StreamReader, error) {
 	req.TransferMode = proto.PagePrintToPDFTransferModeReturnAsStream
 	res, err := req.Call(p)
@@ -405,7 +450,9 @@ func (p *Page) PDF(req *proto.PagePrintToPDF) (*StreamReader, error) {
 }
 
 // GetResource content by the url. Such as image, css, html, etc.
+// 通过URL获取页面中的资源，例如 image,css,html等
 // Use the proto.PageGetResourceTree to list all the resources.
+// 使用 proto.PageGetResourceTree 会返回所有的资源
 func (p *Page) GetResource(url string) ([]byte, error) {
 	res, err := proto.PageGetResourceContent{
 		FrameID: p.FrameID,
@@ -429,6 +476,7 @@ func (p *Page) GetResource(url string) ([]byte, error) {
 }
 
 // WaitOpen waits for the next new page opened by the current one
+// 等待打开从当前页面打开的新页面
 func (p *Page) WaitOpen() func() (*Page, error) {
 	var targetID proto.TargetTargetID
 
@@ -446,16 +494,21 @@ func (p *Page) WaitOpen() func() (*Page, error) {
 }
 
 // EachEvent of the specified event types, if any callback returns true the wait function will resolve,
+// 指定事件类型的事件，如果任何回调返回 true 等待函数将会解决，
 // The type of each callback is (? means optional):
+// 每一个回调类型
 //
 //     func(proto.Event, proto.TargetSessionID?) bool?
 //
 // You can listen to multiple event types at the same time like:
+// 你可以监听很多事件类型同时：
 //
 //     browser.EachEvent(func(a *proto.A) {}, func(b *proto.B) {})
 //
 // Such as subscribe the events to know when the navigation is complete or when the page is rendered.
+// 例如订阅事件，以便于了解navigation何时完成或者页面何时渲染完成。
 // Here's an example to dismiss all dialogs/alerts on the page:
+// 这里是一个关闭所有对话框的例子：
 //
 //      go page.EachEvent(func(e *proto.PageJavascriptDialogOpening) {
 //          _ = proto.PageHandleJavaScriptDialog{ Accept: false, PromptText: ""}.Call(page)
@@ -466,13 +519,16 @@ func (p *Page) EachEvent(callbacks ...interface{}) (wait func()) {
 }
 
 // WaitEvent waits for the next event for one time. It will also load the data into the event object.
+// 等待下一个发生的事件一次。它还会将数据加载到事件对象中。
 func (p *Page) WaitEvent(e proto.Event) (wait func()) {
 	defer p.tryTrace(TraceTypeWait, "event", e.ProtoEvent())()
 	return p.browser.Context(p.ctx).waitEvent(p.SessionID, e)
 }
 
 // WaitNavigation wait for a page lifecycle event when navigating.
+// WaitNavigation 在导航时等待一个页面生命周期事件。
 // Usually you will wait for proto.PageLifecycleEventNameNetworkAlmostIdle
+// 通常等待的是：proto.PageLifecycleEventNameNetworkAlmostIdle
 func (p *Page) WaitNavigation(name proto.PageLifecycleEventName) func() {
 	_ = proto.PageSetLifecycleEventsEnabled{Enabled: true}.Call(p)
 
@@ -488,9 +544,13 @@ func (p *Page) WaitNavigation(name proto.PageLifecycleEventName) func() {
 }
 
 // WaitRequestIdle returns a wait function that waits until no request for d duration.
+// WaitRequestIdle 返回一个等待函数，等待持续d时间内没有请求为止。
 // Be careful, d is not the max wait timeout, it's the least idle time.
+// 注意：d不是最大超时时间，而是最小空闲时间
 // If you want to set a timeout you can use the "Page.Timeout" function.
+// 如果你想为页面设置超时，请使用：`Page.timeout` 函数
 // Use the includes and excludes regexp list to filter the requests by their url.
+// 使用includes和excludes regexp列表按请求的url筛选请求
 func (p *Page) WaitRequestIdle(d time.Duration, includes, excludes []string) func() {
 	if len(includes) == 0 {
 		includes = []string{""}
@@ -515,6 +575,7 @@ func (p *Page) WaitRequestIdle(d time.Duration, includes, excludes []string) fun
 		if match(sent.Request.URL) {
 			// Redirect will send multiple NetworkRequestWillBeSent events with the same RequestID,
 			// we should filter them out.
+			// 过滤掉重定向发送的多个相同 RequestsID 的 NetworkRequestWillBeSent 事件。
 			if _, has := waitlist[sent.RequestID]; !has {
 				waitlist[sent.RequestID] = sent.Request.URL
 				update(waitlist)
@@ -537,12 +598,14 @@ func (p *Page) WaitRequestIdle(d time.Duration, includes, excludes []string) fun
 }
 
 // WaitIdle waits until the next window.requestIdleCallback is called.
+// WaitIdle 等待直到 window.requestIdleCallback 被调用
 func (p *Page) WaitIdle(timeout time.Duration) (err error) {
 	_, err = p.Evaluate(evalHelper(js.WaitIdle, timeout.Seconds()).ByPromise())
 	return err
 }
 
 // WaitRepaint waits until the next repaint.
+// WaitRepaint会等待下一次重绘。
 // Doc: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
 func (p *Page) WaitRepaint() error {
 	// we use root here because iframe doesn't trigger requestAnimationFrame
@@ -551,6 +614,7 @@ func (p *Page) WaitRepaint() error {
 }
 
 // WaitLoad waits for the `window.onload` event, it returns immediately if the event is already fired.
+// 等待 `window.load` 事件触发，如果已经被触发，则会立即返回
 func (p *Page) WaitLoad() error {
 	defer p.tryTrace(TraceTypeWait, "load")()
 	_, err := p.Evaluate(evalHelper(js.WaitLoad).ByPromise())
@@ -558,6 +622,7 @@ func (p *Page) WaitLoad() error {
 }
 
 // AddScriptTag to page. If url is empty, content will be used.
+// 向页面添加 Script 标签。如果url是空的,content参数将会被使用
 func (p *Page) AddScriptTag(url, content string) error {
 	hash := md5.Sum([]byte(url + content))
 	id := hex.EncodeToString(hash[:])
@@ -566,6 +631,7 @@ func (p *Page) AddScriptTag(url, content string) error {
 }
 
 // AddStyleTag to page. If url is empty, content will be used.
+// 向页面添加 CSS 标签。如果url是空的,content参数将会被使用
 func (p *Page) AddStyleTag(url, content string) error {
 	hash := md5.Sum([]byte(url + content))
 	id := hex.EncodeToString(hash[:])
@@ -574,6 +640,7 @@ func (p *Page) AddStyleTag(url, content string) error {
 }
 
 // EvalOnNewDocument Evaluates given script in every frame upon creation (before loading frame's scripts).
+// 会在每一个新的 frame 创建时，执行给定的JS脚本
 func (p *Page) EvalOnNewDocument(js string) (remove func() error, err error) {
 	res, err := proto.PageAddScriptToEvaluateOnNewDocument{Source: js}.Call(p)
 	if err != nil {
@@ -590,6 +657,7 @@ func (p *Page) EvalOnNewDocument(js string) (remove func() error, err error) {
 }
 
 // Wait until the js returns true
+// 等待 JS 脚本执行返回 true （JS执行成功）
 func (p *Page) Wait(opts *EvalOptions) error {
 	return utils.Retry(p.ctx, p.sleeper(), func() (bool, error) {
 		res, err := p.Evaluate(opts)
@@ -602,11 +670,13 @@ func (p *Page) Wait(opts *EvalOptions) error {
 }
 
 // WaitElementsMoreThan Wait until there are more than <num> <selector> elements.
+// 判断某个元素在页面上是否出现以及出现的次数
 func (p *Page) WaitElementsMoreThan(selector string, num int) error {
 	return p.Wait(Eval(`(s, n) => document.querySelectorAll(s).length > n`, selector, num))
 }
 
 // ObjectToJSON by object id
+// 通过对象ID将对象转换为JSON
 func (p *Page) ObjectToJSON(obj *proto.RuntimeRemoteObject) (gson.JSON, error) {
 	if obj.ObjectID == "" {
 		return obj.Value, nil
@@ -624,8 +694,10 @@ func (p *Page) ObjectToJSON(obj *proto.RuntimeRemoteObject) (gson.JSON, error) {
 }
 
 // ElementFromObject creates an Element from the remote object id.
+// ElementFromObject从远程对象id创建一个元素。
 func (p *Page) ElementFromObject(obj *proto.RuntimeRemoteObject) (*Element, error) {
 	// If the element is in an iframe, we need the jsCtxID to inject helper.js to the correct context.
+	// 如果该元素是在一个iframe中，我们需要jsCtxID来注入helper.js到正确的上下文。
 	id, err := p.jsCtxIDByObjectID(obj.ObjectID)
 	if err != nil {
 		return nil, err
@@ -652,6 +724,7 @@ func (p *Page) ElementFromObject(obj *proto.RuntimeRemoteObject) (*Element, erro
 }
 
 // ElementFromNode creates an Element from the node, NodeID or BackendNodeID must be specified.
+// ElementFromNode从节点创建一个元素，必须指定NodeID或BackendNodeID。
 func (p *Page) ElementFromNode(node *proto.DOMNode) (*Element, error) {
 	res, err := proto.DOMResolveNode{
 		NodeID:        node.NodeID,
@@ -667,6 +740,7 @@ func (p *Page) ElementFromNode(node *proto.DOMNode) (*Element, error) {
 	}
 
 	// make sure always return an element node
+	// 确保总是返回一个element节点
 	desc, err := el.Describe(0, false)
 	if err != nil {
 		return nil, err
@@ -682,7 +756,9 @@ func (p *Page) ElementFromNode(node *proto.DOMNode) (*Element, error) {
 }
 
 // ElementFromPoint creates an Element from the absolute point on the page.
+// ElementFromPoint从页面上的绝对点创建一个元素。
 // The point should include the window scroll offset.
+// 该点应包括窗口滚动偏移量。
 func (p *Page) ElementFromPoint(x, y int) (*Element, error) {
 	node, err := proto.DOMGetNodeForLocation{X: x, Y: y}.Call(p)
 	if err != nil {
@@ -695,19 +771,24 @@ func (p *Page) ElementFromPoint(x, y int) (*Element, error) {
 }
 
 // Release the remote object. Usually, you don't need to call it.
+// 释放远程对象。通常情况下，你不需要调用它。
 // When a page is closed or reloaded, all remote objects will be released automatically.
+// 当一个页面被关闭或重新加载时，所有的远程对象将被自动释放。
 // It's useful if the page never closes or reloads.
+// 这对于页面从来没有被关闭或者重新加载过是非常有用的。
 func (p *Page) Release(obj *proto.RuntimeRemoteObject) error {
 	err := proto.RuntimeReleaseObject{ObjectID: obj.ObjectID}.Call(p)
 	return err
 }
 
 // Call implements the proto.Client
+// 实现了 `proto.Client`
 func (p *Page) Call(ctx context.Context, sessionID, methodName string, params interface{}) (res []byte, err error) {
 	return p.browser.Call(ctx, sessionID, methodName, params)
 }
 
 // Event of the page
+// 页面上的事件
 func (p *Page) Event() <-chan *Message {
 	dst := make(chan *Message)
 	s := p.event.Subscribe(p.ctx)
