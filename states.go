@@ -41,6 +41,7 @@ func (b *Browser) set(sessionID proto.TargetSessionID, methodName string, params
 }
 
 // LoadState into the method, seesionID can be empty.
+// 在方法的LoadState中，sessionID可以为空。
 func (b *Browser) LoadState(sessionID proto.TargetSessionID, method proto.Request) (has bool) {
 	data, has := b.states.Load(b.key(sessionID, method.ProtoReq()))
 	if has {
@@ -52,11 +53,13 @@ func (b *Browser) LoadState(sessionID proto.TargetSessionID, method proto.Reques
 }
 
 // RemoveState a state
+// 删除一个 state
 func (b *Browser) RemoveState(key interface{}) {
 	b.states.Delete(key)
 }
 
 // EnableDomain and returns a restore function to restore previous state
+// EnableDomain 返回一个恢复函数来恢复之前的 State
 func (b *Browser) EnableDomain(sessionID proto.TargetSessionID, req proto.Request) (restore func()) {
 	_, enabled := b.states.Load(b.key(sessionID, req.ProtoReq()))
 
@@ -73,6 +76,7 @@ func (b *Browser) EnableDomain(sessionID proto.TargetSessionID, req proto.Reques
 }
 
 // DisableDomain and returns a restore function to restore previous state
+// DisableDomain 返回一个恢复函数来恢复之前的状态
 func (b *Browser) DisableDomain(sessionID proto.TargetSessionID, req proto.Request) (restore func()) {
 	_, enabled := b.states.Load(b.key(sessionID, req.ProtoReq()))
 	domain, _ := proto.ParseMethodName(req.ProtoReq())
@@ -100,16 +104,19 @@ func (b *Browser) loadCachedPage(id proto.TargetTargetID) *Page {
 }
 
 // LoadState into the method.
+// 在方法中的LoadState
 func (p *Page) LoadState(method proto.Request) (has bool) {
 	return p.browser.LoadState(p.SessionID, method)
 }
 
 // EnableDomain and returns a restore function to restore previous state
+// EnableDomain 返回一个恢复函数来恢复之前的 State
 func (p *Page) EnableDomain(method proto.Request) (restore func()) {
 	return p.browser.Context(p.ctx).EnableDomain(p.SessionID, method)
 }
 
 // DisableDomain and returns a restore function to restore previous state
+// DisableDomain 返回一个恢复函数来恢复之前的状态。
 func (p *Page) DisableDomain(method proto.Request) (restore func()) {
 	return p.browser.Context(p.ctx).DisableDomain(p.SessionID, method)
 }

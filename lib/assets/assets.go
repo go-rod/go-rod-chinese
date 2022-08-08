@@ -3,6 +3,7 @@
 package assets
 
 // MousePointer for rod
+// 定义 rod 的鼠标指针
 const MousePointer = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="277px" height="401px" viewBox="0 0 277 401" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
@@ -28,6 +29,7 @@ const MousePointer = `<?xml version="1.0" encoding="UTF-8"?>
 </svg>`
 
 // Monitor for rod
+// 定义 rod 的 Monitor
 const Monitor = `<html>
   <head>
     <title>Rod Monitor - Pages</title>
@@ -84,6 +86,7 @@ const Monitor = `<html>
 `
 
 // MonitorPage for rod
+// 定义 rod 的 MonitorPage
 const MonitorPage = `<html>
   <head>
     <style>

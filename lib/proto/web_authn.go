@@ -8,7 +8,7 @@ WebAuthn
 
 This domain allows configuring virtual authenticators to test the WebAuthn
 API.
-
+此 Domain 允许配置一个虚拟 认证器 来测试 WebAuthon API
 */
 
 // WebAuthnAuthenticatorID ...
@@ -63,38 +63,46 @@ type WebAuthnVirtualAuthenticatorOptions struct {
 	Protocol WebAuthnAuthenticatorProtocol `json:"protocol"`
 
 	// Ctap2Version (optional) Defaults to ctap2_0. Ignored if |protocol| == u2f.
+	// 可选参数 默认值是 ctap2_0. 如果 |protocol| == u2f. 则可以忽略
 	Ctap2Version WebAuthnCtap2Version `json:"ctap2Version,omitempty"`
 
 	// Transport ...
 	Transport WebAuthnAuthenticatorTransport `json:"transport"`
 
 	// HasResidentKey (optional) Defaults to false.
+	// 可选参数 默认值是 False
 	HasResidentKey bool `json:"hasResidentKey,omitempty"`
 
 	// HasUserVerification (optional) Defaults to false.
+	// 可选参数，默认值 False
 	HasUserVerification bool `json:"hasUserVerification,omitempty"`
 
 	// HasLargeBlob (optional) If set to true, the authenticator will support the largeBlob extension.
 	// https://w3c.github.io/webauthn#largeBlob
 	// Defaults to false.
+	// 可选参数，默认值是False。如果为True，验证器将支持 largeBlob 扩展
 	HasLargeBlob bool `json:"hasLargeBlob,omitempty"`
 
 	// HasCredBlob (optional) If set to true, the authenticator will support the credBlob extension.
 	// https://fidoalliance.org/specs/fido-v2.1-rd-20201208/fido-client-to-authenticator-protocol-v2.1-rd-20201208.html#sctn-credBlob-extension
 	// Defaults to false.
+	// 可选参数，默认值False，如果设置为True，验证器将支持 credBlob 扩展
 	HasCredBlob bool `json:"hasCredBlob,omitempty"`
 
 	// HasMinPinLength (optional) If set to true, the authenticator will support the minPinLength extension.
 	// https://fidoalliance.org/specs/fido-v2.1-ps-20210615/fido-client-to-authenticator-protocol-v2.1-ps-20210615.html#sctn-minpinlength-extension
 	// Defaults to false.
+	// 可选参数，默认值False，如果设置为True，验证器将支持 minPinLength 扩展
 	HasMinPinLength bool `json:"hasMinPinLength,omitempty"`
 
 	// AutomaticPresenceSimulation (optional) If set to true, tests of user presence will succeed immediately.
 	// Otherwise, they will not be resolved. Defaults to true.
+	// 可选参数，默认值True，如果设置为True，用户存在的测试将立即成功。否则，将无法解决
 	AutomaticPresenceSimulation bool `json:"automaticPresenceSimulation,omitempty"`
 
 	// IsUserVerified (optional) Sets whether User Verification succeeds or fails for an authenticator.
 	// Defaults to false.
+	//可选参数，默认False，用于设置验证器用户验证是否成功
 	IsUserVerified bool `json:"isUserVerified,omitempty"`
 }
 
@@ -109,27 +117,33 @@ type WebAuthnCredential struct {
 
 	// RpID (optional) Relying Party ID the credential is scoped to. Must be set when adding a
 	// credential.
+	// 可选参数，凭据作用域的依赖方ID。添加凭据时必须设置。
 	RpID string `json:"rpId,omitempty"`
 
 	// PrivateKey The ECDSA P-256 private key in PKCS#8 format.
+	// PKCS#8格式的ECDSA P-256私钥。
 	PrivateKey []byte `json:"privateKey"`
 
 	// UserHandle (optional) An opaque byte sequence with a maximum size of 64 bytes mapping the
 	// credential to a specific user.
+	// 可选参数，将凭证映射到特定用户的最大大小为64字节的不透明字节序列。
 	UserHandle []byte `json:"userHandle,omitempty"`
 
 	// SignCount Signature counter. This is incremented by one for each successful
 	// assertion.
 	// See https://w3c.github.io/webauthn/#signature-counter
+	// 签名计数器。每一次成功的断言，这个计数器都会递增1。
 	SignCount int `json:"signCount"`
 
 	// LargeBlob (optional) The large blob associated with the credential.
 	// See https://w3c.github.io/webauthn/#sctn-large-blob-extension
+	// 可选参数，large Blob 相关联的凭证
 	LargeBlob []byte `json:"largeBlob,omitempty"`
 }
 
 // WebAuthnEnable Enable the WebAuthn domain and start intercepting credential storage and
 // retrieval with a virtual authenticator.
+// 启用 WebAuthn Domain 并开始用虚拟认证器拦截凭证存储和检索。
 type WebAuthnEnable struct {
 
 	// EnableUI (optional) Whether to enable the WebAuthn user interface. Enabling the UI is
@@ -137,6 +151,8 @@ type WebAuthnEnable struct {
 	// experience. Disabling the UI is recommended for automated testing.
 	// Supported at the embedder's discretion if UI is available.
 	// Defaults to false.
+	// 可选参数，默认值False，是否启用WebAuthn用户界面。建议在调试和演示时启用用户界面，因为它更接近于真实的体验。禁用用户界面建议用于自动测试。
+	// 如果有用户界面，则由嵌入者决定是否支持。
 	EnableUI bool `json:"enableUI,omitempty"`
 }
 
@@ -144,11 +160,13 @@ type WebAuthnEnable struct {
 func (m WebAuthnEnable) ProtoReq() string { return "WebAuthn.enable" }
 
 // Call sends the request
+// 发送请求
 func (m WebAuthnEnable) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // WebAuthnDisable Disable the WebAuthn domain.
+// 禁用 WebAuthn
 type WebAuthnDisable struct {
 }
 
@@ -156,11 +174,13 @@ type WebAuthnDisable struct {
 func (m WebAuthnDisable) ProtoReq() string { return "WebAuthn.disable" }
 
 // Call sends the request
+// 发送请求
 func (m WebAuthnDisable) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // WebAuthnAddVirtualAuthenticator Creates and adds a virtual authenticator.
+// 创建并添加一个虚拟验证器
 type WebAuthnAddVirtualAuthenticator struct {
 
 	// Options ...
@@ -196,11 +216,13 @@ func (m WebAuthnRemoveVirtualAuthenticator) ProtoReq() string {
 }
 
 // Call sends the request
+// 发送请求
 func (m WebAuthnRemoveVirtualAuthenticator) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // WebAuthnAddCredential Adds the credential to the specified authenticator.
+// 为验证器添加特定的凭证
 type WebAuthnAddCredential struct {
 
 	// AuthenticatorID ...
@@ -214,12 +236,14 @@ type WebAuthnAddCredential struct {
 func (m WebAuthnAddCredential) ProtoReq() string { return "WebAuthn.addCredential" }
 
 // Call sends the request
+// 发送请求
 func (m WebAuthnAddCredential) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // WebAuthnGetCredential Returns a single credential stored in the given virtual authenticator that
 // matches the credential ID.
+// 返回存储在给定的虚拟认证器中的、与凭证ID相匹配的单个凭证。
 type WebAuthnGetCredential struct {
 
 	// AuthenticatorID ...
@@ -246,6 +270,7 @@ type WebAuthnGetCredentialResult struct {
 }
 
 // WebAuthnGetCredentials Returns all the credentials stored in the given virtual authenticator.
+// 返回存储在给定虚拟身份验证器中的所有凭据。
 type WebAuthnGetCredentials struct {
 
 	// AuthenticatorID ...
@@ -269,6 +294,7 @@ type WebAuthnGetCredentialsResult struct {
 }
 
 // WebAuthnRemoveCredential Removes a credential from the authenticator.
+// 从验证器中删除凭据。
 type WebAuthnRemoveCredential struct {
 
 	// AuthenticatorID ...
@@ -287,6 +313,7 @@ func (m WebAuthnRemoveCredential) Call(c Client) error {
 }
 
 // WebAuthnClearCredentials Clears all the credentials from the specified device.
+// 清除指定设备中的所有凭据。
 type WebAuthnClearCredentials struct {
 
 	// AuthenticatorID ...
@@ -297,12 +324,14 @@ type WebAuthnClearCredentials struct {
 func (m WebAuthnClearCredentials) ProtoReq() string { return "WebAuthn.clearCredentials" }
 
 // Call sends the request
+// 发送请求
 func (m WebAuthnClearCredentials) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // WebAuthnSetUserVerified Sets whether User Verification succeeds or fails for an authenticator.
 // The default is true.
+// 用于设置验证者的用户验证是否成功，默认为true。
 type WebAuthnSetUserVerified struct {
 
 	// AuthenticatorID ...
@@ -316,12 +345,14 @@ type WebAuthnSetUserVerified struct {
 func (m WebAuthnSetUserVerified) ProtoReq() string { return "WebAuthn.setUserVerified" }
 
 // Call sends the request
+// 发送请求
 func (m WebAuthnSetUserVerified) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // WebAuthnSetAutomaticPresenceSimulation Sets whether tests of user presence will succeed immediately (if true) or fail to resolve (if false) for an authenticator.
 // The default is true.
+// 设置对用户存在的测试是否会立即成功（如果为True）或无法解决（如果为False）的认证器。默认True。
 type WebAuthnSetAutomaticPresenceSimulation struct {
 
 	// AuthenticatorID ...

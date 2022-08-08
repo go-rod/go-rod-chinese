@@ -1,7 +1,8 @@
 // This file defines the helpers to develop automation.
+// 这个文件定义了一些开发自动化的辅助工具
 // Such as when running automation we can use trace to visually
 // see where the mouse going to click.
-
+// 如在运行自动化时，我们可以用trace（跟踪）来直观地看到鼠标要点击的地方。
 package rod
 
 import (
@@ -20,6 +21,7 @@ import (
 )
 
 // TraceType for logger
+// 日志的 Trace 类型
 type TraceType string
 
 // String interface
@@ -45,7 +47,9 @@ const (
 )
 
 // ServeMonitor starts the monitor server.
+// 启动一个监控服务
 // The reason why not to use "chrome://inspect/#devices" is one target cannot be driven by multiple controllers.
+// 不使用 "chrome://inspect/#devices "的原因是一个目标不能被多个控制器驱动。
 func (b *Browser) ServeMonitor(host string) string {
 	url, mux, close := serve(host)
 	go func() {
@@ -93,6 +97,7 @@ func (b *Browser) ServeMonitor(host string) string {
 }
 
 // check method and sleep if needed
+// 检查方法并在需要时进行睡眠。
 func (b *Browser) trySlowmotion() {
 	if b.slowMotion == 0 {
 		return
@@ -102,6 +107,7 @@ func (b *Browser) trySlowmotion() {
 }
 
 // ExposeHelpers helper functions to page's js context so that we can use the Devtools' console to debug them.
+// 将ExposeHelpers的辅助函数放到页面的js ctx 中，这样我们就可以使用Devtools的控制台来调试它们。
 func (p *Page) ExposeHelpers(list ...*js.Function) {
 	p.MustEvaluate(evalHelper(&js.Function{
 		Name:         "_" + utils.RandString(8), // use a random name so it won't hit the cache
@@ -111,6 +117,7 @@ func (p *Page) ExposeHelpers(list ...*js.Function) {
 }
 
 // Overlay a rectangle on the main frame with specified message
+// 在主 Frame 上叠加一个带有指定消息的矩形
 func (p *Page) Overlay(left, top, width, height float64, msg string) (remove func()) {
 	id := utils.RandString(8)
 
@@ -195,6 +202,7 @@ func (p *Page) tryTraceReq(includes, excludes []string) func(map[proto.NetworkRe
 }
 
 // Overlay msg on the element
+// 在元素上叠加 msg
 func (el *Element) Overlay(msg string) (removeOverlay func()) {
 	id := utils.RandString(8)
 
@@ -236,6 +244,7 @@ func (m *Mouse) updateMouseTracer() bool {
 }
 
 // Serve a port, if host is empty a random port will be used.
+// 为端口提供服务，如果主机为空，将使用随机端口。
 func serve(host string) (string, *http.ServeMux, func() error) {
 	if host == "" {
 		host = "127.0.0.1:0"
