@@ -1,4 +1,5 @@
 // This file serves for the Page.Evaluate.
+// 这个文件是为 Page.Evaluate 服务
 
 package rod
 
@@ -16,32 +17,45 @@ import (
 )
 
 // EvalOptions for Page.Evaluate
+// Page.Evaluate 配置项
 type EvalOptions struct {
 	// If enabled the eval result will be a plain JSON value.
+	// 如果启用，eval的结果会是普通JSON值
 	// If disabled the eval result will be a reference of a remote js object.
+	// 如果禁用，eval的结果会是一个JS对象的引用。
 	ByValue bool
 
 	AwaitPromise bool
 
 	// ThisObj represents the "this" object in the JS
+	// ThisObj 代表 JS 里面的 this
 	ThisObj *proto.RuntimeRemoteObject
 
 	// JS function definition to execute.
+	// 要注入的 JS 函数
 	JS string
 
 	// JSArgs represents the arguments that will be passed to JS.
+	// JSArgs 表示将被传递给 JS 函数的参数。
 	// If an argument is *proto.RuntimeRemoteObject type, the corresponding remote object will be used.
+	// 如果参数是 *proto.RuntimeRemoteObject 类型，将使用相应的远程对象。
 	// Or it will be passed as a plain JSON value.
+	// 或者它将作为普通JSON值传递。
 	// When an arg in the args is a *js.Function, the arg will be cached on the page's js context.
+	// 当args中的参数是*js.Function时，该参数将被缓存在页面的 js ctx中。
 	// When the arg.Name exists in the page's cache, it reuse the cache without sending the definition to the browser again.
+	// 当arg.Name存在于页面的缓存中时，它就会重新使用缓存，而不会再次将定义发送到浏览器。
 	// Useful when you need to eval a huge js expression many times.
+	// 当注入的 JS 体积非常大且要注入许多次时，是非常有效的。
 	JSArgs []interface{}
 
 	// Whether execution should be treated as initiated by user in the UI.
+	// 在用户界面中是否应执行应由用户发起。
 	UserGesture bool
 }
 
 // Eval creates a EvalOptions with ByValue set to true.
+// 创建一个 ByValue 设置为 true 的 EvalOptions
 func Eval(js string, args ...interface{}) *EvalOptions {
 	return &EvalOptions{
 		ByValue:      true,
@@ -85,24 +99,28 @@ func (e *EvalOptions) String() string {
 }
 
 // This set the obj as ThisObj
+// 设置 This 的值
 func (e *EvalOptions) This(obj *proto.RuntimeRemoteObject) *EvalOptions {
 	e.ThisObj = obj
 	return e
 }
 
 // ByObject disables ByValue.
+// 禁用 ByValue
 func (e *EvalOptions) ByObject() *EvalOptions {
 	e.ByValue = false
 	return e
 }
 
 // ByUser enables UserGesture.
+// 启用 UserGesture.
 func (e *EvalOptions) ByUser() *EvalOptions {
 	e.UserGesture = true
 	return e
 }
 
 // ByPromise enables AwaitPromise.
+// 启用 AwaitPromise
 func (e *EvalOptions) ByPromise() *EvalOptions {
 	e.AwaitPromise = true
 	return e
@@ -114,16 +132,19 @@ func (e *EvalOptions) formatToJSFunc() string {
 }
 
 // Eval is a shortcut for Page.Evaluate with AwaitPromise, ByValue set to true.
+// Eval 是 当 AwaitPromise ByValue 为 True 时的 Page.Evaluate 的快捷 API
 func (p *Page) Eval(js string, args ...interface{}) (*proto.RuntimeRemoteObject, error) {
 	return p.Evaluate(Eval(js, args...).ByPromise())
 }
 
 // Evaluate js on the page.
+// 在页面中执行 JS
 func (p *Page) Evaluate(opts *EvalOptions) (res *proto.RuntimeRemoteObject, err error) {
 	var backoff utils.Sleeper
 
 	// js context will be invalid if a frame is reloaded or not ready, then the isNilContextErr
 	// will be true, then we retry the eval again.
+	// 如果frame被重新加载或未准备好，js ctx 将无效，那么IsnilContexter将为true，然后会再次执行。
 	for {
 		res, err = p.evaluate(opts)
 		if err != nil && errors.Is(err, cdp.ErrCtxNotFound) {
@@ -181,7 +202,9 @@ func (p *Page) evaluate(opts *EvalOptions) (*proto.RuntimeRemoteObject, error) {
 }
 
 // Expose fn to the page's window object with the name. The exposure survives reloads.
+// 将fn暴露给名为的页面窗口对象。exposure 在重新加载后仍然有效。
 // Call stop to unbind the fn.
+// 调用 stop 可以解除 fn 的绑定
 func (p *Page) Expose(name string, fn func(gson.JSON) (interface{}, error)) (stop func() error, err error) {
 	bind := "_" + utils.RandString(8)
 
@@ -244,6 +267,7 @@ func (p *Page) formatArgs(opts *EvalOptions) ([]*proto.RuntimeCallArgument, erro
 }
 
 // Check the doc of EvalHelper
+// 检查 EvalHelper 的文档
 func (p *Page) ensureJSHelper(fn *js.Function) (proto.RuntimeRemoteObjectID, error) {
 	jsCtxID, err := p.getJSCtxID()
 	if err != nil {
@@ -279,6 +303,7 @@ func (p *Page) ensureJSHelper(fn *js.Function) (proto.RuntimeRemoteObjectID, err
 			FunctionDeclaration: fmt.Sprintf(
 				// we only need the object id, but the cdp will return the whole function string.
 				// So we override the toString to reduce the overhead.
+				// 通常只需要 对象ID就好，但是cdp会返回整个函数字符串，因此需要重写 toString 减少开销
 				"functions => { const f = functions.%s = %s; f.toString = () => 'fn'; return f }",
 				fn.Name, fn.Definition,
 			),
@@ -320,6 +345,7 @@ func (p *Page) setHelper(jsCtxID proto.RuntimeRemoteObjectID, name string, fnID 
 }
 
 // Returns the page's window object, the page can be an iframe
+// 返回页面窗口的对象，页面可以是一个 iframe
 func (p *Page) getJSCtxID() (proto.RuntimeRemoteObjectID, error) {
 	p.jsCtxLock.Lock()
 	defer p.jsCtxLock.Unlock()
