@@ -12,10 +12,12 @@ Network
 
 Network domain allows tracking network activities of the page. It exposes information about http,
 file, data and other requests and responses, their headers, bodies, timing, etc.
+网络域允许跟踪页面的网络活动。它暴露了关于http,文件、数据和其他请求和响应，以及它们的标头、正文、时间等信息。
 
 */
 
 // NetworkResourceType Resource type as it was perceived by the rendering engine.
+// 渲染引擎所认为的资源类型。
 type NetworkResourceType string
 
 const (
@@ -75,15 +77,19 @@ const (
 )
 
 // NetworkLoaderID Unique loader identifier.
+// 唯一的 Loader 标识符
 type NetworkLoaderID string
 
 // NetworkRequestID Unique request identifier.
+// 唯一的 request 标识符
 type NetworkRequestID string
 
 // NetworkInterceptionID Unique intercepted request identifier.
+// 唯一的 被拦截的请求 标识符
 type NetworkInterceptionID string
 
 // NetworkErrorReason Network level fetch failure reason.
+// 网络层面的获取失败原因。
 type NetworkErrorReason string
 
 const (
@@ -131,9 +137,11 @@ const (
 )
 
 // NetworkHeaders Request / response headers as keys / values of JSON object.
+// 请求/响应标头作为JSON对象的键/值。
 type NetworkHeaders map[string]gson.JSON
 
 // NetworkConnectionType The underlying connection technology that the browser is supposedly using.
+// NetworkConnectionType 浏览器使用的底层连接技术。
 type NetworkConnectionType string
 
 const (
@@ -166,6 +174,7 @@ const (
 )
 
 // NetworkCookieSameSite Represents the cookie's 'SameSite' status:
+// 代表cookie的 "SameSite "状态:
 // https://tools.ietf.org/html/draft-west-first-party-cookies
 type NetworkCookieSameSite string
 
@@ -181,6 +190,7 @@ const (
 )
 
 // NetworkCookiePriority (experimental) Represents the cookie's 'Priority' status:
+// 代表cookie的 "优先级 "状态：
 // https://tools.ietf.org/html/draft-west-cookie-priority-00
 type NetworkCookiePriority string
 
@@ -196,8 +206,11 @@ const (
 )
 
 // NetworkCookieSourceScheme (experimental) Represents the source scheme of the origin that originally set the cookie.
+// 表示原始设置cookie的源方案。
 // A value of "Unset" allows protocol clients to emulate legacy cookie scope for the scheme.
+// 值为 "Unset "时，协议客户可以为方案模拟传统的cookie范围。
 // This is a temporary ability and it will be removed in the future.
+// 这是一种临时能力，将来会被删除。
 type NetworkCookieSourceScheme string
 
 const (
@@ -212,65 +225,85 @@ const (
 )
 
 // NetworkResourceTiming Timing information for the request.
+// 请求的时间信息。
 type NetworkResourceTiming struct {
 
 	// RequestTime Timing's requestTime is a baseline in seconds, while the other numbers are ticks in
 	// milliseconds relatively to this requestTime.
+	// Timing的requestTime是一个以秒为单位的基线，而其他数字是相对于这个requestTime的以毫秒为单位的刻度。
 	RequestTime float64 `json:"requestTime"`
 
 	// ProxyStart Started resolving proxy.
+	// 开始解析代理。
 	ProxyStart float64 `json:"proxyStart"`
 
 	// ProxyEnd Finished resolving proxy.
+	// 已完成代理解析。
 	ProxyEnd float64 `json:"proxyEnd"`
 
 	// DNSStart Started DNS address resolve.
+	// 开始解析DNS地址
 	DNSStart float64 `json:"dnsStart"`
 
 	// DNSEnd Finished DNS address resolve.
+	// 完成DNS解析
 	DNSEnd float64 `json:"dnsEnd"`
 
 	// ConnectStart Started connecting to the remote host.
+	// 开始连接主机
 	ConnectStart float64 `json:"connectStart"`
 
 	// ConnectEnd Connected to the remote host.
+	// 完成连接主机
 	ConnectEnd float64 `json:"connectEnd"`
 
 	// SslStart Started SSL handshake.
+	// 开始SSL握手
 	SslStart float64 `json:"sslStart"`
 
 	// SslEnd Finished SSL handshake.
+	// 完成SSL握手
 	SslEnd float64 `json:"sslEnd"`
 
 	// WorkerStart (experimental) Started running ServiceWorker.
+	// 开始运行ServiceWorker。
 	WorkerStart float64 `json:"workerStart"`
 
 	// WorkerReady (experimental) Finished Starting ServiceWorker.
+	// ServiceWorker 完成
 	WorkerReady float64 `json:"workerReady"`
 
 	// WorkerFetchStart (experimental) Started fetch event.
+	// 开始获取事件
 	WorkerFetchStart float64 `json:"workerFetchStart"`
 
 	// WorkerRespondWithSettled (experimental) Settled fetch event respondWith promise.
+	// 已经准备好的事件respondWith promise 的获取。
 	WorkerRespondWithSettled float64 `json:"workerRespondWithSettled"`
 
 	// SendStart Started sending request.
+	// 开始发送请求
 	SendStart float64 `json:"sendStart"`
 
 	// SendEnd Finished sending request.
+	// 请求发送完成
 	SendEnd float64 `json:"sendEnd"`
 
 	// PushStart (experimental) Time the server started pushing request.
+	// 服务器开始推送请求的时间。
 	PushStart float64 `json:"pushStart"`
 
 	// PushEnd (experimental) Time the server finished pushing request.
+	// 服务器完成推送请求的时间。
 	PushEnd float64 `json:"pushEnd"`
 
 	// ReceiveHeadersEnd Finished receiving response headers.
+	// ReceiveHeadersEnd已完成接收响应标头。
 	ReceiveHeadersEnd float64 `json:"receiveHeadersEnd"`
 }
 
 // NetworkResourcePriority Loading priority of a resource request.
+// 资源请求的加载优先级。
 type NetworkResourcePriority string
 
 const (
@@ -291,6 +324,7 @@ const (
 )
 
 // NetworkPostDataEntry Post data entry for HTTP request
+// 为 HTTP 请求 POST data
 type NetworkPostDataEntry struct {
 
 	// Bytes (optional) ...
@@ -298,6 +332,7 @@ type NetworkPostDataEntry struct {
 }
 
 // NetworkRequestReferrerPolicy enum
+// 跨域相关策略
 type NetworkRequestReferrerPolicy string
 
 const (
@@ -327,131 +362,172 @@ const (
 )
 
 // NetworkRequest HTTP request data.
+// HTTP 请求的数据
 type NetworkRequest struct {
 
 	// URL Request URL (without fragment).
+	// 请求的URL地址，不含 fragment
 	URL string `json:"url"`
 
 	// URLFragment (optional) Fragment of the requested URL starting with hash, if present.
+	// URLFragment（可选）请求URL的Fragment，如果存在，以hash开头。
 	URLFragment string `json:"urlFragment,omitempty"`
 
 	// Method HTTP request method.
+	// 请求方式
 	Method string `json:"method"`
 
 	// Headers HTTP request headers.
+	// 请求头
 	Headers NetworkHeaders `json:"headers"`
 
 	// PostData (optional) HTTP POST request data.
+	// PostData（可选）POST请求的数据
 	PostData string `json:"postData,omitempty"`
 
 	// HasPostData (optional) True when the request has POST data. Note that postData might still be omitted when this flag is true when the data is too long.
+	// HasPostData（可选）当请求有POST数据时为True。请注意，当这个标志为True时，当数据太长时，postData仍然可能被省略。
 	HasPostData bool `json:"hasPostData,omitempty"`
 
 	// PostDataEntries (experimental) (optional) Request body elements. This will be converted from base64 to binary
+	// PostDataEntries（实验性）（可选）请求体元素。会被从base64转换为二进制
 	PostDataEntries []*NetworkPostDataEntry `json:"postDataEntries,omitempty"`
 
 	// MixedContentType (optional) The mixed content type of the request.
+	// MixedContentType（可选）请求的混合内容类型。
 	MixedContentType SecurityMixedContentType `json:"mixedContentType,omitempty"`
 
 	// InitialPriority Priority of the resource request at the time request is sent.
+	// InitialPriority 在发送请求时，资源请求的优先级。
 	InitialPriority NetworkResourcePriority `json:"initialPriority"`
 
 	// ReferrerPolicy The referrer policy of the request, as defined in https://www.w3.org/TR/referrer-policy/
+	// 请求的 referrer 策略，定义在：https://www.w3.org/TR/referrer-policy/
 	ReferrerPolicy NetworkRequestReferrerPolicy `json:"referrerPolicy"`
 
 	// IsLinkPreload (optional) Whether is loaded via link preload.
+	// IsLinkPreload（可选） 是否通过链接预加载加载。
 	IsLinkPreload bool `json:"isLinkPreload,omitempty"`
 
 	// TrustTokenParams (experimental) (optional) Set for requests when the TrustToken API is used. Contains the parameters
 	// passed by the developer (e.g. via "fetch") as understood by the backend.
+	// TrustTokenParams (experimental) (optional) 在使用TrustToken API时为请求而设置。包含由开发者传递的参数（例如通过 "fetch"），并被后端理解。
 	TrustTokenParams *NetworkTrustTokenParams `json:"trustTokenParams,omitempty"`
 
 	// IsSameSite (experimental) (optional) True if this resource request is considered to be the 'same site' as the
 	// request correspondinfg to the main frame.
+	// IsSameSite（实验性）（可选）如果这个资源请求被认为是与主frame对应的请求是 "同一站点"，则为true。
 	IsSameSite bool `json:"isSameSite,omitempty"`
 }
 
 // NetworkSignedCertificateTimestamp Details of a signed certificate timestamp (SCT).
+// 签名的证书时间戳（SCT）的详细信息。
 type NetworkSignedCertificateTimestamp struct {
 
 	// Status Validation status.
+	//校验状态
 	Status string `json:"status"`
 
 	// Origin Origin.
+	// 源
 	Origin string `json:"origin"`
 
 	// LogDescription Log name / description.
+	// 日志的名称或描述
 	LogDescription string `json:"logDescription"`
 
 	// LogID Log ID.
+	// 日志ID
 	LogID string `json:"logId"`
 
 	// Timestamp Issuance date. Unlike TimeSinceEpoch, this contains the number of
 	// milliseconds since January 1, 1970, UTC, not the number of seconds.
+	// 签发日期。与TimeSinceEpoch不同，它包含自1970年1月1日（UTC）以来的毫秒数，而不是秒数。
 	Timestamp float64 `json:"timestamp"`
 
 	// HashAlgorithm Hash algorithm.
+	// hash算法
 	HashAlgorithm string `json:"hashAlgorithm"`
 
 	// SignatureAlgorithm Signature algorithm.
+	// 签名算法
 	SignatureAlgorithm string `json:"signatureAlgorithm"`
 
 	// SignatureData Signature data.
+	// 签名数据
 	SignatureData string `json:"signatureData"`
 }
 
 // NetworkSecurityDetails Security details about a request.
+// 请求的安全细节
 type NetworkSecurityDetails struct {
 
 	// Protocol Protocol name (e.g. "TLS 1.2" or "QUIC").
+	// 协议名称（例如："TLS 1.2 "或 "QUIC"）。
 	Protocol string `json:"protocol"`
 
 	// KeyExchange Key Exchange used by the connection, or the empty string if not applicable.
+	// 连接使用的密钥交换，如果不适用，则为空字符串。
 	KeyExchange string `json:"keyExchange"`
 
 	// KeyExchangeGroup (optional) (EC)DH group used by the connection, if applicable.
+	// KeyExchangeGroup (可选) (EC)DH组，如果适用的话，由连接使用。
 	KeyExchangeGroup string `json:"keyExchangeGroup,omitempty"`
 
 	// Cipher Cipher name.
+	// Cipher 名称
 	Cipher string `json:"cipher"`
 
 	// Mac (optional) TLS MAC. Note that AEAD ciphers do not have separate MACs.
+	// Mac（可选）TLS MAC。注意，AEAD cipher 没有单独的MAC。
 	Mac string `json:"mac,omitempty"`
 
 	// CertificateID Certificate ID value.
+	// CertificateID 证书ID值。
 	CertificateID SecurityCertificateID `json:"certificateId"`
 
 	// SubjectName Certificate subject name.
+	// 证书主题名称。
 	SubjectName string `json:"subjectName"`
 
 	// SanList Subject Alternative Name (SAN) DNS names and IP addresses.
+	// 主题替代名称（SAN）DNS名称和IP地址。
 	SanList []string `json:"sanList"`
 
 	// Issuer Name of the issuing CA.
+	// 签发CA的名称。
 	Issuer string `json:"issuer"`
 
 	// ValidFrom Certificate valid from date.
+	// 证书的有效期为：即日起。
 	ValidFrom TimeSinceEpoch `json:"validFrom"`
 
 	// ValidTo Certificate valid to (expiration) date
+	// 证书有效期至（到期）日期
 	ValidTo TimeSinceEpoch `json:"validTo"`
 
 	// SignedCertificateTimestampList List of signed certificate timestamps (SCTs).
+	// 已签署的证书时间戳（SCT）的列表。
 	SignedCertificateTimestampList []*NetworkSignedCertificateTimestamp `json:"signedCertificateTimestampList"`
 
 	// CertificateTransparencyCompliance Whether the request complied with Certificate Transparency policy
+	// 该请求是否符合证书透明度策略
 	CertificateTransparencyCompliance NetworkCertificateTransparencyCompliance `json:"certificateTransparencyCompliance"`
 
 	// ServerSignatureAlgorithm (optional) The signature algorithm used by the server in the TLS server signature,
 	// represented as a TLS SignatureScheme code point. Omitted if not
 	// applicable or not known.
+	// ServerSignatureAlgorithm（可选） 服务器在TLS服务器签名中使用的签名算法，用TLS SignatureScheme代码点表示。
+	// 如果不适用或不知道，则省略。
 	ServerSignatureAlgorithm *int `json:"serverSignatureAlgorithm,omitempty"`
 
 	// EncryptedClientHello Whether the connection used Encrypted ClientHello
+	// 连接是否使用了加密的ClientHello(客户端)。
 	EncryptedClientHello bool `json:"encryptedClientHello"`
 }
 
 // NetworkCertificateTransparencyCompliance Whether the request complied with Certificate Transparency policy.
+// 该请求是否符合证书透明度策略。
 type NetworkCertificateTransparencyCompliance string
 
 const (
@@ -466,6 +542,7 @@ const (
 )
 
 // NetworkBlockedReason The reason why request was blocked.
+// 请求被阻止的原因。
 type NetworkBlockedReason string
 
 const (
@@ -507,6 +584,7 @@ const (
 )
 
 // NetworkCorsError The reason why request was blocked.
+// 请求被阻止的原因。
 type NetworkCorsError string
 
 const (
@@ -605,13 +683,16 @@ const (
 type NetworkCorsErrorStatus struct {
 
 	// CorsError ...
+	// 跨域相关错误
 	CorsError NetworkCorsError `json:"corsError"`
 
 	// FailedParameter ...
+	// 失败参数
 	FailedParameter string `json:"failedParameter"`
 }
 
 // NetworkServiceWorkerResponseSource Source of serviceworker response.
+// 服务器响应的来源
 type NetworkServiceWorkerResponseSource string
 
 const (
@@ -642,17 +723,22 @@ const (
 // NetworkTrustTokenParams (experimental) Determines what type of Trust Token operation is executed and
 // depending on the type, some additional parameters. The values
 // are specified in third_party/blink/renderer/core/fetch/trust_token.idl.
+// NetworkTrustTokenParams (实验性) 决定执行哪种类型的Trust Token操作，并根据该类型决定一些额外的参数。
+// 这些值在third_party/blink/renderer/core/fetch/trust_token.idl中指定。
 type NetworkTrustTokenParams struct {
 
 	// Type ...
+	// 操作类型
 	Type NetworkTrustTokenOperationType `json:"type"`
 
 	// RefreshPolicy Only set for "token-redemption" type and determine whether
 	// to request a fresh SRR or use a still valid cached SRR.
+	// 只对 "token-redemption "类型进行设置，并确定是请求一个新的SRR还是使用一个仍然有效的缓存SRR。
 	RefreshPolicy NetworkTrustTokenParamsRefreshPolicy `json:"refreshPolicy"`
 
 	// Issuers (optional) Origins of issuers from whom to request tokens or redemption
 	// records.
+	// Issuers（可选） 向其申请tokens或redemption的发行人的来源的记录。
 	Issuers []string `json:"issuers,omitempty"`
 }
 
@@ -671,135 +757,179 @@ const (
 )
 
 // NetworkResponse HTTP response data.
+// 响应数据
 type NetworkResponse struct {
 
 	// URL Response URL. This URL can be different from CachedResource.url in case of redirect.
+	// 响应URL。在重定向的情况下，这个URL可以与CachedResource.url不同。
 	URL string `json:"url"`
 
 	// Status HTTP response status code.
+	// 响应状态码
 	Status int `json:"status"`
 
 	// StatusText HTTP response status text.
+	// 响应状态文本
 	StatusText string `json:"statusText"`
 
 	// Headers HTTP response headers.
+	// 响应头
 	Headers NetworkHeaders `json:"headers"`
 
 	// HeadersText (deprecated) (optional) HTTP response headers text. This has been replaced by the headers in Network.responseReceivedExtraInfo.
+	// HTTP响应头文本。这已经被Network.responseReceivedExtraInfo中的头信息所取代。
 	HeadersText string `json:"headersText,omitempty"`
 
 	// MIMEType Resource mimeType as determined by the browser.
+	// 浏览器确定的资源MIME类型。
 	MIMEType string `json:"mimeType"`
 
 	// RequestHeaders (optional) Refined HTTP request headers that were actually transmitted over the network.
+	// 完善的HTTP请求头，实际上是通过网络传输的。
 	RequestHeaders NetworkHeaders `json:"requestHeaders,omitempty"`
 
 	// RequestHeadersText (deprecated) (optional) HTTP request headers text. This has been replaced by the headers in Network.requestWillBeSentExtraInfo.
+	// HTTP请求头信息文本。这已经被Network.requestWillBeSentExtraInfo中的头文件所取代。
 	RequestHeadersText string `json:"requestHeadersText,omitempty"`
 
 	// ConnectionReused Specifies whether physical connection was actually reused for this request.
+	// 指定物理连接是否真的被重用在此请求中。
 	ConnectionReused bool `json:"connectionReused"`
 
 	// ConnectionID Physical connection id that was actually used for this request.
+	// 实际用于该请求的物理连接ID。
 	ConnectionID float64 `json:"connectionId"`
 
 	// RemoteIPAddress (optional) Remote IP address.
+	// 远程IP地址。
 	RemoteIPAddress string `json:"remoteIPAddress,omitempty"`
 
 	// RemotePort (optional) Remote port.
+	// 远程端口
 	RemotePort *int `json:"remotePort,omitempty"`
 
 	// FromDiskCache (optional) Specifies that the request was served from the disk cache.
+	// 指定该请求是否由磁盘缓存提供的。
 	FromDiskCache bool `json:"fromDiskCache,omitempty"`
 
 	// FromServiceWorker (optional) Specifies that the request was served from the ServiceWorker.
+	// 指定该请求是否由ServiceWorker提供的。
 	FromServiceWorker bool `json:"fromServiceWorker,omitempty"`
 
 	// FromPrefetchCache (optional) Specifies that the request was served from the prefetch cache.
+	// 指定该请求是否由预取缓存提供的。
 	FromPrefetchCache bool `json:"fromPrefetchCache,omitempty"`
 
 	// EncodedDataLength Total number of bytes received for this request so far.
+	// 到目前为止，这个请求所收到的字节总数。
 	EncodedDataLength float64 `json:"encodedDataLength"`
 
 	// Timing (optional) Timing information for the given request.
+	// 给定请求的时间信息。
 	Timing *NetworkResourceTiming `json:"timing,omitempty"`
 
 	// ServiceWorkerResponseSource (optional) Response source of response from ServiceWorker.
+	// 来自ServiceWorker的响应来源。
 	ServiceWorkerResponseSource NetworkServiceWorkerResponseSource `json:"serviceWorkerResponseSource,omitempty"`
 
 	// ResponseTime (optional) The time at which the returned response was generated.
+	// 返回的响应产生的时间
 	ResponseTime TimeSinceEpoch `json:"responseTime,omitempty"`
 
 	// CacheStorageCacheName (optional) Cache Storage Cache Name.
+	// 缓存名称。
 	CacheStorageCacheName string `json:"cacheStorageCacheName,omitempty"`
 
 	// Protocol (optional) Protocol used to fetch this request.
+	// 用于获取此请求的协议。
 	Protocol string `json:"protocol,omitempty"`
 
 	// SecurityState Security state of the request resource.
+	// 请求资源的安全状态。
 	SecurityState SecuritySecurityState `json:"securityState"`
 
 	// SecurityDetails (optional) Security details for the request.
+	// 请求的安全详细信息
 	SecurityDetails *NetworkSecurityDetails `json:"securityDetails,omitempty"`
 }
 
 // NetworkWebSocketRequest WebSocket request data.
+// WebSocket的请求数据。
 type NetworkWebSocketRequest struct {
 
 	// Headers HTTP request headers.
+	// 请求头
 	Headers NetworkHeaders `json:"headers"`
 }
 
 // NetworkWebSocketResponse WebSocket response data.
+// WebSocket 响应数据
 type NetworkWebSocketResponse struct {
 
 	// Status HTTP response status code.
+	// 响应状态码
 	Status int `json:"status"`
 
 	// StatusText HTTP response status text.
+	// 响应状态文本
 	StatusText string `json:"statusText"`
 
 	// Headers HTTP response headers.
+	// 响应头
 	Headers NetworkHeaders `json:"headers"`
 
 	// HeadersText (optional) HTTP response headers text.
+	// 响应头文本
 	HeadersText string `json:"headersText,omitempty"`
 
 	// RequestHeaders (optional) HTTP request headers.
+	// 请求头
 	RequestHeaders NetworkHeaders `json:"requestHeaders,omitempty"`
 
 	// RequestHeadersText (optional) HTTP request headers text.
+	// 请求头文本
 	RequestHeadersText string `json:"requestHeadersText,omitempty"`
 }
 
 // NetworkWebSocketFrame WebSocket message data. This represents an entire WebSocket message, not just a fragmented frame as the name suggests.
+// WebSocket消息数据。这代表了整个WebSocket消息，而不是像其名称所暗示的那样只是一个零散的框架。
 type NetworkWebSocketFrame struct {
 
 	// Opcode WebSocket message opcode.
+	// WebSocket消息操作码。
 	Opcode float64 `json:"opcode"`
 
 	// Mask WebSocket message mask.
+	// WebSocket消息掩码。
 	Mask bool `json:"mask"`
 
 	// PayloadData WebSocket message payload data.
+	// WebSocket消息的有效载荷数据。
 	// If the opcode is 1, this is a text message and payloadData is a UTF-8 string.
+	// 如果操作码是1，这是一个文本信息，payloadData是一个UTF-8字符串。
 	// If the opcode isn't 1, then payloadData is a base64 encoded string representing binary data.
+	// 如果操作码不是1，那么payloadData是一个base64编码的字符串，代表二进制数据。
 	PayloadData string `json:"payloadData"`
 }
 
 // NetworkCachedResource Information about the cached resource.
+// 关于缓存资源的信息。
 type NetworkCachedResource struct {
 
 	// URL Resource URL. This is the url of the original network request.
+	// URL 资源URL。这是原网络请求的网址。
 	URL string `json:"url"`
 
 	// Type Type of this resource.
+	// 资源类型
 	Type NetworkResourceType `json:"type"`
 
 	// Response (optional) Cached response data.
+	// 缓存的响应数据
 	Response *NetworkResponse `json:"response,omitempty"`
 
 	// BodySize Cached response body size.
+	// 缓存的响应体大小
 	BodySize float64 `json:"bodySize"`
 }
 
@@ -827,85 +957,112 @@ const (
 )
 
 // NetworkInitiator Information about the request initiator.
+// 关于请求发起者的信息。
 type NetworkInitiator struct {
 
 	// Type Type of this initiator.
+	// 发起者的类型
 	Type NetworkInitiatorType `json:"type"`
 
 	// Stack (optional) Initiator JavaScript stack trace, set for Script only.
+	// 启动器的JavaScript堆栈跟踪，只为脚本设定。
 	Stack *RuntimeStackTrace `json:"stack,omitempty"`
 
 	// URL (optional) Initiator URL, set for Parser type or for Script type (when script is importing module) or for SignedExchange type.
+	// Initiator URL，为解析器类型或脚本类型（当脚本导入模块时）或为SignedExchange类型设置。
 	URL string `json:"url,omitempty"`
 
 	// LineNumber (optional) Initiator line number, set for Parser type or for Script type (when script is importing
 	// module) (0-based).
+	// Initiator 行号，设置为解析器类型或脚本类型（当脚本导入模块时）（基于0）。
 	LineNumber *float64 `json:"lineNumber,omitempty"`
 
 	// ColumnNumber (optional) Initiator column number, set for Parser type or for Script type (when script is importing
 	// module) (0-based).
+	// Initiator 列号，设置为解析器类型或脚本类型（当脚本导入模块时）（基于0）。
 	ColumnNumber *float64 `json:"columnNumber,omitempty"`
 
 	// RequestID (optional) Set if another request triggered this request (e.g. preflight).
+	// 如果另一个请求触发了此请求（例如preflight），则设置此选项。
 	RequestID NetworkRequestID `json:"requestId,omitempty"`
 }
 
 // NetworkCookie Cookie object
+// Cookie 对象
 type NetworkCookie struct {
 
 	// Name Cookie name.
+	// Cookie 名称
 	Name string `json:"name"`
 
 	// Value Cookie value.
+	// Cookie 值
 	Value string `json:"value"`
 
 	// Domain Cookie domain.
+	// Cookie 的域名
 	Domain string `json:"domain"`
 
 	// Path Cookie path.
+	// Cookie的路径
 	Path string `json:"path"`
 
 	// Expires Cookie expiration date
+	// Cookie的过期时间
 	Expires TimeSinceEpoch `json:"expires"`
 
 	// Size Cookie size.
+	// Cookie的大小
 	Size int `json:"size"`
 
 	// HTTPOnly True if cookie is http-only.
+	// 是否设置为http-only
 	HTTPOnly bool `json:"httpOnly"`
 
 	// Secure True if cookie is secure.
+	// 判断Cookie是否安全，True则安全
 	Secure bool `json:"secure"`
 
 	// Session True in case of session cookie.
+	// 是否是会话Cookie
 	Session bool `json:"session"`
 
 	// SameSite (optional) Cookie SameSite type.
+	// Cookie SameSite类型。
 	SameSite NetworkCookieSameSite `json:"sameSite,omitempty"`
 
 	// Priority (experimental) Cookie Priority
+	// Cookie 的优先级
 	Priority NetworkCookiePriority `json:"priority"`
 
 	// SameParty (experimental) True if cookie is SameParty.
+	// 如果cookie是SameParty，则为true。
 	SameParty bool `json:"sameParty"`
 
 	// SourceScheme (experimental) Cookie source scheme type.
+	// Cookie源方案类型。
 	SourceScheme NetworkCookieSourceScheme `json:"sourceScheme"`
 
 	// SourcePort (experimental) Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port.
+	// Cookie源端口。有效值为{-1, [1, 65535]}，-1表示未指定的端口。
 	// An unspecified port value allows protocol clients to emulate legacy cookie scope for the port.
+	// 未指定的端口值允许协议客户端模拟端口的旧cookie范围。
 	// This is a temporary ability and it will be removed in the future.
+	// 这是一种临时能力，将来会被删除。
 	SourcePort int `json:"sourcePort"`
 
 	// PartitionKey (experimental) (optional) Cookie partition key. The site of the top-level URL the browser was visiting at the start
 	// of the request to the endpoint that set the cookie.
+	// Cookie分区键。浏览器在向设置cookie的端点发出请求时访问的顶级URL的站点。
 	PartitionKey string `json:"partitionKey,omitempty"`
 
 	// PartitionKeyOpaque (experimental) (optional) True if cookie partition key is opaque.
+	// 如果cookie分区密钥是不透明的，则为真。
 	PartitionKeyOpaque bool `json:"partitionKeyOpaque,omitempty"`
 }
 
 // NetworkSetCookieBlockedReason (experimental) Types of reasons why a cookie may not be stored from a response.
+// 无法从响应中存储cookie的原因类型。
 type NetworkSetCookieBlockedReason string
 
 const (
@@ -965,6 +1122,7 @@ const (
 )
 
 // NetworkCookieBlockedReason (experimental) Types of reasons why a cookie may not be sent with a request.
+// cookie不能随请求一起发送的原因类型。
 type NetworkCookieBlockedReason string
 
 const (
@@ -1012,79 +1170,105 @@ const (
 )
 
 // NetworkBlockedSetCookieWithReason (experimental) A cookie which was not stored from a response with the corresponding reason.
+// 未从具有相应原因的响应中存储的cookie。
 type NetworkBlockedSetCookieWithReason struct {
 
 	// BlockedReasons The reason(s) this cookie was blocked.
+	// 该cookie被阻止的原因。
 	BlockedReasons []NetworkSetCookieBlockedReason `json:"blockedReasons"`
 
 	// CookieLine The string representing this individual cookie as it would appear in the header.
+	// 表示此cookie的字符串，它将显示在标题中。
 	// This is not the entire "cookie" or "set-cookie" header which could have multiple cookies.
+	// 这不是整个 "cookie "或 "set-cookie "头，它可能有多个cookie。
 	CookieLine string `json:"cookieLine"`
 
 	// Cookie (optional) The cookie object which represents the cookie which was not stored. It is optional because
 	// sometimes complete cookie information is not available, such as in the case of parsing
 	// errors.
+	// 代表未被存储的cookie的cookie对象。它是可选的，因为有时完整的cookie信息是不可用的，例如在解析错误的情况下。
 	Cookie *NetworkCookie `json:"cookie,omitempty"`
 }
 
 // NetworkBlockedCookieWithReason (experimental) A cookie with was not sent with a request with the corresponding reason.
+// 一个cookie没有与请求一起发送，并有相应的原因。
 type NetworkBlockedCookieWithReason struct {
 
 	// BlockedReasons The reason(s) the cookie was blocked.
+	// Cookie被阻止的原因。
 	BlockedReasons []NetworkCookieBlockedReason `json:"blockedReasons"`
 
 	// Cookie The cookie object representing the cookie which was not sent.
+	// 代表未发送的cookie对象。
 	Cookie *NetworkCookie `json:"cookie"`
 }
 
 // NetworkCookieParam Cookie parameter object
+// Cookie参数对象
 type NetworkCookieParam struct {
 
 	// Name Cookie name.
+	// Cookie 名称
 	Name string `json:"name"`
 
 	// Value Cookie value.
+	// Cookie 值
 	Value string `json:"value"`
 
 	// URL (optional) The request-URI to associate with the setting of the cookie. This value can affect the
 	// default domain, path, source port, and source scheme values of the created cookie.
+	// 要与cookie的设置相关联的请求-URI。这个值可以影响创建的cookie的默认域、路径、源端口和源方案值。
 	URL string `json:"url,omitempty"`
 
 	// Domain (optional) Cookie domain.
+	// Cookie对应的域名
 	Domain string `json:"domain,omitempty"`
 
 	// Path (optional) Cookie path.
+	// Cookie的路径
 	Path string `json:"path,omitempty"`
 
 	// Secure (optional) True if cookie is secure.
+	// Cookie 是否安全，安全则为True
 	Secure bool `json:"secure,omitempty"`
 
 	// HTTPOnly (optional) True if cookie is http-only.
+	// 是否设置为HTTP-Only
 	HTTPOnly bool `json:"httpOnly,omitempty"`
 
 	// SameSite (optional) Cookie SameSite type.
+	// Cookie SameSite类型。
 	SameSite NetworkCookieSameSite `json:"sameSite,omitempty"`
 
 	// Expires (optional) Cookie expiration date, session cookie if not set
+	// Cookie的过期时间，如果没有设置，则为session cookie
 	Expires TimeSinceEpoch `json:"expires,omitempty"`
 
 	// Priority (experimental) (optional) Cookie Priority.
+	// Cookie的优先级
 	Priority NetworkCookiePriority `json:"priority,omitempty"`
 
 	// SameParty (experimental) (optional) True if cookie is SameParty.
+	// 如果cookie是SameParty，则为真。
 	SameParty bool `json:"sameParty,omitempty"`
 
 	// SourceScheme (experimental) (optional) Cookie source scheme type.
+	// Cookie 源scheme类型。
 	SourceScheme NetworkCookieSourceScheme `json:"sourceScheme,omitempty"`
 
 	// SourcePort (experimental) (optional) Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port.
+	// Cookie源端口。有效值为｛-1、[165535]｝，-1表示未指定的端口。
 	// An unspecified port value allows protocol clients to emulate legacy cookie scope for the port.
+	// 未指定的端口值允许协议客户端模拟端口的旧cookie范围。
 	// This is a temporary ability and it will be removed in the future.
+	// 这是一种临时能力，将来会被删除。
 	SourcePort *int `json:"sourcePort,omitempty"`
 
 	// PartitionKey (experimental) (optional) Cookie partition key. The site of the top-level URL the browser was visiting at the start
 	// of the request to the endpoint that set the cookie.
+	// Cookie分区的键。浏览器在向设置cookie的端点请求开始时访问的顶级URL的站点。
 	// If not set, the cookie will be set as not partitioned.
+	// 如果未设置，cookie将被设置为未分区。
 	PartitionKey string `json:"partitionKey,omitempty"`
 }
 
@@ -1100,18 +1284,23 @@ const (
 )
 
 // NetworkAuthChallenge (experimental) Authorization challenge for HTTP status code 401 or 407.
+// HTTP状态码401或407的认证质询。
 type NetworkAuthChallenge struct {
 
 	// Source (optional) Source of the authentication challenge.
+	// 认证质询的来源
 	Source NetworkAuthChallengeSource `json:"source,omitempty"`
 
 	// Origin Origin of the challenger.
+	// 质疑者的源
 	Origin string `json:"origin"`
 
 	// Scheme The authentication scheme used, such as basic or digest
+	// 使用的身份验证方案，如basic或digest
 	Scheme string `json:"scheme"`
 
 	// Realm The realm of the challenge. May be empty.
+	// 质疑的域。很有可能是空的
 	Realm string `json:"realm"`
 }
 
@@ -1130,24 +1319,29 @@ const (
 )
 
 // NetworkAuthChallengeResponse (experimental) Response to an AuthChallenge.
+// 对认证质询的响应
 type NetworkAuthChallengeResponse struct {
 
 	// Response The decision on what to do in response to the authorization challenge.  Default means
 	// deferring to the default behavior of the net stack, which will likely either the Cancel
 	// authentication or display a popup dialog box.
+	// 决定如何响应认证质询。默认意味着遵从.net堆栈的默认行为，这可能会取消身份验证或显示弹出对话框。
 	Response NetworkAuthChallengeResponseResponse `json:"response"`
 
 	// Username (optional) The username to provide, possibly empty. Should only be set if response is
 	// ProvideCredentials.
+	// 要提供的用户名，可能为空。仅当响应为providedecedentials时才应设置。
 	Username string `json:"username,omitempty"`
 
 	// Password (optional) The password to provide, possibly empty. Should only be set if response is
 	// ProvideCredentials.
+	// 要提供的密码，可能为空。仅当响应为providedecedentials时才应设置。
 	Password string `json:"password,omitempty"`
 }
 
 // NetworkInterceptionStage (experimental) Stages of the interception to begin intercepting. Request will intercept before the request is
 // sent. Response will intercept after the response is received.
+// 开始拦截的拦截阶段。请求将在发送请求之前拦截。响应将在接收到响应后拦截。
 type NetworkInterceptionStage string
 
 const (
@@ -1159,72 +1353,93 @@ const (
 )
 
 // NetworkRequestPattern (experimental) Request pattern for interception.
+// 拦截的请求模式。
 type NetworkRequestPattern struct {
 
 	// URLPattern (optional) Wildcards (`'*'` -> zero or more, `'?'` -> exactly one) are allowed. Escape character is
 	// backslash. Omitting is equivalent to `"*"`.
+	// 允许使用通配符（`*`->零或多个，`？`->正好一个）。转义字符是反斜杠。省略相当于`“*”`。
 	URLPattern string `json:"urlPattern,omitempty"`
 
 	// ResourceType (optional) If set, only requests for matching resource types will be intercepted.
+	// 如果设置，则仅拦截匹配资源类型的请求。
 	ResourceType NetworkResourceType `json:"resourceType,omitempty"`
 
 	// InterceptionStage (optional) Stage at which to begin intercepting requests. Default is Request.
+	// 开始拦截请求的阶段。默认为请求。
 	InterceptionStage NetworkInterceptionStage `json:"interceptionStage,omitempty"`
 }
 
 // NetworkSignedExchangeSignature (experimental) Information about a signed exchange signature.
+// 有关已签署的交换签名的信息。
 // https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#rfc.section.3.1
 type NetworkSignedExchangeSignature struct {
 
 	// Label Signed exchange signature label.
+	// 签署的交换签名标签。
 	Label string `json:"label"`
 
 	// Signature The hex string of signed exchange signature.
+	// 已签名的交换签名的十六进制字符串。
 	Signature string `json:"signature"`
 
 	// Integrity Signed exchange signature integrity.
+	// 签署的交换签名的完整性
 	Integrity string `json:"integrity"`
 
 	// CertURL (optional) Signed exchange signature cert Url.
+	// 已签名的交换签名证书Url。
 	CertURL string `json:"certUrl,omitempty"`
 
 	// CertSha256 (optional) The hex string of signed exchange signature cert sha256.
+	// 已签名的交换签名证书sha256的十六进制字符串。
 	CertSha256 string `json:"certSha256,omitempty"`
 
 	// ValidityURL Signed exchange signature validity Url.
+	// 已签署的交换签名的有效性Url。
 	ValidityURL string `json:"validityUrl"`
 
 	// Date Signed exchange signature date.
+	// 签署的交换签名日期。
 	Date int `json:"date"`
 
 	// Expires Signed exchange signature expires.
+	// 签署的交换签名过期。
 	Expires int `json:"expires"`
 
 	// Certificates (optional) The encoded certificates.
+	// 编码后的证书。
 	Certificates []string `json:"certificates,omitempty"`
 }
 
 // NetworkSignedExchangeHeader (experimental) Information about a signed exchange header.
+// 关于签名的交换头的信息
 // https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#cbor-representation
 type NetworkSignedExchangeHeader struct {
 
 	// RequestURL Signed exchange request URL.
+	// 已签署的交换请求URL。
 	RequestURL string `json:"requestUrl"`
 
 	// ResponseCode Signed exchange response code.
+	// 签署的交换响应码。
 	ResponseCode int `json:"responseCode"`
 
 	// ResponseHeaders Signed exchange response headers.
+	// 签名的交换响应头。
 	ResponseHeaders NetworkHeaders `json:"responseHeaders"`
 
 	// Signatures Signed exchange response signature.
+	// 签名的交换响应签名。
 	Signatures []*NetworkSignedExchangeSignature `json:"signatures"`
 
 	// HeaderIntegrity Signed exchange header integrity hash in the form of "sha256-<base64-hash-value>".
+	// 以 "sha256-<base64-hash-value>"形式签署的交换头完整性哈希值。
 	HeaderIntegrity string `json:"headerIntegrity"`
 }
 
 // NetworkSignedExchangeErrorField (experimental) Field type for a signed exchange related error.
+// 签名交换相关错误的字段类型。
 type NetworkSignedExchangeErrorField string
 
 const (
@@ -1248,35 +1463,44 @@ const (
 )
 
 // NetworkSignedExchangeError (experimental) Information about a signed exchange response.
+// 有关已签署的交换响应的信息。
 type NetworkSignedExchangeError struct {
 
 	// Message Error message.
+	// 错误信息
 	Message string `json:"message"`
 
 	// SignatureIndex (optional) The index of the signature which caused the error.
+	// 造成错误的签名的索引。
 	SignatureIndex *int `json:"signatureIndex,omitempty"`
 
 	// ErrorField (optional) The field which caused the error.
+	// 导致错误的字段。
 	ErrorField NetworkSignedExchangeErrorField `json:"errorField,omitempty"`
 }
 
 // NetworkSignedExchangeInfo (experimental) Information about a signed exchange response.
+// 有关已签署的交换响应的信息。
 type NetworkSignedExchangeInfo struct {
 
 	// OuterResponse The outer response of signed HTTP exchange which was received from network.
+	// 从网络接收的签名HTTP交换的外部响应。
 	OuterResponse *NetworkResponse `json:"outerResponse"`
 
 	// Header (optional) Information about the signed exchange header.
 	Header *NetworkSignedExchangeHeader `json:"header,omitempty"`
 
 	// SecurityDetails (optional) Security details for the signed exchange header.
+	// 关于已签署的交换头的信息。
 	SecurityDetails *NetworkSecurityDetails `json:"securityDetails,omitempty"`
 
 	// Errors (optional) Errors occurred while handling the signed exchagne.
+	// 在处理已签名的exchagne时发生的错误。
 	Errors []*NetworkSignedExchangeError `json:"errors,omitempty"`
 }
 
 // NetworkContentEncoding (experimental) List of content encodings supported by the backend.
+// 后台支持的内容编码的列表。
 type NetworkContentEncoding string
 
 const (
@@ -1333,6 +1557,8 @@ type NetworkConnectTiming struct {
 	// RequestTime Timing's requestTime is a baseline in seconds, while the other numbers are ticks in
 	// milliseconds relatively to this requestTime. Matches ResourceTiming's requestTime for
 	// the same request (but not for redirected requests).
+	// Timing的requestTime是以秒为单位的基准线，而其他数字是相对于这个requestTime的毫秒数。
+	// 与ResourceTiming的requestTime匹配，用于同一请求（但不用于重定向请求）。
 	RequestTime float64 `json:"requestTime"`
 }
 
@@ -1429,6 +1655,7 @@ type NetworkSecurityIsolationStatus struct {
 }
 
 // NetworkReportStatus (experimental) The status of a Reporting API report.
+// Reporting API报告的状态。
 type NetworkReportStatus string
 
 const (
@@ -1449,27 +1676,34 @@ const (
 type NetworkReportID string
 
 // NetworkReportingAPIReport (experimental) An object representing a report generated by the Reporting API.
+// 表示由报告API生成的报告的对象。
 type NetworkReportingAPIReport struct {
 
 	// ID ...
 	ID NetworkReportID `json:"id"`
 
 	// InitiatorURL The URL of the document that triggered the report.
+	// 触发报表的文档的URL。
 	InitiatorURL string `json:"initiatorUrl"`
 
 	// Destination The name of the endpoint group that should be used to deliver the report.
+	// 应用于传递报告的端点组的名称。
 	Destination string `json:"destination"`
 
 	// Type The type of the report (specifies the set of data that is contained in the report body).
+	// 报表的类型（指定报表正文中包含的数据集）。
 	Type string `json:"type"`
 
 	// Timestamp When the report was generated.
+	// 	报告产生的时间
 	Timestamp TimeSinceEpoch `json:"timestamp"`
 
 	// Depth How many uploads deep the related request was.
+	// 相关请求的上载深度。
 	Depth int `json:"depth"`
 
 	// CompletedAttempts The number of delivery attempts made so far, not including an active attempt.
+	// 迄今为止进行的传递尝试次数，不包括活动尝试。
 	CompletedAttempts int `json:"completedAttempts"`
 
 	// Body ...
@@ -1483,19 +1717,23 @@ type NetworkReportingAPIReport struct {
 type NetworkReportingAPIEndpoint struct {
 
 	// URL The URL of the endpoint to which reports may be delivered.
+	// 可向其传递报告的端点的URL。
 	URL string `json:"url"`
 
 	// GroupName Name of the endpoint group.
+	// 端点组的名称。
 	GroupName string `json:"groupName"`
 }
 
 // NetworkLoadNetworkResourcePageResult (experimental) An object providing the result of a network resource load.
+// 提供网络资源负载结果的对象。
 type NetworkLoadNetworkResourcePageResult struct {
 
 	// Success ...
 	Success bool `json:"success"`
 
 	// NetError (optional) Optional values used for error reporting.
+	// 用于错误报告的可选值。
 	NetError *float64 `json:"netError,omitempty"`
 
 	// NetErrorName (optional) ...
@@ -1505,14 +1743,17 @@ type NetworkLoadNetworkResourcePageResult struct {
 	HTTPStatusCode *float64 `json:"httpStatusCode,omitempty"`
 
 	// Stream (optional) If successful, one of the following two fields holds the result.
+	// 如果成功，以下两个字段之一将保存结果。
 	Stream IOStreamHandle `json:"stream,omitempty"`
 
 	// Headers (optional) Response headers.
+	// 响应头
 	Headers NetworkHeaders `json:"headers,omitempty"`
 }
 
 // NetworkLoadNetworkResourceOptions (experimental) An options object that may be extended later to better support CORS,
 // CORB and streaming.
+// 一个选项对象，以后可能被扩展以更好地支持 CORS。 CORB和流媒体。
 type NetworkLoadNetworkResourceOptions struct {
 
 	// DisableCache ...
@@ -1523,9 +1764,11 @@ type NetworkLoadNetworkResourceOptions struct {
 }
 
 // NetworkSetAcceptedEncodings (experimental) Sets a list of content encodings that will be accepted. Empty list means no encoding is accepted.
+// 设置将被接受的内容编码列表。空列表表示不接受编码。
 type NetworkSetAcceptedEncodings struct {
 
 	// Encodings List of accepted content encodings.
+	// 接受的内容编码列表。
 	Encodings []NetworkContentEncoding `json:"encodings"`
 }
 
@@ -1538,6 +1781,7 @@ func (m NetworkSetAcceptedEncodings) Call(c Client) error {
 }
 
 // NetworkClearAcceptedEncodingsOverride (experimental) Clears accepted encodings set by setAcceptedEncodings
+// 清除setAcceptedEncodings设置的接受编码
 type NetworkClearAcceptedEncodingsOverride struct {
 }
 
@@ -1552,6 +1796,7 @@ func (m NetworkClearAcceptedEncodingsOverride) Call(c Client) error {
 }
 
 // NetworkCanClearBrowserCache (deprecated) Tells whether clearing browser cache is supported.
+// 说明是否支持清除浏览器缓存。
 type NetworkCanClearBrowserCache struct {
 }
 
@@ -1572,6 +1817,7 @@ type NetworkCanClearBrowserCacheResult struct {
 }
 
 // NetworkCanClearBrowserCookies (deprecated) Tells whether clearing browser cookies is supported.
+// 说明是否支持清除浏览器cookies。
 type NetworkCanClearBrowserCookies struct {
 }
 
@@ -1592,6 +1838,7 @@ type NetworkCanClearBrowserCookiesResult struct {
 }
 
 // NetworkCanEmulateNetworkConditions (deprecated) Tells whether emulation of network conditions is supported.
+// 说明是否支持对网络条件的模拟。
 type NetworkCanEmulateNetworkConditions struct {
 }
 
@@ -1610,10 +1857,12 @@ func (m NetworkCanEmulateNetworkConditions) Call(c Client) (*NetworkCanEmulateNe
 type NetworkCanEmulateNetworkConditionsResult struct {
 
 	// Result True if emulation of network conditions is supported.
+	// 如果支持模拟网络条件，则为True。
 	Result bool `json:"result"`
 }
 
 // NetworkClearBrowserCache Clears browser cache.
+// 清除浏览器缓存。
 type NetworkClearBrowserCache struct {
 }
 
@@ -1626,6 +1875,7 @@ func (m NetworkClearBrowserCache) Call(c Client) error {
 }
 
 // NetworkClearBrowserCookies Clears browser cookies.
+// 清除浏览器Cookie
 type NetworkClearBrowserCookies struct {
 }
 
@@ -1641,7 +1891,10 @@ func (m NetworkClearBrowserCookies) Call(c Client) error {
 // modifications, or blocks it, or completes it with the provided response bytes. If a network
 // fetch occurs as a result which encounters a redirect an additional Network.requestIntercepted
 // event will be sent with the same InterceptionId.
+// 对Network.requestIntercepted的响应，要么修改请求以继续任何修改，要么阻止它，要么用提供的响应字节完成它。
+// 如果一个网络获取发生的结果遇到了重定向，一个额外的Network.requestIntercepted事件将以相同的InterceptionId发送。
 // Deprecated, use Fetch.continueRequest, Fetch.fulfillRequest and Fetch.failRequest instead.
+// 已弃用，使用Fetch.continueRequest、Fetch.fulfillRequest和Fetch.failRequest代替。
 type NetworkContinueInterceptedRequest struct {
 
 	// InterceptionID ...
@@ -1686,19 +1939,24 @@ func (m NetworkContinueInterceptedRequest) Call(c Client) error {
 }
 
 // NetworkDeleteCookies Deletes browser cookies with matching name and url or domain/path pair.
+// 删除具有匹配名称和url或域/路径对的浏览器Cookie。
 type NetworkDeleteCookies struct {
 
 	// Name Name of the cookies to remove.
+	// 要删除的Cookie名称
 	Name string `json:"name"`
 
 	// URL (optional) If specified, deletes all the cookies with the given name where domain and path match
 	// provided URL.
+	// 如果指定，则删除具有给定名称的所有cookie，其中域和路径与提供的URL匹配。
 	URL string `json:"url,omitempty"`
 
 	// Domain (optional) If specified, deletes only cookies with the exact domain.
+	// 如果指定，则仅删除具有确切域的Cookie。
 	Domain string `json:"domain,omitempty"`
 
 	// Path (optional) If specified, deletes only cookies with the exact path.
+	// 如果指定，则仅删除具有确切路径的Cookie。
 	Path string `json:"path,omitempty"`
 }
 
@@ -1711,6 +1969,7 @@ func (m NetworkDeleteCookies) Call(c Client) error {
 }
 
 // NetworkDisable Disables network tracking, prevents network events from being sent to the client.
+// 禁用网络跟踪，防止向客户端发送网络事件。
 type NetworkDisable struct {
 }
 
@@ -1723,21 +1982,27 @@ func (m NetworkDisable) Call(c Client) error {
 }
 
 // NetworkEmulateNetworkConditions Activates emulation of network conditions.
+// 激活对网络条件的模拟。
 type NetworkEmulateNetworkConditions struct {
 
 	// Offline True to emulate internet disconnection.
+	// 真实模拟互联网断开。
 	Offline bool `json:"offline"`
 
 	// Latency Minimum latency from request sent to response headers received (ms).
+	// 从发送请求到接收响应头的最小延迟（毫秒）。
 	Latency float64 `json:"latency"`
 
 	// DownloadThroughput Maximal aggregated download throughput (bytes/sec). -1 disables download throttling.
+	// 最大聚合下载吞吐量（字节/秒）-1禁用下载限制。
 	DownloadThroughput float64 `json:"downloadThroughput"`
 
 	// UploadThroughput Maximal aggregated upload throughput (bytes/sec).  -1 disables upload throttling.
+	// 最大聚合上传吞吐量（字节/秒）-1禁用上载限制。
 	UploadThroughput float64 `json:"uploadThroughput"`
 
 	// ConnectionType (optional) Connection type if known.
+	// 连接类型（如果已知）。
 	ConnectionType NetworkConnectionType `json:"connectionType,omitempty"`
 }
 
@@ -1750,15 +2015,19 @@ func (m NetworkEmulateNetworkConditions) Call(c Client) error {
 }
 
 // NetworkEnable Enables network tracking, network events will now be delivered to the client.
+// 启用网络跟踪，网络事件现在将传递给客户端。
 type NetworkEnable struct {
 
 	// MaxTotalBufferSize (experimental) (optional) Buffer size in bytes to use when preserving network payloads (XHRs, etc).
+	// 保留网络有效负载（XHR等）时使用的缓冲区大小（字节）。
 	MaxTotalBufferSize *int `json:"maxTotalBufferSize,omitempty"`
 
 	// MaxResourceBufferSize (experimental) (optional) Per-resource buffer size in bytes to use when preserving network payloads (XHRs, etc).
+	// 保留网络有效负载（XHR等）时使用的每资源缓冲区大小（字节）。
 	MaxResourceBufferSize *int `json:"maxResourceBufferSize,omitempty"`
 
 	// MaxPostDataSize (optional) Longest post body size (in bytes) that would be included in requestWillBeSent notification
+	// 将包含在RequestWillbsent通知中的最长的帖子正文大小（以字节为单位）
 	MaxPostDataSize *int `json:"maxPostDataSize,omitempty"`
 }
 
@@ -1772,6 +2041,7 @@ func (m NetworkEnable) Call(c Client) error {
 
 // NetworkGetAllCookies Returns all browser cookies. Depending on the backend support, will return detailed cookie
 // information in the `cookies` field.
+// 返回所有浏览器的cookie。根据后端支持情况，将返回详细的cookie 信息的字段。
 type NetworkGetAllCookies struct {
 }
 
@@ -1788,13 +2058,16 @@ func (m NetworkGetAllCookies) Call(c Client) (*NetworkGetAllCookiesResult, error
 type NetworkGetAllCookiesResult struct {
 
 	// Cookies Array of cookie objects.
+	// Cookie对象列表
 	Cookies []*NetworkCookie `json:"cookies"`
 }
 
 // NetworkGetCertificate (experimental) Returns the DER-encoded certificate.
+// 返回DER编码的证书。
 type NetworkGetCertificate struct {
 
 	// Origin Origin to get certificate for.
+	// 获取证书的来源。
 	Origin string `json:"origin"`
 }
 
@@ -1816,11 +2089,13 @@ type NetworkGetCertificateResult struct {
 
 // NetworkGetCookies Returns all browser cookies for the current URL. Depending on the backend support, will return
 // detailed cookie information in the `cookies` field.
+// 返回当前URL的所有浏览器cookies。根据后端支持情况，将在`cookies`字段中返回详细的cookie信息。
 type NetworkGetCookies struct {
 
 	// Urls (optional) The list of URLs for which applicable cookies will be fetched.
 	// If not specified, it's assumed to be set to the list containing
 	// the URLs of the page and all of its subframes.
+	// 将获取适用cookie的URL列表。如果未指定，则假定将其设置为包含页面及其所有子frame的URL的列表。
 	Urls []string `json:"urls,omitempty"`
 }
 
@@ -1837,13 +2112,16 @@ func (m NetworkGetCookies) Call(c Client) (*NetworkGetCookiesResult, error) {
 type NetworkGetCookiesResult struct {
 
 	// Cookies Array of cookie objects.
+	// Cookie 对象的数组
 	Cookies []*NetworkCookie `json:"cookies"`
 }
 
 // NetworkGetResponseBody Returns content served for the given request.
+// 返回为给定请求提供的内容。
 type NetworkGetResponseBody struct {
 
 	// RequestID Identifier of the network request to get content for.
+	// 要获取内容的网络请求的标识符。
 	RequestID NetworkRequestID `json:"requestId"`
 }
 
@@ -1860,16 +2138,20 @@ func (m NetworkGetResponseBody) Call(c Client) (*NetworkGetResponseBodyResult, e
 type NetworkGetResponseBodyResult struct {
 
 	// Body Response body.
+	// 响应体
 	Body string `json:"body"`
 
 	// Base64Encoded True, if content was sent as base64.
+	// 如果内容作为base64发送，则为True。
 	Base64Encoded bool `json:"base64Encoded"`
 }
 
 // NetworkGetRequestPostData Returns post data sent with the request. Returns an error when no data was sent with the request.
+// 返回随请求发送的post数据。当没有随请求发送数据时返回错误。
 type NetworkGetRequestPostData struct {
 
 	// RequestID Identifier of the network request to get content for.
+	// 要获取内容的网络请求的标识符。
 	RequestID NetworkRequestID `json:"requestId"`
 }
 
@@ -1886,13 +2168,16 @@ func (m NetworkGetRequestPostData) Call(c Client) (*NetworkGetRequestPostDataRes
 type NetworkGetRequestPostDataResult struct {
 
 	// PostData Request body string, omitting files from multipart requests
+	// 请求正文字符串，从多部分请求中省略文件
 	PostData string `json:"postData"`
 }
 
 // NetworkGetResponseBodyForInterception (experimental) Returns content served for the given currently intercepted request.
+// 返回为当前拦截的请求所提供的内容。
 type NetworkGetResponseBodyForInterception struct {
 
 	// InterceptionID Identifier for the intercepted request to get body for.
+	// 截获请求的标识符，以获取其正文。
 	InterceptionID NetworkInterceptionID `json:"interceptionId"`
 }
 
@@ -1911,9 +2196,11 @@ func (m NetworkGetResponseBodyForInterception) Call(c Client) (*NetworkGetRespon
 type NetworkGetResponseBodyForInterceptionResult struct {
 
 	// Body Response body.
+	// 请求体
 	Body string `json:"body"`
 
 	// Base64Encoded True, if content was sent as base64.
+	// 如果内容作为base64发送，则为True。
 	Base64Encoded bool `json:"base64Encoded"`
 }
 
@@ -1921,6 +2208,7 @@ type NetworkGetResponseBodyForInterceptionResult struct {
 // the intercepted request can't be continued as is -- you either need to cancel it or to provide
 // the response body. The stream only supports sequential read, IO.read will fail if the position
 // is specified.
+// 返回一个代表响应体的流的句柄。注意，在这个命令之后，被拦截的请求不能再继续下去了--你要么取消它，要么提供响应体。该流只支持顺序读取，如果指定了位置，IO.read将失败。
 type NetworkTakeResponseBodyForInterceptionAsStream struct {
 
 	// InterceptionID ...
@@ -1948,9 +2236,11 @@ type NetworkTakeResponseBodyForInterceptionAsStreamResult struct {
 // NetworkReplayXHR (experimental) This method sends a new XMLHttpRequest which is identical to the original one. The following
 // parameters should be identical: method, url, async, request body, extra headers, withCredentials
 // attribute, user, password.
+// 此方法发送一个新的XMLHttpRequest，它与原始方法相同。以下参数应相同：方法、url、异步、请求正文、额外标头、withCredentials属性、用户、密码。
 type NetworkReplayXHR struct {
 
 	// RequestID Identifier of XHR to replay.
+	// 要重放的XHR的标识符。
 	RequestID NetworkRequestID `json:"requestId"`
 }
 
@@ -1963,18 +2253,23 @@ func (m NetworkReplayXHR) Call(c Client) error {
 }
 
 // NetworkSearchInResponseBody (experimental) Searches for given string in response content.
+// 在响应内容中搜索给定的字符串。
 type NetworkSearchInResponseBody struct {
 
 	// RequestID Identifier of the network response to search.
+	// 、要搜索的网络响应的标识符。
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Query String to search for.
+	// 要搜索的字符串
 	Query string `json:"query"`
 
 	// CaseSensitive (optional) If true, search is case sensitive.
+	// 如果为true，则搜索区分大小写。
 	CaseSensitive bool `json:"caseSensitive,omitempty"`
 
 	// IsRegex (optional) If true, treats string parameter as regex.
+	//、 如果为true，则将字符串参数视为正则表达式。
 	IsRegex bool `json:"isRegex,omitempty"`
 }
 
@@ -1991,13 +2286,16 @@ func (m NetworkSearchInResponseBody) Call(c Client) (*NetworkSearchInResponseBod
 type NetworkSearchInResponseBodyResult struct {
 
 	// Result List of search matches.
+	// 搜索匹配的列表。
 	Result []*DebuggerSearchMatch `json:"result"`
 }
 
 // NetworkSetBlockedURLs (experimental) Blocks URLs from loading.
+// 阻止URL加载。
 type NetworkSetBlockedURLs struct {
 
 	// Urls URL patterns to block. Wildcards ('*') are allowed.
+	// 要阻止的URL模式。允许使用通配符（“*”）。
 	Urls []string `json:"urls"`
 }
 
@@ -2010,9 +2308,11 @@ func (m NetworkSetBlockedURLs) Call(c Client) error {
 }
 
 // NetworkSetBypassServiceWorker (experimental) Toggles ignoring of service worker for each request.
+// 切换忽略每个请求的service worker。
 type NetworkSetBypassServiceWorker struct {
 
 	// Bypass Bypass service worker and load from network.
+	// 绕过service worker，从网络上加载。
 	Bypass bool `json:"bypass"`
 }
 
@@ -2025,9 +2325,11 @@ func (m NetworkSetBypassServiceWorker) Call(c Client) error {
 }
 
 // NetworkSetCacheDisabled Toggles ignoring cache for each request. If `true`, cache will not be used.
+// 切换忽略每个请求的缓存。如果为“true”，则不会使用缓存。
 type NetworkSetCacheDisabled struct {
 
 	// CacheDisabled Cache disabled state.
+	// 缓存处于禁用状态。
 	CacheDisabled bool `json:"cacheDisabled"`
 }
 
@@ -2040,53 +2342,70 @@ func (m NetworkSetCacheDisabled) Call(c Client) error {
 }
 
 // NetworkSetCookie Sets a cookie with the given cookie data; may overwrite equivalent cookies if they exist.
+// 设置具有给定cookie数据的cookie；如果存在等效cookie，则可能会覆盖它们。
 type NetworkSetCookie struct {
 
 	// Name Cookie name.
+	// Cookie 名称
 	Name string `json:"name"`
 
 	// Value Cookie value.
+	// Cookie 值
 	Value string `json:"value"`
 
 	// URL (optional) The request-URI to associate with the setting of the cookie. This value can affect the
 	// default domain, path, source port, and source scheme values of the created cookie.
+	// 与cookie设置关联的请求URI。此值可能会影响所创建cookie的默认域、路径、源端口和源方案值。
 	URL string `json:"url,omitempty"`
 
 	// Domain (optional) Cookie domain.
+	// Cookie 的域名
 	Domain string `json:"domain,omitempty"`
 
 	// Path (optional) Cookie path.
+	// Cookie的路径
 	Path string `json:"path,omitempty"`
 
 	// Secure (optional) True if cookie is secure.
+	// 如果cookie是安全的，则为True。
 	Secure bool `json:"secure,omitempty"`
 
 	// HTTPOnly (optional) True if cookie is http-only.
+	// 如果cookie为http-only，则为True。
 	HTTPOnly bool `json:"httpOnly,omitempty"`
 
 	// SameSite (optional) Cookie SameSite type.
+	// Cookie SameSite类型。
 	SameSite NetworkCookieSameSite `json:"sameSite,omitempty"`
 
 	// Expires (optional) Cookie expiration date, session cookie if not set
+	// Cookie过期日期，如果未设置会话Cookie
 	Expires TimeSinceEpoch `json:"expires,omitempty"`
 
 	// Priority (experimental) (optional) Cookie Priority type.
+	// Cookie优先级类型。
 	Priority NetworkCookiePriority `json:"priority,omitempty"`
 
 	// SameParty (experimental) (optional) True if cookie is SameParty.
+	// 如果cookie是SameParty，则为True。
 	SameParty bool `json:"sameParty,omitempty"`
 
 	// SourceScheme (experimental) (optional) Cookie source scheme type.
+	// Cookie源方案类型。
 	SourceScheme NetworkCookieSourceScheme `json:"sourceScheme,omitempty"`
 
 	// SourcePort (experimental) (optional) Cookie source port. Valid values are {-1, [1, 65535]}, -1 indicates an unspecified port.
+	// Cookie源端口。有效值为｛-1、[165535]｝，-1表示未指定的端口。
 	// An unspecified port value allows protocol clients to emulate legacy cookie scope for the port.
+	// 未指定的端口值允许协议客户端模拟端口的旧cookie范围。
 	// This is a temporary ability and it will be removed in the future.
+	// 这是一个临时功能，将来会被移除。
 	SourcePort *int `json:"sourcePort,omitempty"`
 
 	// PartitionKey (experimental) (optional) Cookie partition key. The site of the top-level URL the browser was visiting at the start
 	// of the request to the endpoint that set the cookie.
 	// If not set, the cookie will be set as not partitioned.
+	// Cookie分区密钥。浏览器在向设置cookie的端点发出请求时访问的顶级URL的站点。如果未设置，cookie将被设置为未分区。
 	PartitionKey string `json:"partitionKey,omitempty"`
 }
 
@@ -2103,13 +2422,16 @@ func (m NetworkSetCookie) Call(c Client) (*NetworkSetCookieResult, error) {
 type NetworkSetCookieResult struct {
 
 	// Success (deprecated) Always set to true. If an error occurs, the response indicates protocol error.
+	// 始终设置为true。如果发生错误，响应指示协议错误。
 	Success bool `json:"success"`
 }
 
 // NetworkSetCookies Sets given cookies.
+// 设置给定的cookies。
 type NetworkSetCookies struct {
 
 	// Cookies Cookies to be set.
+	// 要设置的Cookie。
 	Cookies []*NetworkCookieParam `json:"cookies"`
 }
 
@@ -2122,9 +2444,11 @@ func (m NetworkSetCookies) Call(c Client) error {
 }
 
 // NetworkSetExtraHTTPHeaders Specifies whether to always send extra HTTP headers with the requests from this page.
+// 指定是否始终随此页的请求发送额外的HTTP头。
 type NetworkSetExtraHTTPHeaders struct {
 
 	// Headers Map with extra HTTP headers.
+	// 使用额外的HTTP头映射。
 	Headers NetworkHeaders `json:"headers"`
 }
 
@@ -2137,9 +2461,11 @@ func (m NetworkSetExtraHTTPHeaders) Call(c Client) error {
 }
 
 // NetworkSetAttachDebugStack (experimental) Specifies whether to attach a page script stack id in requests
+// 指定是否在请求中附加页面脚本堆栈id
 type NetworkSetAttachDebugStack struct {
 
 	// Enabled Whether to attach a page script stack for debugging purpose.
+	// 是否为调试目的附加页面脚本堆栈。
 	Enabled bool `json:"enabled"`
 }
 
@@ -2152,11 +2478,14 @@ func (m NetworkSetAttachDebugStack) Call(c Client) error {
 }
 
 // NetworkSetRequestInterception (deprecated) (experimental) Sets the requests to intercept that match the provided patterns and optionally resource types.
+// 设置与提供的模式和可选资源类型匹配的要拦截的请求。
 // Deprecated, please use Fetch.enable instead.
+// 已弃用，请使用Fetch.enable代替。
 type NetworkSetRequestInterception struct {
 
 	// Patterns Requests matching any of these patterns will be forwarded and wait for the corresponding
 	// continueInterceptedRequest call.
+	// 匹配这些模式的请求将被转发，并等待相应的continueInterceptedRequest调用。
 	Patterns []*NetworkRequestPattern `json:"patterns"`
 }
 
@@ -2169,18 +2498,23 @@ func (m NetworkSetRequestInterception) Call(c Client) error {
 }
 
 // NetworkSetUserAgentOverride Allows overriding user agent with the given string.
+// 允许使用给定字符串重写 user agent。
 type NetworkSetUserAgentOverride struct {
 
 	// UserAgent User agent to use.
+	// 要使用的 user agent
 	UserAgent string `json:"userAgent"`
 
 	// AcceptLanguage (optional) Browser langugage to emulate.
+	// 要模拟的浏览器语言。
 	AcceptLanguage string `json:"acceptLanguage,omitempty"`
 
 	// Platform (optional) The platform navigator.platform should return.
+	// navigator.platform应该返回的平台。
 	Platform string `json:"platform,omitempty"`
 
 	// UserAgentMetadata (experimental) (optional) To be sent in Sec-CH-UA-* headers and returned in navigator.userAgentData
+	// 以Sec CH UA-*标题发送，并以navigator.userAgentData返回
 	UserAgentMetadata *EmulationUserAgentMetadata `json:"userAgentMetadata,omitempty"`
 }
 
@@ -2193,9 +2527,11 @@ func (m NetworkSetUserAgentOverride) Call(c Client) error {
 }
 
 // NetworkGetSecurityIsolationStatus (experimental) Returns information about the COEP/COOP isolation status.
+// 返回有关COEP/COOP隔离状态的信息。
 type NetworkGetSecurityIsolationStatus struct {
 
 	// FrameID (optional) If no frameId is provided, the status of the target is provided.
+	// 如果未提供frameId，则提供目标的状态。
 	FrameID PageFrameID `json:"frameId,omitempty"`
 }
 
@@ -2218,10 +2554,13 @@ type NetworkGetSecurityIsolationStatusResult struct {
 }
 
 // NetworkEnableReportingAPI (experimental) Enables tracking for the Reporting API, events generated by the Reporting API will now be delivered to the client.
+// 启用报告API的跟踪，报告API产生的事件现在将被传递到客户端。
 // Enabling triggers 'reportingApiReportAdded' for all existing reports.
+// 为所有现有报告启用触发器“ReportingApirePorteded”。
 type NetworkEnableReportingAPI struct {
 
 	// Enable Whether to enable or disable events for the Reporting API
+	// 是否为报告API启用或禁用事件
 	Enable bool `json:"enable"`
 }
 
@@ -2234,16 +2573,20 @@ func (m NetworkEnableReportingAPI) Call(c Client) error {
 }
 
 // NetworkLoadNetworkResource (experimental) Fetches the resource and returns the content.
+// 获取资源并返回内容。
 type NetworkLoadNetworkResource struct {
 
 	// FrameID (optional) Frame id to get the resource for. Mandatory for frame targets, and
 	// should be omitted for worker targets.
+	// 获取资源的frame id。对于frame目标是强制性的，对于辅助目标应该省略。
 	FrameID PageFrameID `json:"frameId,omitempty"`
 
 	// URL URL of the resource to get content for.
+	// 要获取内容的资源的URL。
 	URL string `json:"url"`
 
 	// Options Options for the request.
+	// 请求的选项。
 	Options *NetworkLoadNetworkResourceOptions `json:"options"`
 }
 
@@ -2264,18 +2607,23 @@ type NetworkLoadNetworkResourceResult struct {
 }
 
 // NetworkDataReceived Fired when data chunk was received over the network.
+// 当通过网络接收到数据块时触发。
 type NetworkDataReceived struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// DataLength Data chunk length.
+	// 数据块长度
 	DataLength int `json:"dataLength"`
 
 	// EncodedDataLength Actual bytes received (might be less than dataLength for compressed encodings).
+	// 收到的实际字节数（对于压缩编码，可能小于dataLength）。
 	EncodedDataLength int `json:"encodedDataLength"`
 }
 
@@ -2285,21 +2633,27 @@ func (evt NetworkDataReceived) ProtoEvent() string {
 }
 
 // NetworkEventSourceMessageReceived Fired when EventSource message is received.
+// 接收到EventSource消息时触发。
 type NetworkEventSourceMessageReceived struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// EventName Message type.
+	// 消息类型
 	EventName string `json:"eventName"`
 
 	// EventID Message identifier.
+	// 消息标识符
 	EventID string `json:"eventId"`
 
 	// Data Message content.
+	// 消息内容
 	Data string `json:"data"`
 }
 
@@ -2309,27 +2663,35 @@ func (evt NetworkEventSourceMessageReceived) ProtoEvent() string {
 }
 
 // NetworkLoadingFailed Fired when HTTP request has failed to load.
+// 加载HTTP请求失败时触发。
 type NetworkLoadingFailed struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// Type Resource type.
+	// 资源类型
 	Type NetworkResourceType `json:"type"`
 
 	// ErrorText User friendly error message.
+	// 用户友好的错误消息。
 	ErrorText string `json:"errorText"`
 
 	// Canceled (optional) True if loading was canceled.
+	// 如果取消加载，则为True。
 	Canceled bool `json:"canceled,omitempty"`
 
 	// BlockedReason (optional) The reason why loading was blocked, if any.
+	// 加载受阻的原因（如有）。
 	BlockedReason NetworkBlockedReason `json:"blockedReason,omitempty"`
 
 	// CorsErrorStatus (optional) The reason why loading was blocked by CORS, if any.
+	// 加载被CORS阻止的原因（如有）。
 	CorsErrorStatus *NetworkCorsErrorStatus `json:"corsErrorStatus,omitempty"`
 }
 
@@ -2339,19 +2701,24 @@ func (evt NetworkLoadingFailed) ProtoEvent() string {
 }
 
 // NetworkLoadingFinished Fired when HTTP request has finished loading.
+// 当HTTP请求完成加载时触发。
 type NetworkLoadingFinished struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// EncodedDataLength Total number of bytes received for this request.
+	// 为此请求接收的总字节数。
 	EncodedDataLength float64 `json:"encodedDataLength"`
 
 	// ShouldReportCorbBlocking (optional) Set when 1) response was blocked by Cross-Origin Read Blocking and also
 	// 2) this needs to be reported to the DevTools console.
+	// 设置为：1）响应被跨域读取阻止，2）这需要报告给DevTools控制台。
 	ShouldReportCorbBlocking bool `json:"shouldReportCorbBlocking,omitempty"`
 }
 
@@ -2362,51 +2729,66 @@ func (evt NetworkLoadingFinished) ProtoEvent() string {
 
 // NetworkRequestIntercepted (deprecated) (experimental) Details of an intercepted HTTP request, which must be either allowed, blocked, modified or
 // mocked.
+// 拦截的HTTP请求的详细信息，必须允许、阻止、修改或模拟。
 // Deprecated, use Fetch.requestPaused instead.
+// 已弃用，使用Fetch.requestPaused代替。
 type NetworkRequestIntercepted struct {
 
 	// InterceptionID Each request the page makes will have a unique id, however if any redirects are encountered
 	// while processing that fetch, they will be reported with the same id as the original fetch.
+	// 页面发出的每个请求都有一个唯一的id，但是，如果在处理该提取时遇到任何重定向，则将使用与原始提取相同的id报告重定向。
 	// Likewise if HTTP authentication is needed then the same fetch id will be used.
+	// 同样，如果需要HTTP认证，那么将使用相同的获取ID。
 	InterceptionID NetworkInterceptionID `json:"interceptionId"`
 
 	// Request ...
 	Request *NetworkRequest `json:"request"`
 
 	// FrameID The id of the frame that initiated the request.
+	// 发起请求的frame的id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// ResourceType How the requested resource will be used.
+	// 如何使用所请求的资源。
 	ResourceType NetworkResourceType `json:"resourceType"`
 
 	// IsNavigationRequest Whether this is a navigation request, which can abort the navigation completely.
+	// 这是否是可以完全中止导航的导航请求。
 	IsNavigationRequest bool `json:"isNavigationRequest"`
 
 	// IsDownload (optional) Set if the request is a navigation that will result in a download.
+	// 设置请求是否为将导致下载的导航。
 	// Only present after response is received from the server (i.e. HeadersReceived stage).
+	// 仅在从服务器接收到响应后出现（即HeadersReceived阶段）。
 	IsDownload bool `json:"isDownload,omitempty"`
 
 	// RedirectURL (optional) Redirect location, only sent if a redirect was intercepted.
+	// 重定向位置，仅在重定向被拦截时发送。
 	RedirectURL string `json:"redirectUrl,omitempty"`
 
 	// AuthChallenge (optional) Details of the Authorization Challenge encountered. If this is set then
 	// continueInterceptedRequest must contain an authChallengeResponse.
+	// 遇到的认证质询的详细信息。如果设置了此选项，则continueInterceptedRequest必须包含authChallengeResponse。
 	AuthChallenge *NetworkAuthChallenge `json:"authChallenge,omitempty"`
 
 	// ResponseErrorReason (optional) Response error if intercepted at response stage or if redirect occurred while intercepting
 	// request.
+	// 如果在响应阶段被拦截或在拦截请求时发生重定向，则响应错误。
 	ResponseErrorReason NetworkErrorReason `json:"responseErrorReason,omitempty"`
 
 	// ResponseStatusCode (optional) Response code if intercepted at response stage or if redirect occurred while intercepting
 	// request or auth retry occurred.
+	// 如果在响应阶段被拦截，或者在拦截请求或进行身份验证重试时发生重定向，则为响应代码。
 	ResponseStatusCode *int `json:"responseStatusCode,omitempty"`
 
 	// ResponseHeaders (optional) Response headers if intercepted at the response stage or if redirect occurred while
 	// intercepting request or auth retry occurred.
+	// 如果在响应阶段被拦截，或者在拦截请求或身份验证重试时发生重定向，则为响应标头。
 	ResponseHeaders NetworkHeaders `json:"responseHeaders,omitempty"`
 
 	// RequestID (optional) If the intercepted request had a corresponding requestWillBeSent event fired for it, then
 	// this requestId will be the same as the requestId present in the requestWillBeSent event.
+	// 如果截获的请求触发了相应的requestWillBeSent事件，则此requestId将与requestWillBeSent事件中的requestId相同。
 	RequestID NetworkRequestID `json:"requestId,omitempty"`
 }
 
@@ -2416,9 +2798,11 @@ func (evt NetworkRequestIntercepted) ProtoEvent() string {
 }
 
 // NetworkRequestServedFromCache Fired if request ended up loading from cache.
+// 如果请求最终从缓存加载，则会触发。
 type NetworkRequestServedFromCache struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 }
 
@@ -2428,44 +2812,57 @@ func (evt NetworkRequestServedFromCache) ProtoEvent() string {
 }
 
 // NetworkRequestWillBeSent Fired when page is about to send HTTP request.
+// 当页面将要发送HTTP请求时触发。
 type NetworkRequestWillBeSent struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// LoaderID Loader identifier. Empty string if the request is fetched from worker.
+	// 加载器标识符。如果请求是从worker获取的，则为空字符串。
 	LoaderID NetworkLoaderID `json:"loaderId"`
 
 	// DocumentURL URL of the document this request is loaded for.
+	// 加载此请求的文档的URL。
 	DocumentURL string `json:"documentURL"`
 
 	// Request Request data.
+	// 请求数据。
 	Request *NetworkRequest `json:"request"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// WallTime Timestamp.
+	// 时间戳
 	WallTime TimeSinceEpoch `json:"wallTime"`
 
 	// Initiator Request initiator.
+	// 请求发起者
 	Initiator *NetworkInitiator `json:"initiator"`
 
 	// RedirectHasExtraInfo (experimental) In the case that redirectResponse is populated, this flag indicates whether
 	// requestWillBeSentExtraInfo and responseReceivedExtraInfo events will be or were emitted
 	// for the request which was just redirected.
+	// 在redirectResponse被填充的情况下，这个标志表明requestWillBeSentExtraInfo和responseReceivedExtraInfo事件是否将或已经为刚被重定向的请求发出。
 	RedirectHasExtraInfo bool `json:"redirectHasExtraInfo"`
 
 	// RedirectResponse (optional) Redirect response data.
+	// 重定向的响应数据
 	RedirectResponse *NetworkResponse `json:"redirectResponse,omitempty"`
 
 	// Type (optional) Type of this resource.
+	// 资源类型
 	Type NetworkResourceType `json:"type,omitempty"`
 
 	// FrameID (optional) Frame identifier.
+	// Frame 标识符
 	FrameID PageFrameID `json:"frameId,omitempty"`
 
 	// HasUserGesture (optional) Whether the request is initiated by a user gesture. Defaults to false.
+	// 请求是否由用户手势发起。默认为false。
 	HasUserGesture bool `json:"hasUserGesture,omitempty"`
 }
 
@@ -2475,15 +2872,19 @@ func (evt NetworkRequestWillBeSent) ProtoEvent() string {
 }
 
 // NetworkResourceChangedPriority (experimental) Fired when resource loading priority is changed
+// 更改资源加载优先级时触发
 type NetworkResourceChangedPriority struct {
 
 	// RequestID Request identifier.
+	// 请求标识符。
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// NewPriority New priority
+	// 新的优先级
 	NewPriority NetworkResourcePriority `json:"newPriority"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 }
 
@@ -2493,12 +2894,15 @@ func (evt NetworkResourceChangedPriority) ProtoEvent() string {
 }
 
 // NetworkSignedExchangeReceived (experimental) Fired when a signed exchange was received over the network
+// 在通过网络接收到签名交换时触发
 type NetworkSignedExchangeReceived struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Info Information about the signed exchange response.
+	// 有关签名的exchange响应的信息。
 	Info *NetworkSignedExchangeInfo `json:"info"`
 }
 
@@ -2508,28 +2912,36 @@ func (evt NetworkSignedExchangeReceived) ProtoEvent() string {
 }
 
 // NetworkResponseReceived Fired when HTTP response is available.
+// 当HTTP响应可用时触发。
 type NetworkResponseReceived struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// LoaderID Loader identifier. Empty string if the request is fetched from worker.
+	// 加载器标识符。如果请求是从worker获取的，则为空字符串。
 	LoaderID NetworkLoaderID `json:"loaderId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// Type Resource type.
+	// 资源类型
 	Type NetworkResourceType `json:"type"`
 
 	// Response Response data.
+	// 响应数据
 	Response *NetworkResponse `json:"response"`
 
 	// HasExtraInfo (experimental) Indicates whether requestWillBeSentExtraInfo and responseReceivedExtraInfo events will be
 	// or were emitted for this request.
+	// 指示是否将为此请求发出或已发出RequestBesEntextRainfo和responseReceivedExtraInfo事件。
 	HasExtraInfo bool `json:"hasExtraInfo"`
 
 	// FrameID (optional) Frame identifier.
+	// Frame 标识符
 	FrameID PageFrameID `json:"frameId,omitempty"`
 }
 
@@ -2539,12 +2951,15 @@ func (evt NetworkResponseReceived) ProtoEvent() string {
 }
 
 // NetworkWebSocketClosed Fired when WebSocket is closed.
+// 当 Websocket 关闭时触发
 type NetworkWebSocketClosed struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 }
 
@@ -2554,15 +2969,19 @@ func (evt NetworkWebSocketClosed) ProtoEvent() string {
 }
 
 // NetworkWebSocketCreated Fired upon WebSocket creation.
+// 在创建WebSocket时触发。
 type NetworkWebSocketCreated struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// URL WebSocket request URL.
+	// websocket 请求地址
 	URL string `json:"url"`
 
 	// Initiator (optional) Request initiator.
+	// 请求发起者
 	Initiator *NetworkInitiator `json:"initiator,omitempty"`
 }
 
@@ -2572,15 +2991,19 @@ func (evt NetworkWebSocketCreated) ProtoEvent() string {
 }
 
 // NetworkWebSocketFrameError Fired when WebSocket message error occurs.
+// 在创建WebSocket时触发。
 type NetworkWebSocketFrameError struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// ErrorMessage WebSocket error message.
+	// WebSocket错误消息。
 	ErrorMessage string `json:"errorMessage"`
 }
 
@@ -2590,15 +3013,19 @@ func (evt NetworkWebSocketFrameError) ProtoEvent() string {
 }
 
 // NetworkWebSocketFrameReceived Fired when WebSocket message is received.
+// 收到WebSocket消息时触发。
 type NetworkWebSocketFrameReceived struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// Response WebSocket response data.
+	// websocket 响应数据
 	Response *NetworkWebSocketFrame `json:"response"`
 }
 
@@ -2608,15 +3035,19 @@ func (evt NetworkWebSocketFrameReceived) ProtoEvent() string {
 }
 
 // NetworkWebSocketFrameSent Fired when WebSocket message is sent.
+// 当websocket 消息被发送时，被触发
 type NetworkWebSocketFrameSent struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// Response WebSocket response data.
+	// Websocket 响应数据
 	Response *NetworkWebSocketFrame `json:"response"`
 }
 
@@ -2626,15 +3057,19 @@ func (evt NetworkWebSocketFrameSent) ProtoEvent() string {
 }
 
 // NetworkWebSocketHandshakeResponseReceived Fired when WebSocket handshake response becomes available.
+// 当WebSocket握手响应可用时触发。
 type NetworkWebSocketHandshakeResponseReceived struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// Response WebSocket response data.
+	// WebSocket 响应数据
 	Response *NetworkWebSocketResponse `json:"response"`
 }
 
@@ -2644,18 +3079,23 @@ func (evt NetworkWebSocketHandshakeResponseReceived) ProtoEvent() string {
 }
 
 // NetworkWebSocketWillSendHandshakeRequest Fired when WebSocket is about to initiate handshake.
+// 当 WebSocket 即将启动握手时触发。
 type NetworkWebSocketWillSendHandshakeRequest struct {
 
 	// RequestID Request identifier.
+	// 请求标识符
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// WallTime UTC Timestamp.
+	// UTC 时间戳
 	WallTime TimeSinceEpoch `json:"wallTime"`
 
 	// Request WebSocket request data.
+	// websocket 请求数据
 	Request *NetworkWebSocketRequest `json:"request"`
 }
 
@@ -2665,18 +3105,23 @@ func (evt NetworkWebSocketWillSendHandshakeRequest) ProtoEvent() string {
 }
 
 // NetworkWebTransportCreated Fired upon WebTransport creation.
+// 在WebTransport创建时触发。
 type NetworkWebTransportCreated struct {
 
 	// TransportID WebTransport identifier.
+	// WebTransport标识符。
 	TransportID NetworkRequestID `json:"transportId"`
 
 	// URL WebTransport request URL.
+	// WebTransport请求URL。
 	URL string `json:"url"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 
 	// Initiator (optional) Request initiator.
+	// 请求发起者
 	Initiator *NetworkInitiator `json:"initiator,omitempty"`
 }
 
@@ -2686,12 +3131,15 @@ func (evt NetworkWebTransportCreated) ProtoEvent() string {
 }
 
 // NetworkWebTransportConnectionEstablished Fired when WebTransport handshake is finished.
+// WebTransport握手完成时激发。
 type NetworkWebTransportConnectionEstablished struct {
 
 	// TransportID WebTransport identifier.
+	// WebTransport标识符。
 	TransportID NetworkRequestID `json:"transportId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 }
 
@@ -2701,12 +3149,15 @@ func (evt NetworkWebTransportConnectionEstablished) ProtoEvent() string {
 }
 
 // NetworkWebTransportClosed Fired when WebTransport is disposed.
+// 当WebTransport被弃置时触发。
 type NetworkWebTransportClosed struct {
 
 	// TransportID WebTransport identifier.
+	// WebTransport标识符。
 	TransportID NetworkRequestID `json:"transportId"`
 
 	// Timestamp Timestamp.
+	// 时间戳
 	Timestamp MonotonicTime `json:"timestamp"`
 }
 
@@ -2719,22 +3170,29 @@ func (evt NetworkWebTransportClosed) ProtoEvent() string {
 // network stack. Not every requestWillBeSent event will have an additional
 // requestWillBeSentExtraInfo fired for it, and there is no guarantee whether requestWillBeSent
 // or requestWillBeSentExtraInfo will be fired first for the same request.
+// 当网络堆栈中有关于requestWillBeSent事件的其他信息时触发。并不是每个requestWillBeSent事件都会为其触发额外的requestWillBeSentExtraInfo，
+// 也不能保证同一请求是否会首先触发requestWillBeSent或requestWillBeSentExtraInfo
 type NetworkRequestWillBeSentExtraInfo struct {
 
 	// RequestID Request identifier. Used to match this information to an existing requestWillBeSent event.
+	// 请求标识符。用于将此信息与现有的RequestWillbsent事件匹配。
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// AssociatedCookies A list of cookies potentially associated to the requested URL. This includes both cookies sent with
 	// the request and the ones not sent; the latter are distinguished by having blockedReason field set.
+	// 可能与请求的URL相关联的Cookie列表。这包括随请求发送的cookie和未发送的cookies；后者的区别在于具有blockedReason字段集。
 	AssociatedCookies []*NetworkBlockedCookieWithReason `json:"associatedCookies"`
 
 	// Headers Raw request headers as they will be sent over the wire.
+	// 原始请求头，因为它们将通过线路发送。
 	Headers NetworkHeaders `json:"headers"`
 
 	// ConnectTiming (experimental) Connection timing information for the request.
+	// 该请求的连接时间信息。
 	ConnectTiming *NetworkConnectTiming `json:"connectTiming"`
 
 	// ClientSecurityState (optional) The client security state set for the request.
+	// 为请求设置的客户端安全状态。
 	ClientSecurityState *NetworkClientSecurityState `json:"clientSecurityState,omitempty"`
 }
 
@@ -2746,14 +3204,19 @@ func (evt NetworkRequestWillBeSentExtraInfo) ProtoEvent() string {
 // NetworkResponseReceivedExtraInfo (experimental) Fired when additional information about a responseReceived event is available from the network
 // stack. Not every responseReceived event will have an additional responseReceivedExtraInfo for
 // it, and responseReceivedExtraInfo may be fired before or after responseReceived.
+// 当网络堆栈中提供有关responseReceived事件的其他信息时触发。并非每个responseReceived事件都会有一个额外的responseReceivedExtraInfo，
+// 并且responseReceivedExtraInfo可能会在responseReceived之前或之后触发。
 type NetworkResponseReceivedExtraInfo struct {
 
 	// RequestID Request identifier. Used to match this information to another responseReceived event.
+	// 用于将此信息与另一个responseReceived事件匹配。
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// BlockedCookies A list of cookies which were not stored from the response along with the corresponding
 	// reasons for blocking. The cookies here may not be valid due to syntax errors, which
 	// are represented by the invalid cookie line string instead of a proper cookie.
+	// 未从响应中存储的Cookie列表，以及相应的阻止原因。由于语法错误，此处的cookie可能无效，
+	// 这些错误由无效cookie行字符串而不是正确的cookie表示。
 	BlockedCookies []*NetworkBlockedSetCookieWithReason `json:"blockedCookies"`
 
 	// Headers Raw response headers as they were received over the wire.
@@ -2761,15 +3224,20 @@ type NetworkResponseReceivedExtraInfo struct {
 
 	// ResourceIPAddressSpace The IP address space of the resource. The address space can only be determined once the transport
 	// established the connection, so we can't send it in `requestWillBeSentExtraInfo`.
+	// 资源的IP地址空间。地址空间只有在运输系统建立连接后才能确定，所以我们不能在`requestWillBeSentExtraInfo`中发送。
+	// 建立连接后才能确定，所以我们不能在`requestWillBeSentExtraInfo`中发送它。
 	ResourceIPAddressSpace NetworkIPAddressSpace `json:"resourceIPAddressSpace"`
 
 	// StatusCode The status code of the response. This is useful in cases the request failed and no responseReceived
 	// event is triggered, which is the case for, e.g., CORS errors. This is also the correct status code
 	// for cached requests, where the status in responseReceived is a 200 and this will be 304.
+	// 响应的状态代码。这在请求失败且未触发responseReceived事件的情况下非常有用，例如CORS错误。这也是缓存请求的正确状态代码，
+	// 其中responseReceived中的状态200，将为304。
 	StatusCode int `json:"statusCode"`
 
 	// HeadersText (optional) Raw response header text as it was received over the wire. The raw text may not always be
 	// available, such as in the case of HTTP/2 or QUIC.
+	// 通过线路接收的原始响应标题文本。原始文本可能并不总是可用的，例如在HTTP/2或QUIC的情况下。
 	HeadersText string `json:"headersText,omitempty"`
 }
 
@@ -2817,12 +3285,15 @@ const (
 // the type of the operation and whether the operation succeeded or
 // failed, the event is fired before the corresponding request was sent
 // or after the response was received.
+// 每次信任令牌操作只触发一次。根据操作的类型以及操作是成功还是失败，在发送相应的请求之前还是在收到响应之后触发事件。
 type NetworkTrustTokenOperationDone struct {
 
 	// Status Detailed success or error status of the operation.
+	// 操作的详细成功或错误状态。
 	// 'AlreadyExists' also signifies a successful operation, as the result
 	// of the operation already exists und thus, the operation was abort
 	// preemptively (e.g. a cache hit).
+	// AlreadyExists 也表示一个成功的操作，因为该操作的结果已经存在，因此，该操作被预先中止了（例如，一个缓存命中）。
 	Status NetworkTrustTokenOperationDoneStatus `json:"status"`
 
 	// Type ...
@@ -2832,12 +3303,15 @@ type NetworkTrustTokenOperationDone struct {
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// TopLevelOrigin (optional) Top level origin. The context in which the operation was attempted.
+	// 顶级源。尝试操作的上下文。
 	TopLevelOrigin string `json:"topLevelOrigin,omitempty"`
 
 	// IssuerOrigin (optional) Origin of the issuer in case of a "Issuance" or "Redemption" operation.
+	// 在 "Issuance "或 "Redemption "操作的情况下，发行者的源。
 	IssuerOrigin string `json:"issuerOrigin,omitempty"`
 
 	// IssuedTokenCount (optional) The number of obtained Trust Tokens on a successful "Issuance" operation.
+	// 在成功的“Issuance”操作中获得的信任令牌数。
 	IssuedTokenCount *int `json:"issuedTokenCount,omitempty"`
 }
 
@@ -2847,13 +3321,17 @@ func (evt NetworkTrustTokenOperationDone) ProtoEvent() string {
 }
 
 // NetworkSubresourceWebBundleMetadataReceived (experimental) Fired once when parsing the .wbn file has succeeded.
+// 当解析.wbn文件成功时触发一次。
 // The event contains the information about the web bundle contents.
+// 该事件包含有关web捆绑包内容的信息。
 type NetworkSubresourceWebBundleMetadataReceived struct {
 
 	// RequestID Request identifier. Used to match this information to another event.
+	// 请求标识符。用于将此信息与其他事件匹配。
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// Urls A list of URLs of resources in the subresource Web Bundle.
+	// 子资源Web捆绑包中资源的URL列表。
 	Urls []string `json:"urls"`
 }
 
@@ -2863,12 +3341,15 @@ func (evt NetworkSubresourceWebBundleMetadataReceived) ProtoEvent() string {
 }
 
 // NetworkSubresourceWebBundleMetadataError (experimental) Fired once when parsing the .wbn file has failed.
+// 解析.wbn文件失败时触发一次。
 type NetworkSubresourceWebBundleMetadataError struct {
 
 	// RequestID Request identifier. Used to match this information to another event.
+	// 请求标识符。用于将此信息与其他事件匹配。
 	RequestID NetworkRequestID `json:"requestId"`
 
 	// ErrorMessage Error message
+	// 错误信息
 	ErrorMessage string `json:"errorMessage"`
 }
 
@@ -2878,18 +3359,24 @@ func (evt NetworkSubresourceWebBundleMetadataError) ProtoEvent() string {
 }
 
 // NetworkSubresourceWebBundleInnerResponseParsed (experimental) Fired when handling requests for resources within a .wbn file.
+// 处理.wbn文件中的资源请求时激发。
 // Note: this will only be fired for resources that are requested by the webpage.
+// 这将仅针对网页请求的资源触发。
 type NetworkSubresourceWebBundleInnerResponseParsed struct {
 
 	// InnerRequestID Request identifier of the subresource request
+	// 子资源请求的请求标识符
 	InnerRequestID NetworkRequestID `json:"innerRequestId"`
 
 	// InnerRequestURL URL of the subresource resource.
+	// 子资源的URL。
 	InnerRequestURL string `json:"innerRequestURL"`
 
 	// BundleRequestID (optional) Bundle request identifier. Used to match this information to another event.
+	// 包请求标识符。用于将此信息与其他事件匹配。
 	// This made be absent in case when the instrumentation was enabled only
 	// after webbundle was parsed.
+	// 如果仅在解析webbundle后才启用仪器，则不会出现这种情况。
 	BundleRequestID NetworkRequestID `json:"bundleRequestId,omitempty"`
 }
 
@@ -2899,20 +3386,26 @@ func (evt NetworkSubresourceWebBundleInnerResponseParsed) ProtoEvent() string {
 }
 
 // NetworkSubresourceWebBundleInnerResponseError (experimental) Fired when request for resources within a .wbn file failed.
+// 在.wbn文件中的资源请求失败时触发。
 type NetworkSubresourceWebBundleInnerResponseError struct {
 
 	// InnerRequestID Request identifier of the subresource request
+	// 子资源请求的标识符
 	InnerRequestID NetworkRequestID `json:"innerRequestId"`
 
 	// InnerRequestURL URL of the subresource resource.
+	// 子资源的URL。
 	InnerRequestURL string `json:"innerRequestURL"`
 
 	// ErrorMessage Error message
+	// 错误信息
 	ErrorMessage string `json:"errorMessage"`
 
 	// BundleRequestID (optional) Bundle request identifier. Used to match this information to another event.
+	// 包请求标识符。用于将此信息与其他事件匹配。
 	// This made be absent in case when the instrumentation was enabled only
 	// after webbundle was parsed.
+	// 如果仅在解析webbundle后才启用仪器，则不会出现这种情况。
 	BundleRequestID NetworkRequestID `json:"bundleRequestId,omitempty"`
 }
 
@@ -2923,6 +3416,7 @@ func (evt NetworkSubresourceWebBundleInnerResponseError) ProtoEvent() string {
 
 // NetworkReportingAPIReportAdded (experimental) Is sent whenever a new report is added.
 // And after 'enableReportingApi' for all existing reports.
+// 以及在所有现有报告的“enableReportingApi”之后。
 type NetworkReportingAPIReportAdded struct {
 
 	// Report ...
@@ -2950,6 +3444,7 @@ func (evt NetworkReportingAPIReportUpdated) ProtoEvent() string {
 type NetworkReportingAPIEndpointsChangedForOrigin struct {
 
 	// Origin Origin of the document(s) which configured the endpoints.
+	// 配置端点的文档的来源。
 	Origin string `json:"origin"`
 
 	// Endpoints ...

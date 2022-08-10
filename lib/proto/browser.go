@@ -7,6 +7,7 @@ package proto
 Browser
 
 The Browser domain defines methods and events for browser managing.
+浏览器域定义了用于管理浏览器的方法和事件。
 
 */
 
@@ -17,6 +18,7 @@ type BrowserBrowserContextID string
 type BrowserWindowID int
 
 // BrowserWindowState (experimental) The state of the browser window.
+// 浏览器窗口的状态
 type BrowserWindowState string
 
 const (
@@ -34,25 +36,32 @@ const (
 )
 
 // BrowserBounds (experimental) Browser window bounds information
+// 浏览器窗口的边界信息
 type BrowserBounds struct {
 
 	// Left (optional) The offset from the left edge of the screen to the window in pixels.
+	// Left（可选）从屏幕左边缘到窗口的偏移，单位为像素。
 	Left *int `json:"left,omitempty"`
 
 	// Top (optional) The offset from the top edge of the screen to the window in pixels.
+	// Top（可选）从屏幕上边缘到窗口的偏移，以像素为单位。
 	Top *int `json:"top,omitempty"`
 
 	// Width (optional) The window width in pixels.
+	// Width（可选）以像素为单位的窗口宽度。
 	Width *int `json:"width,omitempty"`
 
 	// Height (optional) The window height in pixels.
+	// Height（可选）以像素为单位的窗口高度。
 	Height *int `json:"height,omitempty"`
 
 	// WindowState (optional) The window state. Default to normal.
+	// WindowState（可选） 窗口的状态。默认为normal。
 	WindowState BrowserWindowState `json:"windowState,omitempty"`
 }
 
 // BrowserPermissionType (experimental) ...
+// 浏览器权限类型
 type BrowserPermissionType string
 
 const (
@@ -127,6 +136,7 @@ const (
 )
 
 // BrowserPermissionSetting (experimental) ...
+// 浏览器权限的设置
 type BrowserPermissionSetting string
 
 const (
@@ -141,28 +151,36 @@ const (
 )
 
 // BrowserPermissionDescriptor (experimental) Definition of PermissionDescriptor defined in the Permissions API:
+// BrowserPermissionDescriptor (experimental) 在Permissions API中定义的PermissionDescriptor的定义：
 // https://w3c.github.io/permissions/#dictdef-permissiondescriptor.
 type BrowserPermissionDescriptor struct {
 
 	// Name Name of permission.
+	// 权限的名称,查看文档:
 	// See https://cs.chromium.org/chromium/src/third_party/blink/renderer/modules/permissions/permission_descriptor.idl for valid permission names.
 	Name string `json:"name"`
 
 	// Sysex (optional) For "midi" permission, may also specify sysex control.
+	// Sysex（可选）用于“midi”权限，也可以指定Sysex控件。
 	Sysex bool `json:"sysex,omitempty"`
 
 	// UserVisibleOnly (optional) For "push" permission, may specify userVisibleOnly.
+	// UserVisibleOnly（可选）对于“push”权限，可以指定UserVisibileOnly。
 	// Note that userVisibleOnly = true is the only currently supported type.
+	// 注意，userVisibleOnly = true是目前唯一支持的类型。
 	UserVisibleOnly bool `json:"userVisibleOnly,omitempty"`
 
 	// AllowWithoutSanitization (optional) For "clipboard" permission, may specify allowWithoutSanitization.
+	// AllowWithOutsanization（可选）对于“clipboard”权限，可以指定AllowWithoutsanization。
 	AllowWithoutSanitization bool `json:"allowWithoutSanitization,omitempty"`
 
 	// PanTiltZoom (optional) For "camera" permission, may specify panTiltZoom.
+	// PanTiltZoom（可选）对于“camera”权限，可以指定PanTiltZoom。
 	PanTiltZoom bool `json:"panTiltZoom,omitempty"`
 }
 
 // BrowserBrowserCommandID (experimental) Browser command ids used by executeBrowserCommand.
+// executeBrowserCommand使用的浏览器命令ID。
 type BrowserBrowserCommandID string
 
 const (
@@ -174,15 +192,23 @@ const (
 )
 
 // BrowserBucket (experimental) Chrome histogram bucket.
+/*
+Histogram是base库的统计功能，用于方便、高效地址代码里面插入一些统计打点。统计结果既可以由程序自发地在VLOG打开的情况下打印出来，也可以自己决定要输出哪些统计项目。
+统计结果主要包含了统计个数、总和、每个打点的落点分布，这些信息可以用多种方式展示，例如ASCII文本、HTML、JSON。
+文本方式的输出结果可以打开chrome，输入 chrome://histograms/ 看到。
+*/
 type BrowserBucket struct {
 
 	// Low Minimum value (inclusive).
+	// Low 最小值（包括）。
 	Low int `json:"low"`
 
 	// High Maximum value (exclusive).
+	// High 最大值（不包括）。
 	High int `json:"high"`
 
 	// Count Number of samples.
+	// Count 样本的数量。
 	Count int `json:"count"`
 }
 
@@ -190,31 +216,40 @@ type BrowserBucket struct {
 type BrowserHistogram struct {
 
 	// Name Name.
+	// 名称
 	Name string `json:"name"`
 
 	// Sum Sum of sample values.
+	// 样本值的和
 	Sum int `json:"sum"`
 
 	// Count Total number of samples.
+	// 总的样本数量
 	Count int `json:"count"`
 
 	// Buckets Buckets.
+	// BrowserBucket
 	Buckets []*BrowserBucket `json:"buckets"`
 }
 
 // BrowserSetPermission (experimental) Set permission settings for given origin.
+// 为给定的源设置权限设置
 type BrowserSetPermission struct {
 
 	// Permission Descriptor of permission to override.
+	// 要覆盖的权限描述符
 	Permission *BrowserPermissionDescriptor `json:"permission"`
 
 	// Setting Setting of the permission.
+	// 权限的设置
 	Setting BrowserPermissionSetting `json:"setting"`
 
 	// Origin (optional) Origin the permission applies to, all origins if not specified.
+	// Origin（可选）权限应用的源，如果没有特别指定，则是全部源。
 	Origin string `json:"origin,omitempty"`
 
 	// BrowserContextID (optional) Context to override. When omitted, default browser context is used.
+	// BrowserContextID（可选） 覆盖的上下文。当省略时，将使用默认的浏览器上下文。
 	BrowserContextID BrowserBrowserContextID `json:"browserContextId,omitempty"`
 }
 
@@ -222,20 +257,24 @@ type BrowserSetPermission struct {
 func (m BrowserSetPermission) ProtoReq() string { return "Browser.setPermission" }
 
 // Call sends the request
+// 发送请求
 func (m BrowserSetPermission) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // BrowserGrantPermissions (experimental) Grant specific permissions to the given origin and reject all others.
+// 向给定的源授予特定权限并拒绝所有其他权限。
 type BrowserGrantPermissions struct {
 
 	// Permissions ...
 	Permissions []BrowserPermissionType `json:"permissions"`
 
 	// Origin (optional) Origin the permission applies to, all origins if not specified.
+	// Origin（可选）权限应用的源，如果没有特别指定，则是全部源。
 	Origin string `json:"origin,omitempty"`
 
 	// BrowserContextID (optional) BrowserContext to override permissions. When omitted, default browser context is used.
+	// BrowserContextID（可选） 覆盖的上下文。当省略时，将使用默认的浏览器上下文。
 	BrowserContextID BrowserBrowserContextID `json:"browserContextId,omitempty"`
 }
 
@@ -243,14 +282,17 @@ type BrowserGrantPermissions struct {
 func (m BrowserGrantPermissions) ProtoReq() string { return "Browser.grantPermissions" }
 
 // Call sends the request
+// 发送请求
 func (m BrowserGrantPermissions) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // BrowserResetPermissions (experimental) Reset all permission management for all origins.
+// 重置所有来源的所有权限管理。
 type BrowserResetPermissions struct {
 
 	// BrowserContextID (optional) BrowserContext to reset permissions. When omitted, default browser context is used.
+	// BrowserContextID（可选） 覆盖的上下文。当省略时，将使用默认的浏览器上下文。
 	BrowserContextID BrowserBrowserContextID `json:"browserContextId,omitempty"`
 }
 
@@ -258,11 +300,13 @@ type BrowserResetPermissions struct {
 func (m BrowserResetPermissions) ProtoReq() string { return "Browser.resetPermissions" }
 
 // Call sends the request
+// 发送请求
 func (m BrowserResetPermissions) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // BrowserSetDownloadBehaviorBehavior enum
+// 设置浏览器下载行为
 type BrowserSetDownloadBehaviorBehavior string
 
 const (
@@ -280,21 +324,26 @@ const (
 )
 
 // BrowserSetDownloadBehavior (experimental) Set the behavior when downloading a file.
+// 设置下载文件时的行为。
 type BrowserSetDownloadBehavior struct {
 
 	// Behavior Whether to allow all or deny all download requests, or use default Chrome behavior if
 	// available (otherwise deny). |allowAndName| allows download and names files according to
 	// their dowmload guids.
+	// 是否允许所有的或拒绝所有的下载请求，或使用Chrome浏览器的默认行为（否则拒绝）。|allowAndName|允许下载并根据其下载指南命名文件。
 	Behavior BrowserSetDownloadBehaviorBehavior `json:"behavior"`
 
 	// BrowserContextID (optional) BrowserContext to set download behavior. When omitted, default browser context is used.
+	// BrowserContextID（可选） 覆盖的上下文。当省略时，将使用默认的浏览器上下文。
 	BrowserContextID BrowserBrowserContextID `json:"browserContextId,omitempty"`
 
 	// DownloadPath (optional) The default path to save downloaded files to. This is required if behavior is set to 'allow'
 	// or 'allowAndName'.
+	// DownloadPath（可选）将下载的文件保存到的默认路径。如果行为被设置为 "allow "或 "allowAndName"，这是必需的。
 	DownloadPath string `json:"downloadPath,omitempty"`
 
 	// EventsEnabled (optional) Whether to emit download events (defaults to false).
+	// 是否发出下载事件（默认为false）。
 	EventsEnabled bool `json:"eventsEnabled,omitempty"`
 }
 
@@ -302,17 +351,21 @@ type BrowserSetDownloadBehavior struct {
 func (m BrowserSetDownloadBehavior) ProtoReq() string { return "Browser.setDownloadBehavior" }
 
 // Call sends the request
+// 发送请求
 func (m BrowserSetDownloadBehavior) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // BrowserCancelDownload (experimental) Cancel a download if in progress
+// BrowserCancelDownload (experimental) 取消正在进行的下载。
 type BrowserCancelDownload struct {
 
 	// GUID Global unique identifier of the download.
+	// GUID 下载的全局一标识符。
 	GUID string `json:"guid"`
 
 	// BrowserContextID (optional) BrowserContext to perform the action in. When omitted, default browser context is used.
+	// BrowserContextID（可选） 覆盖的上下文。当省略时，将使用默认的浏览器上下文。
 	BrowserContextID BrowserBrowserContextID `json:"browserContextId,omitempty"`
 }
 
@@ -320,11 +373,13 @@ type BrowserCancelDownload struct {
 func (m BrowserCancelDownload) ProtoReq() string { return "Browser.cancelDownload" }
 
 // Call sends the request
+// 发送请求
 func (m BrowserCancelDownload) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // BrowserClose Close browser gracefully.
+// 优雅的关闭浏览器
 type BrowserClose struct {
 }
 
@@ -332,11 +387,13 @@ type BrowserClose struct {
 func (m BrowserClose) ProtoReq() string { return "Browser.close" }
 
 // Call sends the request
+// 发送请求
 func (m BrowserClose) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // BrowserCrash (experimental) Crashes browser on the main thread.
+// 在主线程上使浏览器崩溃
 type BrowserCrash struct {
 }
 
@@ -344,11 +401,13 @@ type BrowserCrash struct {
 func (m BrowserCrash) ProtoReq() string { return "Browser.crash" }
 
 // Call sends the request
+// 发送请求
 func (m BrowserCrash) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // BrowserCrashGpuProcess (experimental) Crashes GPU process.
+// 崩溃的GPU进程
 type BrowserCrashGpuProcess struct {
 }
 
@@ -356,11 +415,13 @@ type BrowserCrashGpuProcess struct {
 func (m BrowserCrashGpuProcess) ProtoReq() string { return "Browser.crashGpuProcess" }
 
 // Call sends the request
+// 发送请求
 func (m BrowserCrashGpuProcess) Call(c Client) error {
 	return call(m.ProtoReq(), m, nil, c)
 }
 
 // BrowserGetVersion Returns version information.
+// 返回浏览器的版本信息
 type BrowserGetVersion struct {
 }
 
@@ -394,6 +455,7 @@ type BrowserGetVersionResult struct {
 
 // BrowserGetBrowserCommandLine (experimental) Returns the command line switches for the browser process if, and only if
 // --enable-automation is on the commandline.
+// BrowserGetBrowserCommandLine (experimental) 返回浏览器进程的命令行开关，当且仅当--enable-automation出现在命令行上。
 type BrowserGetBrowserCommandLine struct {
 }
 
@@ -410,6 +472,7 @@ func (m BrowserGetBrowserCommandLine) Call(c Client) (*BrowserGetBrowserCommandL
 type BrowserGetBrowserCommandLineResult struct {
 
 	// Arguments Commandline parameters
+	// 命令行参数
 	Arguments []string `json:"arguments"`
 }
 
@@ -419,9 +482,11 @@ type BrowserGetHistograms struct {
 	// Query (optional) Requested substring in name. Only histograms which have query as a
 	// substring in their name are extracted. An empty or absent query returns
 	// all histograms.
+	// Query（可选）要求的名称中的子串。只有名称中包含query的histograms才会被提取出来。空的或不存在的查询会返回所有的直方图。
 	Query string `json:"query,omitempty"`
 
 	// Delta (optional) If true, retrieve delta since last call.
+	// Delta（可选） 如果为真，检索自上次调用以来的delta。
 	Delta bool `json:"delta,omitempty"`
 }
 
@@ -442,12 +507,15 @@ type BrowserGetHistogramsResult struct {
 }
 
 // BrowserGetHistogram (experimental) Get a Chrome histogram by name.
+// 通过名称来查找 histogram
 type BrowserGetHistogram struct {
 
 	// Name Requested histogram name.
+	// 请求的histogram名称。
 	Name string `json:"name"`
 
 	// Delta (optional) If true, retrieve delta since last call.
+	// Delta（可选） 如果为真，检索自上次调用以来的delta。
 	Delta bool `json:"delta,omitempty"`
 }
 
@@ -468,9 +536,11 @@ type BrowserGetHistogramResult struct {
 }
 
 // BrowserGetWindowBounds (experimental) Get position and size of the browser window.
+// 获得浏览器窗口的大小和位置信息
 type BrowserGetWindowBounds struct {
 
 	// WindowID Browser window id.
+	// 窗口ID
 	WindowID BrowserWindowID `json:"windowId"`
 }
 
@@ -488,13 +558,16 @@ type BrowserGetWindowBoundsResult struct {
 
 	// Bounds Bounds information of the window. When window state is 'minimized', the restored window
 	// position and size are returned.
+	// Bounds 窗口的边界信息。当窗口状态为 "minimized "时，将返回恢复的窗口位置和大小。
 	Bounds *BrowserBounds `json:"bounds"`
 }
 
 // BrowserGetWindowForTarget (experimental) Get the browser window that contains the devtools target.
+// 获取包含devtools目标的浏览器窗口。
 type BrowserGetWindowForTarget struct {
 
 	// TargetID (optional) Devtools agent host id. If called as a part of the session, associated targetId is used.
+	// TargetID（可选）Devtools代理主机ID。如果作为会话的一部分调用，将使用相关的targetId。
 	TargetID TargetTargetID `json:"targetId,omitempty"`
 }
 
@@ -515,17 +588,21 @@ type BrowserGetWindowForTargetResult struct {
 
 	// Bounds Bounds information of the window. When window state is 'minimized', the restored window
 	// position and size are returned.
+	// Bounds 窗口的边界信息。当窗口状态为 "minimized "时，将返回恢复的窗口位置和大小。
 	Bounds *BrowserBounds `json:"bounds"`
 }
 
 // BrowserSetWindowBounds (experimental) Set position and/or size of the browser window.
+// 设置浏览器窗口的位置或大小
 type BrowserSetWindowBounds struct {
 
 	// WindowID Browser window id.
+	// 窗口ID
 	WindowID BrowserWindowID `json:"windowId"`
 
 	// Bounds New window bounds. The 'minimized', 'maximized' and 'fullscreen' states cannot be combined
 	// with 'left', 'top', 'width' or 'height'. Leaves unspecified fields unchanged.
+	// Bounds 新的窗口边界。minimized"、"maximized "和 "fullscreen "状态不能与 "left"、"top"、"width "或 "height "结合。保留未指定的字段不做改变。
 	Bounds *BrowserBounds `json:"bounds"`
 }
 
@@ -538,12 +615,14 @@ func (m BrowserSetWindowBounds) Call(c Client) error {
 }
 
 // BrowserSetDockTile (experimental) Set dock tile details, platform-specific.
+// 根据平台的具体情况，设置dock-tile详细信息。
 type BrowserSetDockTile struct {
 
 	// BadgeLabel (optional) ...
 	BadgeLabel string `json:"badgeLabel,omitempty"`
 
 	// Image (optional) Png encoded image.
+	// Png编码图像。
 	Image []byte `json:"image,omitempty"`
 }
 
@@ -556,6 +635,7 @@ func (m BrowserSetDockTile) Call(c Client) error {
 }
 
 // BrowserExecuteBrowserCommand (experimental) Invoke custom browser commands used by telemetry.
+// 调用遥测使用的自定义浏览器命令。
 type BrowserExecuteBrowserCommand struct {
 
 	// CommandID ...
@@ -571,18 +651,23 @@ func (m BrowserExecuteBrowserCommand) Call(c Client) error {
 }
 
 // BrowserDownloadWillBegin (experimental) Fired when page is about to start a download.
+// 调用遥测使用的自定义浏览器命令。
 type BrowserDownloadWillBegin struct {
 
 	// FrameID Id of the frame that caused the download to begin.
+	// 导致下载开始的frame的ID
 	FrameID PageFrameID `json:"frameId"`
 
 	// GUID Global unique identifier of the download.
+	// 下载的全局唯一标识符
 	GUID string `json:"guid"`
 
 	// URL URL of the resource being downloaded.
+	// 下载的URL地址
 	URL string `json:"url"`
 
 	// SuggestedFilename Suggested file name of the resource (the actual name of the file saved on disk may differ).
+	// 建议的资源文件名（保存在磁盘上的文件的实际名称可能不同）。
 	SuggestedFilename string `json:"suggestedFilename"`
 }
 
@@ -606,18 +691,23 @@ const (
 )
 
 // BrowserDownloadProgress (experimental) Fired when download makes progress. Last call has |done| == true.
+// 下载有进展时触发。最后一次调用有|done| == true。
 type BrowserDownloadProgress struct {
 
 	// GUID Global unique identifier of the download.
+	// 下载的全局唯一标识符
 	GUID string `json:"guid"`
 
 	// TotalBytes Total expected bytes to download.
+	// 下载的总字节数
 	TotalBytes float64 `json:"totalBytes"`
 
 	// ReceivedBytes Total bytes received.
+	// 已经接收到的字节数
 	ReceivedBytes float64 `json:"receivedBytes"`
 
 	// State Download status.
+	// 下载的状态
 	State BrowserDownloadProgressState `json:"state"`
 }
 
