@@ -7,13 +7,16 @@ package proto
 Page
 
 Actions and events related to the inspected page belong to the page domain.
+// 与被检查页面相关的操作和事件，都属于 Page Domain
 
 */
 
 // PageFrameID Unique frame identifier.
+// 唯一的 Frame 标识符
 type PageFrameID string
 
 // PageAdFrameType (experimental) Indicates whether a frame has been identified as an ad.
+// 一个Frame是否已确定被标记为广告
 type PageAdFrameType string
 
 const (
@@ -42,6 +45,7 @@ const (
 )
 
 // PageAdFrameStatus (experimental) Indicates whether a frame has been identified as an ad and why.
+// Frame 是否被确定为广告以及被确定为广告的原因
 type PageAdFrameStatus struct {
 
 	// AdFrameType ...
@@ -53,17 +57,21 @@ type PageAdFrameStatus struct {
 
 // PageAdScriptID (experimental) Identifies the bottom-most script which caused the frame to be labelled
 // as an ad.
+// 标识导致Frame被标记为广告的最底层脚本。
 type PageAdScriptID struct {
 
 	// ScriptID Script Id of the bottom-most script which caused the frame to be labelled
 	// as an ad.
+	// 导致框架被标记为广告的最底层脚本的脚本ID。
 	ScriptID RuntimeScriptID `json:"scriptId"`
 
 	// DebuggerID Id of adScriptId's debugger.
+	// 脚本ID的 debugger ID
 	DebuggerID RuntimeUniqueDebuggerID `json:"debuggerId"`
 }
 
 // PageSecureContextType (experimental) Indicates whether the frame is a secure context and why it is the case.
+// 表示该Frame是否是一个安全的ctx，以及为什么是这样的情况。
 type PageSecureContextType string
 
 const (
@@ -81,6 +89,7 @@ const (
 )
 
 // PageCrossOriginIsolatedContextType (experimental) Indicates whether the frame is cross-origin isolated and why it is the case.
+// 表示该Frame是否是跨域隔离的，以及为什么是这样的。
 type PageCrossOriginIsolatedContextType string
 
 const (
@@ -113,6 +122,7 @@ const (
 
 // PagePermissionsPolicyFeature (experimental) All Permissions Policy features. This enum should match the one defined
 // in third_party/blink/renderer/core/permissions_policy/permissions_policy_features.json5.
+// 所有权限策略特征。这个枚举应该与定义在third_party/blink/renderer/core/permissions_policy/permissions_policy_features.json5中定义的。
 type PagePermissionsPolicyFeature string
 
 const (
@@ -331,6 +341,7 @@ const (
 )
 
 // PagePermissionsPolicyBlockReason (experimental) Reason for a permissions policy feature to be disabled.
+// 权限策略功能被禁用的原因。
 type PagePermissionsPolicyBlockReason string
 
 const (
@@ -372,6 +383,7 @@ type PagePermissionsPolicyFeatureState struct {
 
 // PageOriginTrialTokenStatus (experimental) Origin Trial(https://www.chromium.org/blink/origin-trials) support.
 // Status for an Origin Trial token.
+// 支持Origin Trial(https://www.chromium.org/blink/origin-trials)。Origin Trial token的状态。
 type PageOriginTrialTokenStatus string
 
 const (
@@ -413,6 +425,7 @@ const (
 )
 
 // PageOriginTrialStatus (experimental) Status for an Origin Trial.
+// Origin Trial 的状态
 type PageOriginTrialStatus string
 
 const (
@@ -470,6 +483,7 @@ type PageOriginTrialTokenWithStatus struct {
 
 	// ParsedToken (optional) `parsedToken` is present only when the token is extractable and
 	// parsable.
+	// `parsedToken'只有在token可提取和可解析时才会出现。
 	ParsedToken *PageOriginTrialToken `json:"parsedToken,omitempty"`
 
 	// Status ...
@@ -490,106 +504,139 @@ type PageOriginTrial struct {
 }
 
 // PageFrame Information about the Frame on the page.
+// 页面上 Frame 的信息
 type PageFrame struct {
 
 	// ID Frame unique identifier.
+	// Frame 的唯一标识符
 	ID PageFrameID `json:"id"`
 
 	// ParentID (optional) Parent frame identifier.
+	// 父 Frame 的标识符
 	ParentID PageFrameID `json:"parentId,omitempty"`
 
 	// LoaderID Identifier of the loader associated with this frame.
+	// 与此Frame相关的Loader的标识符。
 	LoaderID NetworkLoaderID `json:"loaderId"`
 
 	// Name (optional) Frame's name as specified in the tag.
+	// 标签中指定的Frame名称。
 	Name string `json:"name,omitempty"`
 
 	// URL Frame document's URL without fragment.
+	// 不含 Fragment的Frame Document的URL
 	URL string `json:"url"`
 
 	// URLFragment (experimental) (optional) Frame document's URL fragment including the '#'.
+	// Frame Document的URL Fragment，包括'#'。
 	URLFragment string `json:"urlFragment,omitempty"`
 
 	// DomainAndRegistry (experimental) Frame document's registered domain, taking the public suffixes list into account.
+	// Frame Fragment 的注册域，考虑公共后缀列表。
 	// Extracted from the Frame's url.
+	// 从 Frame的URL提取，例如：
 	// Example URLs: http://www.google.com/file.html -> "google.com"
 	//               http://a.b.co.uk/file.html      -> "b.co.uk"
 	DomainAndRegistry string `json:"domainAndRegistry"`
 
 	// SecurityOrigin Frame document's security origin.
+	// Frame Document 的安全源
 	SecurityOrigin string `json:"securityOrigin"`
 
 	// MIMEType Frame document's mimeType as determined by the browser.
+	// 由浏览器定义的 mimeType
 	MIMEType string `json:"mimeType"`
 
 	// UnreachableURL (experimental) (optional) If the frame failed to load, this contains the URL that could not be loaded. Note that unlike url above, this URL may contain a fragment.
+	// 如果Frame加载失败，则包含无法加载的URL。请注意，与上面的url不同，此url可能包含一个 fragment。
 	UnreachableURL string `json:"unreachableUrl,omitempty"`
 
 	// AdFrameStatus (experimental) (optional) Indicates whether this frame was tagged as an ad and why.
+	// 表示该Frame是否被标记为广告以及为什么。
 	AdFrameStatus *PageAdFrameStatus `json:"adFrameStatus,omitempty"`
 
 	// SecureContextType (experimental) Indicates whether the main document is a secure context and explains why that is the case.
+	// 指示主文档是否为安全ctx，并解释其原因。
 	SecureContextType PageSecureContextType `json:"secureContextType"`
 
 	// CrossOriginIsolatedContextType (experimental) Indicates whether this is a cross origin isolated context.
+	// 指示这是否是跨域隔离的ctx。
 	CrossOriginIsolatedContextType PageCrossOriginIsolatedContextType `json:"crossOriginIsolatedContextType"`
 
 	// GatedAPIFeatures (experimental) Indicated which gated APIs / features are available.
+	// TODO:始终不知道 gatedAPI 该怎么翻译
 	GatedAPIFeatures []PageGatedAPIFeatures `json:"gatedAPIFeatures"`
 }
 
 // PageFrameResource (experimental) Information about the Resource on the page.
+// 页面资源的信息
 type PageFrameResource struct {
 
 	// URL Resource URL.
+	// 资源的URL
 	URL string `json:"url"`
 
 	// Type Type of this resource.
+	// 资源的类型
 	Type NetworkResourceType `json:"type"`
 
 	// MIMEType Resource mimeType as determined by the browser.
+	// 由浏览器决定的 MIME 类型
 	MIMEType string `json:"mimeType"`
 
 	// LastModified (optional) last-modified timestamp as reported by server.
+	// 由服务器报告的最后修改的时间戳。
 	LastModified TimeSinceEpoch `json:"lastModified,omitempty"`
 
 	// ContentSize (optional) Resource content size.
+	// 资源内容大小
 	ContentSize *float64 `json:"contentSize,omitempty"`
 
 	// Failed (optional) True if the resource failed to load.
+	// 如果资源加载失败，则为true
 	Failed bool `json:"failed,omitempty"`
 
 	// Canceled (optional) True if the resource was canceled during loading.
+	// 如果资源在加载过程中被取消，则为True
 	Canceled bool `json:"canceled,omitempty"`
 }
 
 // PageFrameResourceTree (experimental) Information about the Frame hierarchy along with their cached resources.
+// 有关Frame层次结构及其缓存资源的信息。
 type PageFrameResourceTree struct {
 
 	// Frame Frame information for this tree item.
+	// 此树项的Frame信息
 	Frame *PageFrame `json:"frame"`
 
 	// ChildFrames (optional) Child frames.
+	// 子 Frames
 	ChildFrames []*PageFrameResourceTree `json:"childFrames,omitempty"`
 
 	// Resources Information about frame resources.
+	// frame资源的信息
 	Resources []*PageFrameResource `json:"resources"`
 }
 
 // PageFrameTree Information about the Frame hierarchy.
+// Frame 层次信息
 type PageFrameTree struct {
 
 	// Frame Frame information for this tree item.
+	// 此树项的Frame信息
 	Frame *PageFrame `json:"frame"`
 
 	// ChildFrames (optional) Child frames.
+	// 子Frames
 	ChildFrames []*PageFrameTree `json:"childFrames,omitempty"`
 }
 
 // PageScriptIdentifier Unique script identifier.
+// 脚本的唯一标识符
 type PageScriptIdentifier string
 
 // PageTransitionType Transition type.
+// 页面转换类型
 type PageTransitionType string
 
 const (
@@ -634,50 +681,65 @@ const (
 )
 
 // PageNavigationEntry Navigation history entry.
+// 导航历史条目。
 type PageNavigationEntry struct {
 
 	// ID Unique id of the navigation history entry.
+	// 导航历史条目唯一ID
 	ID int `json:"id"`
 
 	// URL URL of the navigation history entry.
+	// 导航历史条目URL
 	URL string `json:"url"`
 
 	// UserTypedURL URL that the user typed in the url bar.
+	// 用户在URL栏中输入的URL。
 	UserTypedURL string `json:"userTypedURL"`
 
 	// Title Title of the navigation history entry.
+	//、 导航历史条目的标题。
 	Title string `json:"title"`
 
 	// TransitionType Transition type.
+	// 页面转换类型
 	TransitionType PageTransitionType `json:"transitionType"`
 }
 
 // PageScreencastFrameMetadata (experimental) Screencast frame metadata.
+// 屏幕录像Frame的元数据
 type PageScreencastFrameMetadata struct {
 
 	// OffsetTop Top offset in DIP.
+	// DIP中的顶部偏移量。
 	OffsetTop float64 `json:"offsetTop"`
 
 	// PageScaleFactor Page scale factor.
+	// 页面比例系数。
 	PageScaleFactor float64 `json:"pageScaleFactor"`
 
 	// DeviceWidth Device screen width in DIP.
+	// 以DIP为单位的设备屏幕宽度。
 	DeviceWidth float64 `json:"deviceWidth"`
 
 	// DeviceHeight Device screen height in DIP.
+	// 以DIP为单位的设备屏幕高度。
 	DeviceHeight float64 `json:"deviceHeight"`
 
 	// ScrollOffsetX Position of horizontal scroll in CSS pixels.
+	// 水平滚动的位置，以CSS像素为单位。
 	ScrollOffsetX float64 `json:"scrollOffsetX"`
 
 	// ScrollOffsetY Position of vertical scroll in CSS pixels.
+	// 垂直滚动的位置，以CSS像素为单位。
 	ScrollOffsetY float64 `json:"scrollOffsetY"`
 
 	// Timestamp (optional) Frame swap timestamp.
+	// Frame 交换的时间戳。
 	Timestamp TimeSinceEpoch `json:"timestamp,omitempty"`
 }
 
 // PageDialogType Javascript dialog type.
+// JS 弹窗的类型
 type PageDialogType string
 
 const (
@@ -695,133 +757,175 @@ const (
 )
 
 // PageAppManifestError Error while paring app manifest.
+// 在解析应用程序清单时出错。
 type PageAppManifestError struct {
 
 	// Message Error message.
+	// 错误消息
 	Message string `json:"message"`
 
 	// Critical If criticial, this is a non-recoverable parse error.
+	// 如果是严重的，则这是一个不可恢复的解析错误。
 	Critical int `json:"critical"`
 
 	// Line Error line.
+	// 错误行数
 	Line int `json:"line"`
 
 	// Column Error column.
+	// 错误列数
 	Column int `json:"column"`
 }
 
 // PageAppManifestParsedProperties (experimental) Parsed app manifest properties.
+// 已解析的应用程序清单属性。
 type PageAppManifestParsedProperties struct {
 
 	// Scope Computed scope value
+	// 计算的范围值
 	Scope string `json:"scope"`
 }
 
 // PageLayoutViewport Layout viewport position and dimensions.
+// 布局viewport（电脑屏幕的可视窗口）位置和尺寸。
 type PageLayoutViewport struct {
 
 	// PageX Horizontal offset relative to the document (CSS pixels).
+	// 相对于文档的水平偏移（CSS像素）。
 	PageX int `json:"pageX"`
 
 	// PageY Vertical offset relative to the document (CSS pixels).
+	// 相对于文档的垂直偏移（CSS像素）。
 	PageY int `json:"pageY"`
 
 	// ClientWidth Width (CSS pixels), excludes scrollbar if present.
+	//、 宽度（CSS像素），如果存在滚动条则不包括在内。
 	ClientWidth int `json:"clientWidth"`
 
 	// ClientHeight Height (CSS pixels), excludes scrollbar if present.
+	// 高度（CSS像素），不包括滚动条（如果存在）。
 	ClientHeight int `json:"clientHeight"`
 }
 
 // PageVisualViewport Visual viewport position, dimensions, and scale.
+// 视觉视口的位置、尺寸和比例。
 type PageVisualViewport struct {
 
 	// OffsetX Horizontal offset relative to the layout viewport (CSS pixels).
+	// 相对于布局视口的水平偏移（CSS像素）。
+
 	OffsetX float64 `json:"offsetX"`
 
 	// OffsetY Vertical offset relative to the layout viewport (CSS pixels).
+	// 相对于布局视口的垂直偏移（CSS像素）。
 	OffsetY float64 `json:"offsetY"`
 
 	// PageX Horizontal offset relative to the document (CSS pixels).
+	// 相对于文档的水平偏移（CSS像素）。
 	PageX float64 `json:"pageX"`
 
 	// PageY Vertical offset relative to the document (CSS pixels).
+	// 相对于文档的垂直偏移（CSS像素）。
 	PageY float64 `json:"pageY"`
 
 	// ClientWidth Width (CSS pixels), excludes scrollbar if present.
+	// 宽度（CSS像素），如果存在滚动条则不包括在内。
 	ClientWidth float64 `json:"clientWidth"`
 
 	// ClientHeight Height (CSS pixels), excludes scrollbar if present.
+	// 高度（CSS像素），不包括滚动条（如果存在）。
 	ClientHeight float64 `json:"clientHeight"`
 
 	// Scale Scale relative to the ideal viewport (size at width=device-width).
+	// 相对于理想视口的比例（在宽度=设备-宽度时的尺寸）。
 	Scale float64 `json:"scale"`
 
 	// Zoom (optional) Page zoom factor (CSS to device independent pixels ratio).
+	// 页面缩放系数（CSS与设备独立像素的比率）。
 	Zoom *float64 `json:"zoom,omitempty"`
 }
 
 // PageViewport Viewport for capturing screenshot.
+// 用于捕获屏幕截图的视口。
 type PageViewport struct {
 
 	// X X offset in device independent pixels (dip).
+	// 独立于设备的像素中的X偏移（dip）。
 	X float64 `json:"x"`
 
 	// Y Y offset in device independent pixels (dip).
+	// 独立于设备的像素中的Y偏移（dip）。
 	Y float64 `json:"y"`
 
 	// Width Rectangle width in device independent pixels (dip).
+	// 矩形宽度，与设备无关的像素（dip）。
 	Width float64 `json:"width"`
 
 	// Height Rectangle height in device independent pixels (dip).
+	// 矩形的高度，与设备无关的像素（dip）。
 	Height float64 `json:"height"`
 
 	// Scale Page scale factor.
+	// 页面比例系数。
 	Scale float64 `json:"scale"`
 }
 
 // PageFontFamilies (experimental) Generic font families collection.
+// 通用的字体系列集合。
 type PageFontFamilies struct {
 
 	// Standard (optional) The standard font-family.
+	// 标准字体。
 	Standard string `json:"standard,omitempty"`
 
 	// Fixed (optional) The fixed font-family.
+	// 固定字体。
 	Fixed string `json:"fixed,omitempty"`
 
 	// Serif (optional) The serif font-family.
+	// 衬线字体。
 	Serif string `json:"serif,omitempty"`
 
 	// SansSerif (optional) The sansSerif font-family.
+	// sansSerif字体。
 	SansSerif string `json:"sansSerif,omitempty"`
 
 	// Cursive (optional) The cursive font-family.
+	// 草书字体。
 	Cursive string `json:"cursive,omitempty"`
 
 	// Fantasy (optional) The fantasy font-family.
+	// fantasy 字体
 	Fantasy string `json:"fantasy,omitempty"`
 
 	// Math (optional) The math font-family.
+	// 数学符号
 	Math string `json:"math,omitempty"`
 }
 
 // PageScriptFontFamilies (experimental) Font families collection for a script.
+// 脚本的字体系列集合。
 type PageScriptFontFamilies struct {
 
 	// Script Name of the script which these font families are defined for.
+	// 为其定义这些字体族的脚本的名称。
 	Script string `json:"script"`
 
 	// FontFamilies Generic font families collection for the script.
+	// 脚本的通用字体系列集合。
 	FontFamilies *PageFontFamilies `json:"fontFamilies"`
 }
 
 // PageFontSizes (experimental) Default font sizes.
+// 默认的字体大小
 type PageFontSizes struct {
 
 	// Standard (optional) Default standard font size.
+	//  默认字体大小
 	Standard *int `json:"standard,omitempty"`
 
 	// Fixed (optional) Default fixed font size.
+	// 默认固定字体大小
 	Fixed *int `json:"fixed,omitempty"`
 }
 
@@ -875,23 +979,29 @@ const (
 type PageInstallabilityErrorArgument struct {
 
 	// Name Argument name (e.g. name:'minimum-icon-size-in-pixels').
+	// 参数名称，例如：minimum-icon-size-in-pixels
 	Name string `json:"name"`
 
 	// Value Argument value (e.g. value:'64').
+	// 参数值，例如：64
 	Value string `json:"value"`
 }
 
 // PageInstallabilityError (experimental) The installability error
+// 可安装性错误
 type PageInstallabilityError struct {
 
 	// ErrorID The error id (e.g. 'manifest-missing-suitable-icon').
+	// 错误ID，例如：manifest-missing-suitable-icon
 	ErrorID string `json:"errorId"`
 
 	// ErrorArguments The list of error arguments (e.g. {name:'minimum-icon-size-in-pixels', value:'64'}).
+	// 错误参数列表，例如：{name:'minimum-icon-size-in-pixels', value:'64'}
 	ErrorArguments []*PageInstallabilityErrorArgument `json:"errorArguments"`
 }
 
 // PageReferrerPolicy (experimental) The referring-policy used for the navigation.
+// 导航所用的 referring-policy
 type PageReferrerPolicy string
 
 const (
@@ -921,17 +1031,22 @@ const (
 )
 
 // PageCompilationCacheParams (experimental) Per-script compilation cache parameters for `Page.produceCompilationCache`
+// `Page.produceCompilationCache`的每个脚本编译缓存参数
 type PageCompilationCacheParams struct {
 
 	// URL The URL of the script to produce a compilation cache entry for.
+	//、 脚本的URL，以产生一个编译缓存条目。
 	URL string `json:"url"`
 
 	// Eager (optional) A hint to the backend whether eager compilation is recommended.
+	//  向后端提示是否建议立即编译。
 	// (the actual compilation mode used is upon backend discretion).
+	// (实际使用的编译模式由后端决定）。
 	Eager bool `json:"eager,omitempty"`
 }
 
 // PageNavigationType (experimental) The type of a frameNavigated event.
+// frameNavigated事件的类型。
 type PageNavigationType string
 
 const (
@@ -943,6 +1058,7 @@ const (
 )
 
 // PageBackForwardCacheNotRestoredReason (experimental) List of not restored reasons for back-forward cache.
+//未恢复的原因列表，用于后向缓存。
 type PageBackForwardCacheNotRestoredReason string
 
 const (
@@ -1314,6 +1430,7 @@ const (
 )
 
 // PageBackForwardCacheNotRestoredReasonType (experimental) Types of not restored reasons for back-forward cache.
+// 不恢复的原因类型为后退式缓存。
 type PageBackForwardCacheNotRestoredReasonType string
 
 const (
@@ -1331,13 +1448,16 @@ const (
 type PageBackForwardCacheNotRestoredExplanation struct {
 
 	// Type Type of the reason
+	// 原因类型
 	Type PageBackForwardCacheNotRestoredReasonType `json:"type"`
 
 	// Reason Not restored reason
+	// 不恢复的原因
 	Reason PageBackForwardCacheNotRestoredReason `json:"reason"`
 
 	// Context (optional) Context associated with the reason. The meaning of this context is
 	// dependent on the reason:
+	// 与Reason关联的上下文。此上下文的含义取决于以下原因：
 	// - EmbedderExtensionSentMessageToCachedFrame: the extension ID.
 	Context string `json:"context,omitempty"`
 }
@@ -1346,16 +1466,20 @@ type PageBackForwardCacheNotRestoredExplanation struct {
 type PageBackForwardCacheNotRestoredExplanationTree struct {
 
 	// URL URL of each frame
+	// 每个Frame的URL
 	URL string `json:"url"`
 
 	// Explanations Not restored reasons of each frame
+	// 每个Frame的未恢复原因
 	Explanations []*PageBackForwardCacheNotRestoredExplanation `json:"explanations"`
 
 	// Children Array of children frame
+	// 子Frame的列表
 	Children []*PageBackForwardCacheNotRestoredExplanationTree `json:"children"`
 }
 
 // PagePrerenderFinalStatus List of FinalStatus reasons for Prerender2.
+// Prerender2的FinalStatus原因列表。
 type PagePrerenderFinalStatus string
 
 const (
@@ -1466,6 +1590,7 @@ const (
 )
 
 // PageAddScriptToEvaluateOnLoad (deprecated) (experimental) Deprecated, please use addScriptToEvaluateOnNewDocument instead.
+// 已弃用，请使用addScriptToEvaluateOnNewDocument代替。
 type PageAddScriptToEvaluateOnLoad struct {
 
 	// ScriptSource ...
@@ -1489,18 +1614,22 @@ type PageAddScriptToEvaluateOnLoadResult struct {
 }
 
 // PageAddScriptToEvaluateOnNewDocument Evaluates given script in every frame upon creation (before loading frame's scripts).
+// 在每个Frame创建之前注入JS 脚本（在每个Frame的JS加载之前）
 type PageAddScriptToEvaluateOnNewDocument struct {
 
 	// Source ...
+	// 源代码
 	Source string `json:"source"`
 
 	// WorldName (experimental) (optional) If specified, creates an isolated world with the given name and evaluates given script in it.
 	// This world name will be used as the ExecutionContextDescription::name when the corresponding
 	// event is emitted.
+	// 如果指定的话，用给定的名字创建一个孤立的世界，并在其中评估给定的脚本。这个世界的名字将被用作相应事件发生时的ExecutionContextDescription::name。
 	WorldName string `json:"worldName,omitempty"`
 
 	// IncludeCommandLineAPI (experimental) (optional) Specifies whether command line API should be available to the script, defaults
 	// to false.
+	// 指定脚本是否应该使用命令行API，默认为false。
 	IncludeCommandLineAPI bool `json:"includeCommandLineAPI,omitempty"`
 }
 
@@ -1519,10 +1648,12 @@ func (m PageAddScriptToEvaluateOnNewDocument) Call(c Client) (*PageAddScriptToEv
 type PageAddScriptToEvaluateOnNewDocumentResult struct {
 
 	// Identifier Identifier of the added script.
+	// 脚本的唯一标识符
 	Identifier PageScriptIdentifier `json:"identifier"`
 }
 
 // PageBringToFront Brings page to front (activates tab).
+// PageBringToFront 将页面带到前面（激活标签）。
 type PageBringToFront struct {
 }
 
@@ -1549,21 +1680,27 @@ const (
 )
 
 // PageCaptureScreenshot Capture page screenshot.
+// 捕获页面截图。
 type PageCaptureScreenshot struct {
 
 	// Format (optional) Image compression format (defaults to png).
+	// 图像压缩格式（默认为png）。
 	Format PageCaptureScreenshotFormat `json:"format,omitempty"`
 
 	// Quality (optional) Compression quality from range [0..100] (jpeg only).
+	// 压缩质量在[0...100]范围内（仅jpeg）。
 	Quality *int `json:"quality,omitempty"`
 
 	// Clip (optional) Capture the screenshot of a given region only.
+	//只抓取指定区域的屏幕截图。
 	Clip *PageViewport `json:"clip,omitempty"`
 
 	// FromSurface (experimental) (optional) Capture the screenshot from the surface, rather than the view. Defaults to true.
+	// 从表面而不是从视图上捕捉屏幕截图。默认为true。
 	FromSurface bool `json:"fromSurface,omitempty"`
 
 	// CaptureBeyondViewport (experimental) (optional) Capture the screenshot beyond the viewport. Defaults to false.
+	// 捕捉视口以外的屏幕截图。默认为false。
 	CaptureBeyondViewport bool `json:"captureBeyondViewport,omitempty"`
 }
 
@@ -1580,6 +1717,7 @@ func (m PageCaptureScreenshot) Call(c Client) (*PageCaptureScreenshotResult, err
 type PageCaptureScreenshotResult struct {
 
 	// Data Base64-encoded image data.
+	// base64 编码的图像数据
 	Data []byte `json:"data"`
 }
 
@@ -1593,9 +1731,11 @@ const (
 
 // PageCaptureSnapshot (experimental) Returns a snapshot of the page as a string. For MHTML format, the serialization includes
 // iframes, shadow DOM, external resources, and element-inline styles.
+// 返回页面的快照为一个字符串。对于MHTML格式，序列化包括iframes、shadow DOM、外部资源和元素内联样式。
 type PageCaptureSnapshot struct {
 
 	// Format (optional) Format (defaults to mhtml).
+	// 格式（默认为mhtml）。
 	Format PageCaptureSnapshotFormat `json:"format,omitempty"`
 }
 
@@ -1616,6 +1756,7 @@ type PageCaptureSnapshotResult struct {
 }
 
 // PageClearDeviceMetricsOverride (deprecated) (experimental) Clears the overridden device metrics.
+// 清除覆盖的设备指标。
 type PageClearDeviceMetricsOverride struct {
 }
 
@@ -1628,6 +1769,7 @@ func (m PageClearDeviceMetricsOverride) Call(c Client) error {
 }
 
 // PageClearDeviceOrientationOverride (deprecated) (experimental) Clears the overridden Device Orientation.
+// 清除覆盖的设备方向。
 type PageClearDeviceOrientationOverride struct {
 }
 
@@ -1642,6 +1784,7 @@ func (m PageClearDeviceOrientationOverride) Call(c Client) error {
 }
 
 // PageClearGeolocationOverride (deprecated) Clears the overridden Geolocation Position and Error.
+//清除被覆盖的地理定位位置和错误。
 type PageClearGeolocationOverride struct {
 }
 
@@ -1654,16 +1797,21 @@ func (m PageClearGeolocationOverride) Call(c Client) error {
 }
 
 // PageCreateIsolatedWorld Creates an isolated world for the given frame.
+// 为给定的Frame创建一个隔离的世界。
 type PageCreateIsolatedWorld struct {
 
 	// FrameID Id of the frame in which the isolated world should be created.
+	// 给指定 Frame 创建隔离世界的 FrameID
 	FrameID PageFrameID `json:"frameId"`
 
 	// WorldName (optional) An optional name which is reported in the Execution Context.
+	// 在执行上下文中报告的可选名称。
 	WorldName string `json:"worldName,omitempty"`
 
 	// GrantUniveralAccess (optional) Whether or not universal access should be granted to the isolated world. This is a powerful
 	// option, use with caution.
+	// 是否应该对隔离的世界进行普遍访问。这是一个强大的选项，慎重使用。
+	// TODO：感觉翻译的不是很好，这个隔离的世界到底是啥东西
 	GrantUniveralAccess bool `json:"grantUniveralAccess,omitempty"`
 }
 
@@ -1680,16 +1828,20 @@ func (m PageCreateIsolatedWorld) Call(c Client) (*PageCreateIsolatedWorldResult,
 type PageCreateIsolatedWorldResult struct {
 
 	// ExecutionContextID Execution context of the isolated world.
+	// 隔离世界的执行上下文。
 	ExecutionContextID RuntimeExecutionContextID `json:"executionContextId"`
 }
 
 // PageDeleteCookie (deprecated) (experimental) Deletes browser cookie with given name, domain and path.
+// 删除具有给定名称、域和路径的浏览器cookie。
 type PageDeleteCookie struct {
 
 	// CookieName Name of the cookie to remove.
+	// 要删除的Cookie名称
 	CookieName string `json:"cookieName"`
 
 	// URL URL to match cooke domain and path.
+	// 和Cookie于名路径相匹配的URL
 	URL string `json:"url"`
 }
 
@@ -1702,6 +1854,7 @@ func (m PageDeleteCookie) Call(c Client) error {
 }
 
 // PageDisable Disables page domain notifications.
+// 禁用页面域名通知。
 type PageDisable struct {
 }
 
@@ -1714,6 +1867,7 @@ func (m PageDisable) Call(c Client) error {
 }
 
 // PageEnable Enables page domain notifications.
+// 启用页面域名通知。
 type PageEnable struct {
 }
 
@@ -1742,15 +1896,18 @@ func (m PageGetAppManifest) Call(c Client) (*PageGetAppManifestResult, error) {
 type PageGetAppManifestResult struct {
 
 	// URL Manifest location.
+	// Manifest 的位置
 	URL string `json:"url"`
 
 	// Errors ...
 	Errors []*PageAppManifestError `json:"errors"`
 
 	// Data (optional) Manifest content.
+	// Manifest 内容数据
 	Data string `json:"data,omitempty"`
 
 	// Parsed (experimental) (optional) Parsed manifest properties
+	// 解析 Manifest 的属性
 	Parsed *PageAppManifestParsedProperties `json:"parsed,omitempty"`
 }
 
@@ -1795,7 +1952,9 @@ type PageGetManifestIconsResult struct {
 }
 
 // PageGetAppID (experimental) Returns the unique (PWA) app id.
+// 返回唯一的（PWA）应用程序ID。
 // Only returns values if the feature flag 'WebAppEnableManifestId' is enabled
+// 仅在启用功能标志“WebAppEnableManifestId”时返回值
 type PageGetAppID struct {
 }
 
@@ -1812,14 +1971,17 @@ func (m PageGetAppID) Call(c Client) (*PageGetAppIDResult, error) {
 type PageGetAppIDResult struct {
 
 	// AppID (optional) App id, either from manifest's id attribute or computed from start_url
+	// 应用程序的ID，可以从清单的ID属性中获得，也可以从start_url中计算出来。
 	AppID string `json:"appId,omitempty"`
 
 	// RecommendedID (optional) Recommendation for manifest's id attribute to match current id computed from start_url
+	// 建议清单的id属性与从start_url计算出的当前id相匹配。
 	RecommendedID string `json:"recommendedId,omitempty"`
 }
 
 // PageGetCookies (deprecated) (experimental) Returns all browser cookies. Depending on the backend support, will return detailed cookie
 // information in the `cookies` field.
+// 返回所有浏览器的cookies。根据后端支持，将在 "cookies "字段中返回详细的cookies信息。
 type PageGetCookies struct {
 }
 
@@ -1856,10 +2018,12 @@ func (m PageGetFrameTree) Call(c Client) (*PageGetFrameTreeResult, error) {
 type PageGetFrameTreeResult struct {
 
 	// FrameTree Present frame tree structure.
+	// 代表 Frame树结构。
 	FrameTree *PageFrameTree `json:"frameTree"`
 }
 
 // PageGetLayoutMetrics Returns metrics relating to the layouting of the page, such as viewport bounds/scale.
+// 返回与页面布局有关的指标，如视口边界/比例。
 type PageGetLayoutMetrics struct {
 }
 
@@ -1876,25 +2040,32 @@ func (m PageGetLayoutMetrics) Call(c Client) (*PageGetLayoutMetricsResult, error
 type PageGetLayoutMetricsResult struct {
 
 	// LayoutViewport (deprecated) Deprecated metrics relating to the layout viewport. Is in device pixels. Use `cssLayoutViewport` instead.
+	// Deprecated metrics relating to the layout viewport. Is in device pixels. Use `cssLayoutViewport` instead.
 	LayoutViewport *PageLayoutViewport `json:"layoutViewport"`
 
 	// VisualViewport (deprecated) Deprecated metrics relating to the visual viewport. Is in device pixels. Use `cssVisualViewport` instead.
+	// 与可视视口相关的已弃用指标。以设备像素为单位。改用“cssVisualViewport”。
 	VisualViewport *PageVisualViewport `json:"visualViewport"`
 
 	// ContentSize (deprecated) Deprecated size of scrollable area. Is in DP. Use `cssContentSize` instead.
+	// 不推荐使用的可滚动区域大小。在DP中。请改用“csscontetsize”。
 	ContentSize *DOMRect `json:"contentSize"`
 
 	// CSSLayoutViewport Metrics relating to the layout viewport in CSS pixels.
+	// 与布局视口相关的度量（以CSS像素为单位）
 	CSSLayoutViewport *PageLayoutViewport `json:"cssLayoutViewport"`
 
 	// CSSVisualViewport Metrics relating to the visual viewport in CSS pixels.
+	// 与视觉视口有关的指标，以CSS像素为单位。
 	CSSVisualViewport *PageVisualViewport `json:"cssVisualViewport"`
 
 	// CSSContentSize Size of scrollable area in CSS pixels.
+	// 可滚动区域的大小，以CSS像素为单位。
 	CSSContentSize *DOMRect `json:"cssContentSize"`
 }
 
 // PageGetNavigationHistory Returns navigation history for the current page.
+// 返回当前页面的导航历史记录。
 type PageGetNavigationHistory struct {
 }
 
@@ -1911,13 +2082,16 @@ func (m PageGetNavigationHistory) Call(c Client) (*PageGetNavigationHistoryResul
 type PageGetNavigationHistoryResult struct {
 
 	// CurrentIndex Index of the current navigation history entry.
+	// 当前导航历史条目的索引。
 	CurrentIndex int `json:"currentIndex"`
 
 	// Entries Array of navigation history entries.
+	// 导航历史条目的数组。
 	Entries []*PageNavigationEntry `json:"entries"`
 }
 
 // PageResetNavigationHistory Resets navigation history for the current page.
+// 重置当前页面的导航历史。
 type PageResetNavigationHistory struct {
 }
 
@@ -1930,12 +2104,15 @@ func (m PageResetNavigationHistory) Call(c Client) error {
 }
 
 // PageGetResourceContent (experimental) Returns content of the given resource.
+// 返回给定资源的内容。
 type PageGetResourceContent struct {
 
 	// FrameID Frame id to get resource for.
+	// 要获取资源的FrameID。
 	FrameID PageFrameID `json:"frameId"`
 
 	// URL URL of the resource to get content for.
+	// 要获取内容的资源的URL。
 	URL string `json:"url"`
 }
 
@@ -1952,13 +2129,16 @@ func (m PageGetResourceContent) Call(c Client) (*PageGetResourceContentResult, e
 type PageGetResourceContentResult struct {
 
 	// Content Resource content.
+	// 资源内容。
 	Content string `json:"content"`
 
 	// Base64Encoded True, if content was served as base64.
+	// 如果内容用作base64，则为True。
 	Base64Encoded bool `json:"base64Encoded"`
 }
 
 // PageGetResourceTree (experimental) Returns present frame / resource tree structure.
+// 返回当前Frame/资源树结构。
 type PageGetResourceTree struct {
 }
 
@@ -1975,17 +2155,21 @@ func (m PageGetResourceTree) Call(c Client) (*PageGetResourceTreeResult, error) 
 type PageGetResourceTreeResult struct {
 
 	// FrameTree Present frame / resource tree structure.
+	// 代表框架/资源树结构。
 	FrameTree *PageFrameResourceTree `json:"frameTree"`
 }
 
 // PageHandleJavaScriptDialog Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload).
+// 接受或驳回一个由JavaScript发起的对话框（alert, confirm, prompt, or onbeforeunload）。
 type PageHandleJavaScriptDialog struct {
 
 	// Accept Whether to accept or dismiss the dialog.
+	// 是否接受或驳回该对话框。
 	Accept bool `json:"accept"`
 
 	// PromptText (optional) The text to enter into the dialog prompt before accepting. Used only if this is a prompt
 	// dialog.
+	// 接受前要输入对话框提示的文本。仅当这是提示对话框时使用。
 	PromptText string `json:"promptText,omitempty"`
 }
 
@@ -1998,21 +2182,26 @@ func (m PageHandleJavaScriptDialog) Call(c Client) error {
 }
 
 // PageNavigate Navigates current page to the given URL.
+// 将当前页面导航至给定的URL。
 type PageNavigate struct {
 
 	// URL URL to navigate the page to.
+	// 将页面导航到的URL。
 	URL string `json:"url"`
 
 	// Referrer (optional) Referrer URL.
 	Referrer string `json:"referrer,omitempty"`
 
 	// TransitionType (optional) Intended transition type.
+	// 这是一种转换类型。
 	TransitionType PageTransitionType `json:"transitionType,omitempty"`
 
 	// FrameID (optional) Frame id to navigate, if not specified navigates the top frame.
+	// 要导航的frame id，如果未指定，则导航顶部frame。
 	FrameID PageFrameID `json:"frameId,omitempty"`
 
 	// ReferrerPolicy (experimental) (optional) Referrer-policy used for the navigation.
+	// 用于导航的Referrer-policy。
 	ReferrerPolicy PageReferrerPolicy `json:"referrerPolicy,omitempty"`
 }
 
@@ -2029,20 +2218,25 @@ func (m PageNavigate) Call(c Client) (*PageNavigateResult, error) {
 type PageNavigateResult struct {
 
 	// FrameID Frame id that has navigated (or failed to navigate)
+	// 已导航（或未能导航）的Frameid
 	FrameID PageFrameID `json:"frameId"`
 
 	// LoaderID (optional) Loader identifier. This is omitted in case of same-document navigation,
 	// as the previously committed loaderId would not change.
+	// 加载器标识符。对于相同的文档导航，这一点将被省略，因为之前提交的loaderId不会更改。
 	LoaderID NetworkLoaderID `json:"loaderId,omitempty"`
 
 	// ErrorText (optional) User friendly error message, present if and only if navigation has failed.
+	// 用户友好的错误消息，仅当导航失败时出现。
 	ErrorText string `json:"errorText,omitempty"`
 }
 
 // PageNavigateToHistoryEntry Navigates current page to the given history entry.
+// 将当前页面导航到给定的历史条目。
 type PageNavigateToHistoryEntry struct {
 
 	// EntryID Unique id of the entry to navigate to.
+	// 要导航到的条目的唯一ID
 	EntryID int `json:"entryId"`
 }
 
@@ -2066,67 +2260,87 @@ const (
 )
 
 // PagePrintToPDF Print page as PDF.
+// 将页面打印成PDF
 type PagePrintToPDF struct {
 
 	// Landscape (optional) Paper orientation. Defaults to false.
+	// 纸张方向。默认为false。
 	Landscape bool `json:"landscape,omitempty"`
 
 	// DisplayHeaderFooter (optional) Display header and footer. Defaults to false.
+	// 显示页眉和页脚。默认为false。
 	DisplayHeaderFooter bool `json:"displayHeaderFooter,omitempty"`
 
 	// PrintBackground (optional) Print background graphics. Defaults to false.
+	// 打印背景图形。默认为false
 	PrintBackground bool `json:"printBackground,omitempty"`
 
 	// Scale (optional) Scale of the webpage rendering. Defaults to 1.
+	// 、网页渲染的比例。默认为1。
 	Scale *float64 `json:"scale,omitempty"`
 
 	// PaperWidth (optional) Paper width in inches. Defaults to 8.5 inches.
+	// 、纸张宽度，以英寸为单位。默认为8.5英寸。
 	PaperWidth *float64 `json:"paperWidth,omitempty"`
 
 	// PaperHeight (optional) Paper height in inches. Defaults to 11 inches.
+	//、 纸张高度，单位是英寸。默认为11英寸。
 	PaperHeight *float64 `json:"paperHeight,omitempty"`
 
 	// MarginTop (optional) Top margin in inches. Defaults to 1cm (~0.4 inches).
+	// 上边距，单位是英寸。默认为1厘米（~0.4英寸）。
 	MarginTop *float64 `json:"marginTop,omitempty"`
 
 	// MarginBottom (optional) Bottom margin in inches. Defaults to 1cm (~0.4 inches).
+	// 底部空白，以英寸为单位。默认为1厘米（~0.4英寸）。
 	MarginBottom *float64 `json:"marginBottom,omitempty"`
 
 	// MarginLeft (optional) Left margin in inches. Defaults to 1cm (~0.4 inches).
+	//左边的空白，单位是英寸。默认为1厘米（~0.4英寸）。
 	MarginLeft *float64 `json:"marginLeft,omitempty"`
 
 	// MarginRight (optional) Right margin in inches. Defaults to 1cm (~0.4 inches).
+	// 右边的空白，单位是英寸。默认为1厘米（~0.4英寸）。
 	MarginRight *float64 `json:"marginRight,omitempty"`
 
 	// PageRanges (optional) Paper ranges to print, one based, e.g., '1-5, 8, 11-13'. Pages are
 	// printed in the document order, not in the order specified, and no
 	// more than once.
+	// 要打印的纸张范围，基于一个，例如“1-5、8、11-13”。页面按文档顺序打印，而不是按指定的顺序打印，并且不超过一次。
 	// Defaults to empty string, which implies the entire document is printed.
+	// 默认为空字符串，这意味着要打印整个文件。
 	// The page numbers are quietly capped to actual page count of the
 	// document, and ranges beyond the end of the document are ignored.
+	//页码被悄悄地限定在文件的实际页数上，而超出文件末尾的范围则被忽略。
 	// If this results in no pages to print, an error is reported.
 	// It is an error to specify a range with start greater than end.
+	// 如果这样做的结果是没有要打印的页面，就会报告一个错误。指定一个起点大于终点的范围是一个错误。
 	PageRanges string `json:"pageRanges,omitempty"`
 
 	// HeaderTemplate (optional) HTML template for the print header. Should be valid HTML markup with following
 	// classes used to inject printing values into them:
-	// - `date`: formatted print date
-	// - `title`: document title
-	// - `url`: document location
-	// - `pageNumber`: current page number
-	// - `totalPages`: total pages in the document
+	// 打印标题的HTML模板。应为有效的HTML标记，使用以下类将打印值注入其中：
+	// - `date`: formatted print date 格式化打印日期
+	// - `title`: document title 文档标题
+	// - `url`: document location 文档地址
+	// - `pageNumber`: current page number 当前页
+	// - `totalPages`: total pages in the document 文档中的总页数
 	//
 	// For example, `<span class=title></span>` would generate span containing the title.
+	// 例如，`<span class=title></span>`将生成包含标题的span。
 	HeaderTemplate string `json:"headerTemplate,omitempty"`
 
 	// FooterTemplate (optional) HTML template for the print footer. Should use the same format as the `headerTemplate`.
+	// 打印页脚的HTML模板。应使用与“headerTemplate”相同的格式。
 	FooterTemplate string `json:"footerTemplate,omitempty"`
 
 	// PreferCSSPageSize (optional) Whether or not to prefer page size as defined by css. Defaults to false,
 	// in which case the content will be scaled to fit the paper size.
+	// 是否喜欢css定义的页面大小。默认值为false，在这种情况下，内容将缩放以适应纸张大小。
 	PreferCSSPageSize bool `json:"preferCSSPageSize,omitempty"`
 
 	// TransferMode (experimental) (optional) return as stream
+	// 作为流返回
 	TransferMode PagePrintToPDFTransferMode `json:"transferMode,omitempty"`
 }
 
@@ -2143,20 +2357,26 @@ func (m PagePrintToPDF) Call(c Client) (*PagePrintToPDFResult, error) {
 type PagePrintToPDFResult struct {
 
 	// Data Base64-encoded pdf data. Empty if |returnAsStream| is specified.
+	// Base64编码的pdf数据。如果指定了|returnAsStream|，则为空。
 	Data []byte `json:"data"`
 
 	// Stream (experimental) (optional) A handle of the stream that holds resulting PDF data.
+	// 保存生成的PDF数据的流句柄。
 	Stream IOStreamHandle `json:"stream,omitempty"`
 }
 
 // PageReload Reloads given page optionally ignoring the cache.
+// 可以选择忽略缓存来重新加载给定页面。
 type PageReload struct {
 
 	// IgnoreCache (optional) If true, browser cache is ignored (as if the user pressed Shift+refresh).
+	// 如果为真，浏览器缓存将被忽略（就像用户按了Shift+refresh一样）。
 	IgnoreCache bool `json:"ignoreCache,omitempty"`
 
 	// ScriptToEvaluateOnLoad (optional) If set, the script will be injected into all frames of the inspected page after reload.
+	// 如果设置，脚本将在重新加载后注入到检查页面的所有Frame中。
 	// Argument will be ignored if reloading dataURL origin.
+	// 如果重新加载dataURL源，则将忽略参数。
 	ScriptToEvaluateOnLoad string `json:"scriptToEvaluateOnLoad,omitempty"`
 }
 
@@ -2169,6 +2389,7 @@ func (m PageReload) Call(c Client) error {
 }
 
 // PageRemoveScriptToEvaluateOnLoad (deprecated) (experimental) Deprecated, please use removeScriptToEvaluateOnNewDocument instead.
+// 已弃用，请改用removeScriptToEvaluateOnNewDocument
 type PageRemoveScriptToEvaluateOnLoad struct {
 
 	// Identifier ...
@@ -2186,6 +2407,7 @@ func (m PageRemoveScriptToEvaluateOnLoad) Call(c Client) error {
 }
 
 // PageRemoveScriptToEvaluateOnNewDocument Removes given script from the list.
+// 从列表中删除给定的脚本。
 type PageRemoveScriptToEvaluateOnNewDocument struct {
 
 	// Identifier ...
@@ -2203,9 +2425,11 @@ func (m PageRemoveScriptToEvaluateOnNewDocument) Call(c Client) error {
 }
 
 // PageScreencastFrameAck (experimental) Acknowledges that a screencast frame has been received by the frontend.
+// 确认前端已经收到了录屏Frame。
 type PageScreencastFrameAck struct {
 
 	// SessionID Frame number.
+	// Frame 号
 	SessionID int `json:"sessionId"`
 }
 
@@ -2218,21 +2442,27 @@ func (m PageScreencastFrameAck) Call(c Client) error {
 }
 
 // PageSearchInResource (experimental) Searches for given string in resource content.
+// 在资源内容中搜索给定的字符串。
 type PageSearchInResource struct {
 
 	// FrameID Frame id for resource to search in.
+	// 要搜索的资源的 Frame id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// URL URL of the resource to search in.
+	// 要搜索的资源的URL。
 	URL string `json:"url"`
 
 	// Query String to search for.
+	// 要搜索的字符串。
 	Query string `json:"query"`
 
 	// CaseSensitive (optional) If true, search is case sensitive.
+	// 如果为true，则搜索区分大小写。
 	CaseSensitive bool `json:"caseSensitive,omitempty"`
 
 	// IsRegex (optional) If true, treats string parameter as regex.
+	// 如果为true，则将字符串参数视为正则表达式。
 	IsRegex bool `json:"isRegex,omitempty"`
 }
 
@@ -2253,9 +2483,11 @@ type PageSearchInResourceResult struct {
 }
 
 // PageSetAdBlockingEnabled (experimental) Enable Chrome's experimental ad filter on all sites.
+// 在所有网站上启用Chrome的实验广告过滤器。
 type PageSetAdBlockingEnabled struct {
 
 	// Enabled Whether to block ads.
+	//、 是否拦截广告。
 	Enabled bool `json:"enabled"`
 }
 
@@ -2268,9 +2500,11 @@ func (m PageSetAdBlockingEnabled) Call(c Client) error {
 }
 
 // PageSetBypassCSP (experimental) Enable page Content Security Policy by-passing.
+// 通过传递启用页面内容安全策略。
 type PageSetBypassCSP struct {
 
 	// Enabled Whether to bypass page CSP.
+	// 是否绕过页面CSP。
 	Enabled bool `json:"enabled"`
 }
 
@@ -2283,6 +2517,7 @@ func (m PageSetBypassCSP) Call(c Client) error {
 }
 
 // PageGetPermissionsPolicyState (experimental) Get Permissions Policy state on given frame.
+// 获取给定 Frame 上的权限策略状态。
 type PageGetPermissionsPolicyState struct {
 
 	// FrameID ...
@@ -2306,6 +2541,7 @@ type PageGetPermissionsPolicyStateResult struct {
 }
 
 // PageGetOriginTrials (experimental) Get Origin Trials on given frame.
+// 获取给定帧上的Origin Trials。
 type PageGetOriginTrials struct {
 
 	// FrameID ...
@@ -2331,43 +2567,56 @@ type PageGetOriginTrialsResult struct {
 // PageSetDeviceMetricsOverride (deprecated) (experimental) Overrides the values of device screen dimensions (window.screen.width, window.screen.height,
 // window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media
 // query results).
+// 覆盖设备屏幕尺寸的值（window.screen.width、window.screen.height、window.innerWidth、window.innerHeight和 "device-width"/"device-height "相关CSS媒体查询结果）。
 type PageSetDeviceMetricsOverride struct {
 
 	// Width Overriding width value in pixels (minimum 0, maximum 10000000). 0 disables the override.
+	// 覆盖以像素为单位的宽度值（最小值为0，最大值为10000000）。0禁用覆盖。
 	Width int `json:"width"`
 
 	// Height Overriding height value in pixels (minimum 0, maximum 10000000). 0 disables the override.
+	// 覆盖以像素为单位的高度值（最小值为0，最大值为10000000）。0禁用覆盖。
 	Height int `json:"height"`
 
 	// DeviceScaleFactor Overriding device scale factor value. 0 disables the override.
+	// 覆盖设备比例因子值。0禁用覆盖。
 	DeviceScaleFactor float64 `json:"deviceScaleFactor"`
 
 	// Mobile Whether to emulate mobile device. This includes viewport meta tag, overlay scrollbars, text
 	// autosizing and more.
+	// 是否模拟移动设备。这包括视口元标记、重叠滚动条、文本自动大小调整等。
 	Mobile bool `json:"mobile"`
 
 	// Scale (optional) Scale to apply to resulting view image.
+	// 缩放以应用于生成的视图图像。
 	Scale *float64 `json:"scale,omitempty"`
 
 	// ScreenWidth (optional) Overriding screen width value in pixels (minimum 0, maximum 10000000).
+	// 覆盖以像素为单位的屏幕宽度值（最小0，最大10000000）。
 	ScreenWidth *int `json:"screenWidth,omitempty"`
 
 	// ScreenHeight (optional) Overriding screen height value in pixels (minimum 0, maximum 10000000).
+	// 覆盖屏幕高度值，单位为像素（最小0，最大10000000）。
 	ScreenHeight *int `json:"screenHeight,omitempty"`
 
 	// PositionX (optional) Overriding view X position on screen in pixels (minimum 0, maximum 10000000).
+	// 覆盖视图在屏幕上的X位置，单位是像素（最小0，最大10000000）。
 	PositionX *int `json:"positionX,omitempty"`
 
 	// PositionY (optional) Overriding view Y position on screen in pixels (minimum 0, maximum 10000000).
+	// 覆盖视图在屏幕上的Y位置，单位是像素（最小0，最大10000000）。
 	PositionY *int `json:"positionY,omitempty"`
 
 	// DontSetVisibleSize (optional) Do not set visible view size, rely upon explicit setVisibleSize call.
+	// 不要设置可见视图大小，请依赖显式的setVisibleSize调用。
 	DontSetVisibleSize bool `json:"dontSetVisibleSize,omitempty"`
 
 	// ScreenOrientation (optional) Screen orientation override.
+	// 屏幕方向覆盖。
 	ScreenOrientation *EmulationScreenOrientation `json:"screenOrientation,omitempty"`
 
 	// Viewport (optional) The viewport dimensions and scale. If not set, the override is cleared.
+	// 视口尺寸和比例。如果未设置，则清除覆盖。
 	Viewport *PageViewport `json:"viewport,omitempty"`
 }
 
@@ -2380,6 +2629,7 @@ func (m PageSetDeviceMetricsOverride) Call(c Client) error {
 }
 
 // PageSetDeviceOrientationOverride (deprecated) (experimental) Overrides the Device Orientation.
+// 覆盖设备方向。
 type PageSetDeviceOrientationOverride struct {
 
 	// Alpha Mock alpha
@@ -2403,12 +2653,15 @@ func (m PageSetDeviceOrientationOverride) Call(c Client) error {
 }
 
 // PageSetFontFamilies (experimental) Set generic font families.
+// 设置通用字体族。
 type PageSetFontFamilies struct {
 
 	// FontFamilies Specifies font families to set. If a font family is not specified, it won't be changed.
+	// 指定要设置的字体族。如果未指定字体族，则不会对其进行更改。
 	FontFamilies *PageFontFamilies `json:"fontFamilies"`
 
 	// ForScripts (optional) Specifies font families to set for individual scripts.
+	// 指定要为单个脚本设置的字体族。
 	ForScripts []*PageScriptFontFamilies `json:"forScripts,omitempty"`
 }
 
@@ -2421,9 +2674,11 @@ func (m PageSetFontFamilies) Call(c Client) error {
 }
 
 // PageSetFontSizes (experimental) Set default font sizes.
+// 设置默认字体大小。
 type PageSetFontSizes struct {
 
 	// FontSizes Specifies font sizes to set. If a font size is not specified, it won't be changed.
+	// 指定要设置的字体大小。如果没有指定字体大小，它就不会被改变。
 	FontSizes *PageFontSizes `json:"fontSizes"`
 }
 
@@ -2436,12 +2691,15 @@ func (m PageSetFontSizes) Call(c Client) error {
 }
 
 // PageSetDocumentContent Sets given markup as the document's HTML.
+// 将给定标记设置为文档的HTML。
 type PageSetDocumentContent struct {
 
 	// FrameID Frame id to set HTML for.
+	// 要设置HTML的FrameID。
 	FrameID PageFrameID `json:"frameId"`
 
 	// HTML HTML content to set.
+	// 要设置的HTML内容。
 	HTML string `json:"html"`
 }
 
@@ -2468,13 +2726,16 @@ const (
 )
 
 // PageSetDownloadBehavior (deprecated) (experimental) Set the behavior when downloading a file.
+// 设置下载文件时的行为。
 type PageSetDownloadBehavior struct {
 
 	// Behavior Whether to allow all or deny all download requests, or use default Chrome behavior if
 	// available (otherwise deny).
+	// 是否允许所有的或拒绝所有的下载请求，或使用默认的Chrome行为，如果有的话（否则拒绝）。
 	Behavior PageSetDownloadBehaviorBehavior `json:"behavior"`
 
 	// DownloadPath (optional) The default path to save downloaded files to. This is required if behavior is set to 'allow'
+	// 将下载文件保存到的默认路径。如果行为设置为“允许”，则需要此路径
 	DownloadPath string `json:"downloadPath,omitempty"`
 }
 
@@ -2488,6 +2749,7 @@ func (m PageSetDownloadBehavior) Call(c Client) error {
 
 // PageSetGeolocationOverride (deprecated) Overrides the Geolocation Position or Error. Omitting any of the parameters emulates position
 // unavailable.
+// 覆盖地理位置或错误。省略任何参数将模拟位置不可用。
 type PageSetGeolocationOverride struct {
 
 	// Latitude (optional) Mock latitude
@@ -2509,9 +2771,11 @@ func (m PageSetGeolocationOverride) Call(c Client) error {
 }
 
 // PageSetLifecycleEventsEnabled (experimental) Controls whether page will emit lifecycle events.
+// 控制页面是否发出生命周期事件。
 type PageSetLifecycleEventsEnabled struct {
 
 	// Enabled If true, starts emitting lifecycle events.
+	// 如果为true，它将开始发出生命周期事件。
 	Enabled bool `json:"enabled"`
 }
 
@@ -2535,12 +2799,15 @@ const (
 )
 
 // PageSetTouchEmulationEnabled (deprecated) (experimental) Toggles mouse event-based touch event emulation.
+// 基于触摸事件模拟切换鼠标事件。
 type PageSetTouchEmulationEnabled struct {
 
 	// Enabled Whether the touch event emulation should be enabled.
+	// 是否应启用触摸事件仿真。
 	Enabled bool `json:"enabled"`
 
 	// Configuration (optional) Touch/gesture events configuration. Default: current platform.
+	// 触摸/手势事件配置。默认：当前平台。
 	Configuration PageSetTouchEmulationEnabledConfiguration `json:"configuration,omitempty"`
 }
 
@@ -2564,21 +2831,27 @@ const (
 )
 
 // PageStartScreencast (experimental) Starts sending each frame using the `screencastFrame` event.
+// 使用`screencastFrame`事件开始发送每一Frame。
 type PageStartScreencast struct {
 
 	// Format (optional) Image compression format.
+	// 图像压缩格式。
 	Format PageStartScreencastFormat `json:"format,omitempty"`
 
 	// Quality (optional) Compression quality from range [0..100].
+	// 压缩质量的范围是[0...100]。
 	Quality *int `json:"quality,omitempty"`
 
 	// MaxWidth (optional) Maximum screenshot width.
+	// 最大屏幕截图宽度。
 	MaxWidth *int `json:"maxWidth,omitempty"`
 
 	// MaxHeight (optional) Maximum screenshot height.
+	// 最大屏幕截图高度。
 	MaxHeight *int `json:"maxHeight,omitempty"`
 
 	// EveryNthFrame (optional) Send every n-th frame.
+	// 每第 n Frame 发送一次。
 	EveryNthFrame *int `json:"everyNthFrame,omitempty"`
 }
 
@@ -2591,6 +2864,7 @@ func (m PageStartScreencast) Call(c Client) error {
 }
 
 // PageStopLoading Force the page stop all navigations and pending resource fetches.
+// 强制页面停止所有导航和挂起的资源获取。
 type PageStopLoading struct {
 }
 
@@ -2603,6 +2877,7 @@ func (m PageStopLoading) Call(c Client) error {
 }
 
 // PageCrash (experimental) Crashes renderer on the IO thread, generates minidumps.
+// 在IO线程上崩溃渲染器，产生minidumps。
 type PageCrash struct {
 }
 
@@ -2615,6 +2890,7 @@ func (m PageCrash) Call(c Client) error {
 }
 
 // PageClose (experimental) Tries to close page, running its beforeunload hooks, if any.
+// 尝试关闭页面，运行其beforeunload挂钩（如果有的话）。
 type PageClose struct {
 }
 
@@ -2638,11 +2914,14 @@ const (
 )
 
 // PageSetWebLifecycleState (experimental) Tries to update the web lifecycle state of the page.
+// 尝试更新页面的web生命周期状态。
 // It will transition the page to the given state according to:
+// 它将根据以下条件将页面转换为给定状态：
 // https://github.com/WICG/web-lifecycle/
 type PageSetWebLifecycleState struct {
 
 	// State Target lifecycle state
+	// 目标声明周期状态
 	State PageSetWebLifecycleStateState `json:"state"`
 }
 
@@ -2655,6 +2934,7 @@ func (m PageSetWebLifecycleState) Call(c Client) error {
 }
 
 // PageStopScreencast (experimental) Stops sending each frame in the `screencastFrame`.
+// 停止发送“screencastFrame”中的每个Frame。
 type PageStopScreencast struct {
 }
 
@@ -2667,10 +2947,13 @@ func (m PageStopScreencast) Call(c Client) error {
 }
 
 // PageProduceCompilationCache (experimental) Requests backend to produce compilation cache for the specified scripts.
+// 请求后端为指定脚本生成编译缓存。
 // `scripts` are appeneded to the list of scripts for which the cache
 // would be produced. The list may be reset during page navigation.
 // When script with a matching URL is encountered, the cache is optionally
 // produced upon backend discretion, based on internal heuristics.
+// `scripts`被附加到将产生缓存的脚本列表中。这个列表可以在页面导航时被重置。当遇到匹配的URL的脚本时，缓存会根据内部启发式方法，在后端酌情产生。
+// 也可以查看：
 // See also: `Page.compilationCacheProduced`.
 type PageProduceCompilationCache struct {
 
@@ -2688,12 +2971,14 @@ func (m PageProduceCompilationCache) Call(c Client) error {
 
 // PageAddCompilationCache (experimental) Seeds compilation cache for given url. Compilation cache does not survive
 // cross-process navigation.
+// 为给定url种子编译缓存。编译缓存在跨进程导航中无法生存。
 type PageAddCompilationCache struct {
 
 	// URL ...
 	URL string `json:"url"`
 
 	// Data Base64-encoded data
+	// base64 编码的数据
 	Data []byte `json:"data"`
 }
 
@@ -2706,6 +2991,7 @@ func (m PageAddCompilationCache) Call(c Client) error {
 }
 
 // PageClearCompilationCache (experimental) Clears seeded compilation cache.
+// 清除种子编译缓存。
 type PageClearCompilationCache struct {
 }
 
@@ -2732,6 +3018,7 @@ const (
 )
 
 // PageSetSPCTransactionMode (experimental) Sets the Secure Payment Confirmation transaction mode.
+// 设置安全支付确认交易模式。
 // https://w3c.github.io/secure-payment-confirmation/#sctn-automation-set-spc-transaction-mode
 type PageSetSPCTransactionMode struct {
 
@@ -2748,12 +3035,15 @@ func (m PageSetSPCTransactionMode) Call(c Client) error {
 }
 
 // PageGenerateTestReport (experimental) Generates a report for testing.
+// 生成测试报告。
 type PageGenerateTestReport struct {
 
 	// Message Message to be displayed in the report.
+	//要在报告中显示的消息。
 	Message string `json:"message"`
 
 	// Group (optional) Specifies the endpoint group to deliver the report to.
+	// 指定要交付报告的端点组。
 	Group string `json:"group,omitempty"`
 }
 
@@ -2766,6 +3056,7 @@ func (m PageGenerateTestReport) Call(c Client) error {
 }
 
 // PageWaitForDebugger (experimental) Pauses page execution. Can be resumed using generic Runtime.runIfWaitingForDebugger.
+// 暂停页面执行。可以使用generic Runtime.runIfWaitingForDebugger恢复。
 type PageWaitForDebugger struct {
 }
 
@@ -2778,8 +3069,11 @@ func (m PageWaitForDebugger) Call(c Client) error {
 }
 
 // PageSetInterceptFileChooserDialog (experimental) Intercept file chooser requests and transfer control to protocol clients.
+// /拦截文件选择器请求并将控制权转移给协议客户。
 // When file chooser interception is enabled, native file chooser dialog is not shown.
+// 启用文件选择器拦截时，不会显示本机文件选择器对话框。
 // Instead, a protocol event `Page.fileChooserOpened` is emitted.
+// 而是协议事件页面。FileChooservePened'被发出。
 type PageSetInterceptFileChooserDialog struct {
 
 	// Enabled ...
@@ -2820,15 +3114,19 @@ const (
 )
 
 // PageFileChooserOpened Emitted only when `page.interceptFileChooser` is enabled.
+// 只有当`page.interceptFileChooser`被启用时才会发出。
 type PageFileChooserOpened struct {
 
 	// FrameID (experimental) Id of the frame containing input node.
+	// 包含输入节点的Frame的Id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// Mode Input mode.
+	//输入模式。
 	Mode PageFileChooserOpenedMode `json:"mode"`
 
 	// BackendNodeID (experimental) (optional) Input node id. Only present for file choosers opened via an <input type="file"> element.
+	// 输入节点id。仅适用于通过<Input type=“file”>元素打开的文件选择器。
 	BackendNodeID DOMBackendNodeID `json:"backendNodeId,omitempty"`
 }
 
@@ -2838,19 +3136,24 @@ func (evt PageFileChooserOpened) ProtoEvent() string {
 }
 
 // PageFrameAttached Fired when frame has been attached to its parent.
+// 当Frame已附加到其父Frame时触发。
 type PageFrameAttached struct {
 
 	// FrameID Id of the frame that has been attached.
+	//已附着的frame的Id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// ParentFrameID Parent frame identifier.
+	// 父frame标识符。
 	ParentFrameID PageFrameID `json:"parentFrameId"`
 
 	// Stack (optional) JavaScript stack trace of when frame was attached, only set if frame initiated from script.
+	// 附加frame时的JavaScript堆栈跟踪，仅在框架从脚本启动时设置。
 	Stack *RuntimeStackTrace `json:"stack,omitempty"`
 
 	// AdScriptID (experimental) (optional) Identifies the bottom-most script which caused the frame to be labelled
 	// as an ad. Only sent if frame is labelled as an ad and id is available.
+	// 标识导致frame标记为广告的最底层脚本。仅当帧标记为ad且id可用时发送。
 	AdScriptID *PageAdScriptID `json:"adScriptId,omitempty"`
 }
 
@@ -2860,9 +3163,11 @@ func (evt PageFrameAttached) ProtoEvent() string {
 }
 
 // PageFrameClearedScheduledNavigation (deprecated) Fired when frame no longer has a scheduled navigation.
+// /当frame不再具有计划导航时触发。
 type PageFrameClearedScheduledNavigation struct {
 
 	// FrameID Id of the frame that has cleared its scheduled navigation.
+	// 已清除其计划导航的Frame的Id。
 	FrameID PageFrameID `json:"frameId"`
 }
 
@@ -2883,9 +3188,11 @@ const (
 )
 
 // PageFrameDetached Fired when frame has been detached from its parent.
+// 当Frame已从其父Frame分离时触发。
 type PageFrameDetached struct {
 
 	// FrameID Id of the frame that has been detached.
+	// 已经脱离的Frame的Id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// Reason (experimental) ...
@@ -2898,9 +3205,11 @@ func (evt PageFrameDetached) ProtoEvent() string {
 }
 
 // PageFrameNavigated Fired once navigation of the frame has completed. Frame is now associated with the new loader.
+// Frame 导航完成后触发。Frame现在与新的加载器相关联。
 type PageFrameNavigated struct {
 
 	// Frame Frame object.
+	// Frame对象
 	Frame *PageFrame `json:"frame"`
 
 	// Type (experimental) ...
@@ -2913,9 +3222,11 @@ func (evt PageFrameNavigated) ProtoEvent() string {
 }
 
 // PageDocumentOpened (experimental) Fired when opening document to write to.
+// 打开要写入的文档时触发。
 type PageDocumentOpened struct {
 
 	// Frame Frame object.
+	// Frame 对象
 	Frame *PageFrame `json:"frame"`
 }
 
@@ -2934,19 +3245,25 @@ func (evt PageFrameResized) ProtoEvent() string {
 }
 
 // PageFrameRequestedNavigation (experimental) Fired when a renderer-initiated navigation is requested.
+// 当请求渲染器启动的导航时触发。
 // Navigation may still be cancelled after the event is issued.
+// 发布事件后，导航仍可能被取消。
 type PageFrameRequestedNavigation struct {
 
 	// FrameID Id of the frame that is being navigated.
+	// 正在导航的Frame的Id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// Reason The reason for the navigation.
+	// 导航的原因。
 	Reason PageClientNavigationReason `json:"reason"`
 
 	// URL The destination URL for the requested navigation.
+	// 请求的导航的目标URL。
 	URL string `json:"url"`
 
 	// Disposition The disposition for the navigation.
+	// 导航的处置。
 	Disposition PageClientNavigationDisposition `json:"disposition"`
 }
 
@@ -2956,19 +3273,24 @@ func (evt PageFrameRequestedNavigation) ProtoEvent() string {
 }
 
 // PageFrameScheduledNavigation (deprecated) Fired when frame schedules a potential navigation.
+// 当Frame计划潜在导航时触发。
 type PageFrameScheduledNavigation struct {
 
 	// FrameID Id of the frame that has scheduled a navigation.
+	// 已计划导航的Frame的Id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// Delay Delay (in seconds) until the navigation is scheduled to begin. The navigation is not
 	// guaranteed to start.
+	// 延迟（秒），直到计划开始导航。导航不能保证启动。
 	Delay float64 `json:"delay"`
 
 	// Reason The reason for the navigation.
+	// 导航的原因。
 	Reason PageClientNavigationReason `json:"reason"`
 
 	// URL The destination URL for the scheduled navigation.
+	// 计划导航的目标URL。
 	URL string `json:"url"`
 }
 
@@ -2978,9 +3300,11 @@ func (evt PageFrameScheduledNavigation) ProtoEvent() string {
 }
 
 // PageFrameStartedLoading (experimental) Fired when frame has started loading.
+// 当Frame开始加载时触发。
 type PageFrameStartedLoading struct {
 
 	// FrameID Id of the frame that has started loading.
+	// 已开始加载的Frame的Id。
 	FrameID PageFrameID `json:"frameId"`
 }
 
@@ -2990,9 +3314,11 @@ func (evt PageFrameStartedLoading) ProtoEvent() string {
 }
 
 // PageFrameStoppedLoading (experimental) Fired when frame has stopped loading.
+// 当Frame停止加载时触发。
 type PageFrameStoppedLoading struct {
 
 	// FrameID Id of the frame that has stopped loading.
+	// 已停止加载的Frame的Id。
 	FrameID PageFrameID `json:"frameId"`
 }
 
@@ -3002,19 +3328,25 @@ func (evt PageFrameStoppedLoading) ProtoEvent() string {
 }
 
 // PageDownloadWillBegin (deprecated) (experimental) Fired when page is about to start a download.
+// 当页面即将开始下载时触发。
 // Deprecated. Use Browser.downloadWillBegin instead.
+// 弃用。使用Browser.downloadWillBegin代替。
 type PageDownloadWillBegin struct {
 
 	// FrameID Id of the frame that caused download to begin.
+	// 导致下载开始的Frame的Id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// GUID Global unique identifier of the download.
+	// 下载的全局唯一标识符。
 	GUID string `json:"guid"`
 
 	// URL URL of the resource being downloaded.
+	// 正在下载的资源的URL。
 	URL string `json:"url"`
 
 	// SuggestedFilename Suggested file name of the resource (the actual name of the file saved on disk may differ).
+	// 建议的资源文件名（保存在磁盘上的文件的实际名称可能不同）。
 	SuggestedFilename string `json:"suggestedFilename"`
 }
 
@@ -3038,19 +3370,25 @@ const (
 )
 
 // PageDownloadProgress (deprecated) (experimental) Fired when download makes progress. Last call has |done| == true.
+// 当下载进行时触发。上次调用|done|==true。
 // Deprecated. Use Browser.downloadProgress instead.
+// 弃用。使用Browser.downloadProgress代替。
 type PageDownloadProgress struct {
 
 	// GUID Global unique identifier of the download.
+	// 下载的全局唯一标识符。
 	GUID string `json:"guid"`
 
 	// TotalBytes Total expected bytes to download.
+	// 要下载的预期字节总数。
 	TotalBytes float64 `json:"totalBytes"`
 
 	// ReceivedBytes Total bytes received.
+	// 接收的总字节数。
 	ReceivedBytes float64 `json:"receivedBytes"`
 
 	// State Download status.
+	// 下载状态。
 	State PageDownloadProgressState `json:"state"`
 }
 
@@ -3060,6 +3398,7 @@ func (evt PageDownloadProgress) ProtoEvent() string {
 }
 
 // PageInterstitialHidden Fired when interstitial page was hidden
+// 当间隙性页面被隐藏时启动
 type PageInterstitialHidden struct {
 }
 
@@ -3069,6 +3408,7 @@ func (evt PageInterstitialHidden) ProtoEvent() string {
 }
 
 // PageInterstitialShown Fired when interstitial page was shown
+// 在显示间隙性页面时启动
 type PageInterstitialShown struct {
 }
 
@@ -3079,12 +3419,15 @@ func (evt PageInterstitialShown) ProtoEvent() string {
 
 // PageJavascriptDialogClosed Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) has been
 // closed.
+// 关闭JavaScript启动的对话框(alert, confirm, prompt, or onbeforeunload)时触发。
 type PageJavascriptDialogClosed struct {
 
 	// Result Whether dialog was confirmed.
+	// 对话框是否已确认。
 	Result bool `json:"result"`
 
 	// UserInput User input in case of prompt.
+	// 提示时的用户输入。
 	UserInput string `json:"userInput"`
 }
 
@@ -3095,23 +3438,30 @@ func (evt PageJavascriptDialogClosed) ProtoEvent() string {
 
 // PageJavascriptDialogOpening Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) is about to
 // open.
+// 当JavaScript启动的对话框(alert, confirm, prompt, or onbeforeunload)即将打开时触发。
 type PageJavascriptDialogOpening struct {
 
 	// URL Frame url.
+	// Frame url。
 	URL string `json:"url"`
 
 	// Message Message that will be displayed by the dialog.
+	// 对话框将显示的消息。
 	Message string `json:"message"`
 
 	// Type Dialog type.
+	//对话框类型。
 	Type PageDialogType `json:"type"`
 
 	// HasBrowserHandler True iff browser is capable showing or acting on the given dialog. When browser has no
 	// dialog handler for given target, calling alert while Page domain is engaged will stall
 	// the page execution. Execution can be resumed via calling Page.handleJavaScriptDialog.
+	// 如果浏览器能够显示或操作给定对话框，则为True。当浏览器没有针对给定目标的对话框处理程序时，
+	// 在使用页面域时调用警报将暂停页面执行。可以通过调用Page.handleJavaScriptDialog恢复执行。
 	HasBrowserHandler bool `json:"hasBrowserHandler"`
 
 	// DefaultPrompt (optional) Default dialog prompt.
+	// 默认对话框提示。
 	DefaultPrompt string `json:"defaultPrompt,omitempty"`
 }
 
@@ -3156,12 +3506,15 @@ const (
 )
 
 // PageLifecycleEvent Fired for top level page lifecycle events such as navigation, load, paint, etc.
+// 为顶级的页面生命周期事件而启动，如导航、加载、绘制等。
 type PageLifecycleEvent struct {
 
 	// FrameID Id of the frame.
+	// Frame 的Id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// LoaderID Loader identifier. Empty string if the request is fetched from worker.
+	// 加载器标识符。如果请求是从worker获取的，则为空字符串。
 	LoaderID NetworkLoaderID `json:"loaderId"`
 
 	// Name ...
@@ -3180,18 +3533,24 @@ func (evt PageLifecycleEvent) ProtoEvent() string {
 // not assume any ordering with the Page.frameNavigated event. This event is fired only for
 // main-frame history navigation where the document changes (non-same-document navigations),
 // when bfcache navigation fails.
+// 如果启用BackForwardCache功能，对失败的bfcache历史导航进行触发。
+// 不要假设与Page.frameNavigated事件有任何排序。这个事件只在bfcache导航失败时，文件发生变化（非相同文件导航）的main-frame历史导航中被触发。
 type PageBackForwardCacheNotUsed struct {
 
 	// LoaderID The loader id for the associated navgation.
+	// 关联导航的加载器id。
 	LoaderID NetworkLoaderID `json:"loaderId"`
 
 	// FrameID The frame id of the associated frame.
+	// 关联frame的帧id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// NotRestoredExplanations Array of reasons why the page could not be cached. This must not be empty.
+	// 页面不能被缓存的原因数组。这不能是空的。
 	NotRestoredExplanations []*PageBackForwardCacheNotRestoredExplanation `json:"notRestoredExplanations"`
 
 	// NotRestoredExplanationsTree (optional) Tree structure of reasons why the page could not be cached for each frame.
+	// 无法为每个frame缓存页面的原因树结构。
 	NotRestoredExplanationsTree *PageBackForwardCacheNotRestoredExplanationTree `json:"notRestoredExplanationsTree,omitempty"`
 }
 
@@ -3201,9 +3560,11 @@ func (evt PageBackForwardCacheNotUsed) ProtoEvent() string {
 }
 
 // PagePrerenderAttemptCompleted Fired when a prerender attempt is completed.
+// 预渲染尝试完成时触发。
 type PagePrerenderAttemptCompleted struct {
 
 	// InitiatingFrameID The frame id of the frame initiating prerendering.
+	// 启动预渲染的帧的 Frame id。
 	InitiatingFrameID PageFrameID `json:"initiatingFrameId"`
 
 	// PrerenderingURL ...
@@ -3231,12 +3592,15 @@ func (evt PageLoadEventFired) ProtoEvent() string {
 }
 
 // PageNavigatedWithinDocument (experimental) Fired when same-document navigation happens, e.g. due to history API usage or anchor navigation.
+// 当发生同文档导航时触发，例如由于历史API的使用或锚点导航。
 type PageNavigatedWithinDocument struct {
 
 	// FrameID Id of the frame.
+	// Frame 的ID
 	FrameID PageFrameID `json:"frameId"`
 
 	// URL Frame's new url.
+	// Frame 的新url
 	URL string `json:"url"`
 }
 
@@ -3246,15 +3610,19 @@ func (evt PageNavigatedWithinDocument) ProtoEvent() string {
 }
 
 // PageScreencastFrame (experimental) Compressed image data requested by the `startScreencast`.
+// Compressed image data requested by the `startScreencast`.
 type PageScreencastFrame struct {
 
 	// Data Base64-encoded compressed image.
+	// Base64编码压缩图像。
 	Data []byte `json:"data"`
 
 	// Metadata Screencast frame metadata.
+	// 屏幕录像的Frame元数据。
 	Metadata *PageScreencastFrameMetadata `json:"metadata"`
 
 	// SessionID Frame number.
+	// Frame 号
 	SessionID int `json:"sessionId"`
 }
 
@@ -3264,9 +3632,11 @@ func (evt PageScreencastFrame) ProtoEvent() string {
 }
 
 // PageScreencastVisibilityChanged (experimental) Fired when the page with currently enabled screencast was shown or hidden `.
+// 当具有当前启用的截屏的页面被显示或隐藏时启动。
 type PageScreencastVisibilityChanged struct {
 
 	// Visible True if the page is visible.
+	// 如果页面可见，则为True。
 	Visible bool `json:"visible"`
 }
 
@@ -3277,18 +3647,23 @@ func (evt PageScreencastVisibilityChanged) ProtoEvent() string {
 
 // PageWindowOpen Fired when a new window is going to be opened, via window.open(), link click, form submission,
 // etc.
+// 当新窗口将要打开时，通过窗口。open（），单击链接，表单提交， 等等。
 type PageWindowOpen struct {
 
 	// URL The URL for the new window.
+	// 新窗口的URL。
 	URL string `json:"url"`
 
 	// WindowName Window name.
+	// 新窗口的名称
 	WindowName string `json:"windowName"`
 
 	// WindowFeatures An array of enabled window features.
+	// 一组启用的窗口功能。
 	WindowFeatures []string `json:"windowFeatures"`
 
 	// UserGesture Whether or not it was triggered by user gesture.
+	// 是否由用户手势触发。
 	UserGesture bool `json:"userGesture"`
 }
 
@@ -3299,12 +3674,14 @@ func (evt PageWindowOpen) ProtoEvent() string {
 
 // PageCompilationCacheProduced (experimental) Issued for every compilation cache generated. Is only available
 // if Page.setGenerateCompilationCache is enabled.
+// 为每个生成的编译缓存发布。只有当Page.setGenerateCompilationCache被启用时才可用。
 type PageCompilationCacheProduced struct {
 
 	// URL ...
 	URL string `json:"url"`
 
 	// Data Base64-encoded data
+	// base64 编码的数据
 	Data []byte `json:"data"`
 }
 

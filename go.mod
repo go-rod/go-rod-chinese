@@ -1,4 +1,4 @@
-module github.com/go-rod/rod
+module github.com/go-rod/go-rod-chinese
 
 go 1.16
 

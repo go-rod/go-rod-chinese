@@ -1,49 +1,46 @@
-# Overview
+# 概览
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/go-rod/rod.svg)](https://pkg.go.dev/github.com/go-rod/rod)
 [![Discord Chat](https://img.shields.io/discord/719933559456006165.svg)][discord room]
 
-## [Documentation](https://go-rod.github.io/) | [API reference](https://pkg.go.dev/github.com/go-rod/rod?tab=doc) | [Management](https://github.com/orgs/go-rod/projects/1) | [FAQ](https://go-rod.github.io/#/faq/README)
+## [教程文档](https://go-rod.github.io/) | [英文 API 参考文档](https://pkg.go.dev/github.com/go-rod/rod?tab=doc) | [项目管理](https://github.com/orgs/go-rod/projects/1) | [FAQ](https://go-rod.github.io/#/faq/README)
 
-Rod is a high-level driver directly based on [DevTools Protocol](https://chromedevtools.github.io/devtools-protocol).
-It's designed for web automation and scraping for both high-level and low-level use, senior developers can use the low-level packages and functions to easily
-customize or build up their own version of Rod, the high-level functions are just examples to build a default version of Rod.
+Rod 是一个直接基于 [DevTools Protocol](https://chromedevtools.github.io/devtools-protocol) 高级驱动程序。
+它是为网页自动化和爬虫而设计的，既可用于高级应用开发也可用于低级应用开发，高级开发人员可以使用低级包和函数来轻松地定制或建立他们自己的Rod版本，高级函数只是建立Rod默认版本的例子。
 
-## Features
+## 特性
 
-- Chained context design, intuitive to timeout or cancel the long-running task
-- Auto-wait elements to be ready
-- Debugging friendly, auto input tracing, remote monitoring headless browser
-- Thread-safe for all operations
-- Automatically find or download [browser](lib/launcher)
-- High-level helpers like WaitStable, WaitRequestIdle, HijackRequests, WaitDownload, etc
-- Two-step WaitEvent design, never miss an event ([how it works](https://github.com/ysmood/goob))
-- Correctly handles nested iframes or shadow DOMs
-- No zombie browser process after the crash ([how it works](https://github.com/ysmood/leakless))
-- [CI](https://github.com/go-rod/rod/actions) enforced 100% test coverage
+- 链式上下文设计，直观地超时或取消长时间运行的任务
+- 自动等待元素准备就绪
+- 调试友好，自动输入跟踪，远程监控无头浏览器
+- 所有操作都是线程安全的
+- 自动查找或下载 [浏览器](lib/launcher)
+- 高级的辅助程序像 WaitStable, WaitRequestIdle, HijackRequests, WaitDownload,等
+- 两步式的 WaitEvent 设计，永远不会错过任何一个事件 ([工作原理](https://github.com/ysmood/goob))
+- 正确地处理嵌套的iframe或影子DOM
+- 崩溃后没有僵尸浏览器进程 ([工作原理](https://github.com/ysmood/leakless))
+- [CI](https://github.com/go-rod/rod/actions) 100% 的测试覆盖率
 
-## Examples
+## 示例
 
-Please check the [examples_test.go](examples_test.go) file first, then check the [examples](lib/examples) folder.
+首先请查看 [examples_test.go](examples_test.go), 然后查看 [examples](lib/examples) 文件夹.有关更详细的示例，请搜索单元测试。
+例如 `HandleAuth`的使用， 你可以搜索所有 `*_test.go` 文件包含`HandleAuth`的，例如，使用 Github 在线搜索 [在仓库中搜索](https://github.com/go-rod/rod/search?q=HandleAuth&unscoped_q=HandleAuth).
+你也可以搜索 GitHub 的 [issues](https://github.com/go-rod/rod/issues) 或者 [discussions](https://github.com/go-rod/rod/discussions),这里记录了更多的使用示例。
 
-For more detailed examples, please search the unit tests.
-Such as the usage of method `HandleAuth`, you can search all the `*_test.go` files that contain `HandleAuth`,
-for example, use Github online [search in repository](https://github.com/go-rod/rod/search?q=HandleAuth&unscoped_q=HandleAuth).
-You can also search the GitHub [issues](https://github.com/go-rod/rod/issues) or [discussions](https://github.com/go-rod/rod/discussions),
-a lot of usage examples are recorded there.
-
-[Here](lib/examples/compare-chromedp) is a comparison of the examples between rod and Chromedp.
+[这里](lib/examples/compare-chromedp) 是一个 rod 和 chromedp 的比较。
 
 If you have questions, please raise an [issues](https://github.com/go-rod/rod/issues)/[discussions](https://github.com/go-rod/rod/discussions) or join the [chat room][discord room].
 
-## Join us
+如果你有疑问，可以提 [issues](https://github.com/go-rod/rod/issues)/[discussions](https://github.com/go-rod/rod/discussions) 或者加入 [chat room][discord room].
 
-Your help is more than welcome! Even just open an issue to ask a question may greatly help others.
+## 加入我们
 
-Please read [How To Ask Questions The Smart Way](http://www.catb.org/~esr/faqs/smart-questions.html) before you ask questions.
+我们非常欢迎你的帮助! 即使只是打开一个问题，提出一个问题，也可能大大帮助别人。
 
-We use Github Projects to manage tasks, you can see the priority and progress of the issues [here](https://github.com/orgs/go-rod/projects/1).
+在你提出问题之前，请阅读 [如何聪明的提问](http://www.catb.org/~esr/faqs/smart-questions.html)。
 
-If you want to contribute please read the [Contributor Guide](.github/CONTRIBUTING.md).
+我们使用 Github 项目来管理任务，你可以在[这里](https://github.com/orgs/go-rod/projects/1)看到这些问题的优先级和进展。
+
+如果你想为项目作出贡献，请阅读 [Contributor Guide](.github/CONTRIBUTING.md)。
 
 [discord room]: https://discord.gg/CpevuvY
