@@ -1,9 +1,9 @@
 # 概览
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/go-rod/rod.svg)](https://pkg.go.dev/github.com/go-rod/rod)
+[![Go Reference](https://pkg.go.dev/badge/github.com/go-rod/go-rod-chinese.svg)](https://pkg.go.dev/github.com/go-rod/go-rod-chinese)
 [![Discord Chat](https://img.shields.io/discord/719933559456006165.svg)][discord room]
 
-## [教程文档](https://go-rod.github.io/) | [英文 API 参考文档](https://pkg.go.dev/github.com/go-rod/rod?tab=doc) | [项目管理](https://github.com/orgs/go-rod/projects/1) | [FAQ](https://go-rod.github.io/#/faq/README)
+## [教程文档](https://go-rod.github.io/) | [英文 API 参考文档](https://pkg.go.dev/github.com/go-rod/rod?tab=doc) | [中文 API 参考文档](https://pkg.go.dev/github.com/go-rod/go-rod-chinese?tab=doc) | [项目管理](https://github.com/orgs/go-rod/projects/1) | [FAQ](https://go-rod.github.io/#/faq/README)
 
 Rod 是一个直接基于 [DevTools Protocol](https://chromedevtools.github.io/devtools-protocol) 高级驱动程序。
 它是为网页自动化和爬虫而设计的，既可用于高级应用开发也可用于低级应用开发，高级开发人员可以使用低级包和函数来轻松地定制或建立他们自己的Rod版本，高级函数只是建立Rod默认版本的例子。
@@ -20,6 +20,14 @@ Rod 是一个直接基于 [DevTools Protocol](https://chromedevtools.github.io/d
 - 正确地处理嵌套的iframe或影子DOM
 - 崩溃后没有僵尸浏览器进程 ([工作原理](https://github.com/ysmood/leakless))
 - [CI](https://github.com/go-rod/rod/actions) 100% 的测试覆盖率
+
+## 关于中文 API 参考文档的说明
+
+- 中文 API 参考文档中含有 `TODO` 的地方，表示目前的没有较好的翻译，如果有觉得很适合的翻译，请在中文仓库下提交 [issues](https://github.com/go-rod/go-rod-chinese/issues)/[discussions](https://github.com/go-rod/go-rod-chinese/discussions) 
+- 翻译风格，翻译建议，翻译勘误，请在中文仓库下提交 [issues](https://github.com/go-rod/go-rod-chinese/issues)/[discussions](https://github.com/go-rod/go-rod-chinese/discussions) 
+- 不建议将中文仓库的代码，使用在您的项目中，强烈建议使用[英文仓库](https://github.com/go-rod/rod)的代码。中文仓库仅供作为 API 文档中文版的参考
+- 关于API文档的翻译情况：对于底层库封装出来的接口已经全部翻译，底层库目前仅翻译了一些和功能业务相关的，例如：Network，Page等
+- 欢迎加入 rod 中文 API 参考文档的建设当中来
 
 ## 示例
 
