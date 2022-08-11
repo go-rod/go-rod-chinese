@@ -24,14 +24,14 @@ Rod 是一个直接基于 [DevTools Protocol](https://chromedevtools.github.io/d
 ## 示例
 
 首先请查看 [examples_test.go](examples_test.go), 然后查看 [examples](lib/examples) 文件夹.有关更详细的示例，请搜索单元测试。
-例如 `HandleAuth`的使用， 你可以搜索所有 `*_test.go` 文件包含`HandleAuth`的，例如，使用 Github 在线搜索 [在仓库中搜索](https://github.com/go-rod/rod/search?q=HandleAuth&unscoped_q=HandleAuth).
+例如 `HandleAuth`的使用， 你可以搜索所有 `*_test.go` 文件包含`HandleAuth`的，例如，使用 Github 在线搜索 [在仓库中搜索](https://github.com/go-rod/rod/search?q=HandleAuth&unscoped_q=HandleAuth)。
 你也可以搜索 GitHub 的 [issues](https://github.com/go-rod/rod/issues) 或者 [discussions](https://github.com/go-rod/rod/discussions),这里记录了更多的使用示例。
 
 [这里](lib/examples/compare-chromedp) 是一个 rod 和 chromedp 的比较。
 
-If you have questions, please raise an [issues](https://github.com/go-rod/rod/issues)/[discussions](https://github.com/go-rod/rod/discussions) or join the [chat room][discord room].
+If you have questions, please raise an [issues](https://github.com/go-rod/rod/issues)/[discussions](https://github.com/go-rod/rod/discussions) or join the [chat room][discord room]。
 
-如果你有疑问，可以提 [issues](https://github.com/go-rod/rod/issues)/[discussions](https://github.com/go-rod/rod/discussions) 或者加入 [chat room][discord room].
+如果你有疑问，可以提 [issues](https://github.com/go-rod/rod/issues)/[discussions](https://github.com/go-rod/rod/discussions) 或者加入 [chat room][discord room]。
 
 ## 加入我们
 
