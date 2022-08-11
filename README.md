@@ -29,8 +29,6 @@ Rod 是一个直接基于 [DevTools Protocol](https://chromedevtools.github.io/d
 
 [这里](lib/examples/compare-chromedp) 是一个 rod 和 chromedp 的比较。
 
-If you have questions, please raise an [issues](https://github.com/go-rod/rod/issues)/[discussions](https://github.com/go-rod/rod/discussions) or join the [chat room][discord room]。
-
 如果你有疑问，可以提 [issues](https://github.com/go-rod/rod/issues)/[discussions](https://github.com/go-rod/rod/discussions) 或者加入 [chat room][discord room]。
 
 ## 加入我们
