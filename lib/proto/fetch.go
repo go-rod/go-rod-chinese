@@ -7,15 +7,18 @@ package proto
 Fetch
 
 A domain for letting clients substitute browser's network layer with client code.
+一个允许客户端用客户端代码替换浏览器网络层的域。
 
 */
 
 // FetchRequestID Unique request identifier.
+// 唯一的请求标识符。
 type FetchRequestID string
 
 // FetchRequestStage Stages of the request to handle. Request will intercept before the request is
 // sent. Response will intercept after the response is received (but before response
 // body is received).
+// 请求处理的阶段。Request将在发送请求之前拦截。响应将在接收到响应之后(但在接收到响应体之前)进行拦截。
 type FetchRequestStage string
 
 const (
@@ -31,12 +34,15 @@ type FetchRequestPattern struct {
 
 	// URLPattern (optional) Wildcards (`'*'` -> zero or more, `'?'` -> exactly one) are allowed. Escape character is
 	// backslash. Omitting is equivalent to `"*"`.
+	// 通配符  (`'*'` -> 零或更多，”?“→正好一个)是允许的。转义字符为反斜杠。省略等价于`"*"`。
 	URLPattern string `json:"urlPattern,omitempty"`
 
 	// ResourceType (optional) If set, only requests for matching resource types will be intercepted.
+	//如果设置了，只会拦截匹配资源类型的请求。
 	ResourceType NetworkResourceType `json:"resourceType,omitempty"`
 
 	// RequestStage (optional) Stage at which to begin intercepting requests. Default is Request.
+	// 开始拦截请求的阶段。默认是请求。
 	RequestStage FetchRequestStage `json:"requestStage,omitempty"`
 }
 
@@ -62,18 +68,23 @@ const (
 )
 
 // FetchAuthChallenge Authorization challenge for HTTP status code 401 or 407.
+// 针对HTTP状态码401或407的认证质询。
 type FetchAuthChallenge struct {
 
 	// Source (optional) Source of the authentication challenge.
+	// 认证质询的来源
 	Source FetchAuthChallengeSource `json:"source,omitempty"`
 
 	// Origin Origin of the challenger.
+	// 认证质询的源
 	Origin string `json:"origin"`
 
 	// Scheme The authentication scheme used, such as basic or digest
+	// 所使用的身份验证方案，例如基本或摘要
 	Scheme string `json:"scheme"`
 
 	// Realm The realm of the challenge. May be empty.
+	// 认证质询的领域。可能是空的。
 	Realm string `json:"realm"`
 }
 
@@ -92,23 +103,28 @@ const (
 )
 
 // FetchAuthChallengeResponse Response to an AuthChallenge.
+// 对 AuthChallenge 的响应
 type FetchAuthChallengeResponse struct {
 
 	// Response The decision on what to do in response to the authorization challenge.  Default means
 	// deferring to the default behavior of the net stack, which will likely either the Cancel
 	// authentication or display a popup dialog box.
+	// 关于如何响应认证质询的决定。Default意味着遵从网络堆栈的默认行为，这可能是取消身份验证或显示弹出对话框。
 	Response FetchAuthChallengeResponseResponse `json:"response"`
 
 	// Username (optional) The username to provide, possibly empty. Should only be set if response is
 	// ProvideCredentials.
+	// 要提供的用户名，可能为空。仅当响应为providedecedentials时才应设置。
 	Username string `json:"username,omitempty"`
 
 	// Password (optional) The password to provide, possibly empty. Should only be set if response is
 	// ProvideCredentials.
+	// 要提供的密码，可能为空。应该只在response为  ProvideCredentials。
 	Password string `json:"password,omitempty"`
 }
 
 // FetchDisable Disables the fetch domain.
+// 禁用 fetch Domain
 type FetchDisable struct {
 }
 
@@ -122,15 +138,18 @@ func (m FetchDisable) Call(c Client) error {
 
 // FetchEnable Enables issuing of requestPaused events. A request will be paused until client
 // calls one of failRequest, fulfillRequest or continueRequest/continueWithAuth.
+// 启用发出requestPaused事件。请求将被暂停，直到客户端调用failRequest、fulfilled request或continueRequest/continueWithAuth中的一个。
 type FetchEnable struct {
 
 	// Patterns (optional) If specified, only requests matching any of these patterns will produce
 	// fetchRequested event and will be paused until clients response. If not set,
 	// all requests will be affected.
+	// 如果指定，只有匹配这些模式中的任何一个的请求才会产生fetchRequested事件，并将被暂停，直到客户端响应。如果不设置，所有请求都会受到影响。
 	Patterns []*FetchRequestPattern `json:"patterns,omitempty"`
 
 	// HandleAuthRequests (optional) If true, authRequired events will be issued and requests will be paused
 	// expecting a call to continueWithAuth.
+	// 如果为true，将触发authRequired事件，并暂停请求，等待调用continueWithAuth。
 	HandleAuthRequests bool `json:"handleAuthRequests,omitempty"`
 }
 
@@ -143,12 +162,15 @@ func (m FetchEnable) Call(c Client) error {
 }
 
 // FetchFailRequest Causes the request to fail with specified reason.
+// 导致请求失败的指定原因
 type FetchFailRequest struct {
 
 	// RequestID An id the client received in requestPaused event.
+	// 客户端在requestPaused事件中收到的id。
 	RequestID FetchRequestID `json:"requestId"`
 
 	// ErrorReason Causes the request to fail with the given reason.
+	// 导致请求失败的指定原因
 	ErrorReason NetworkErrorReason `json:"errorReason"`
 }
 
@@ -161,30 +183,37 @@ func (m FetchFailRequest) Call(c Client) error {
 }
 
 // FetchFulfillRequest Provides response to the request.
+// 为请求提供响应。
 type FetchFulfillRequest struct {
 
 	// RequestID An id the client received in requestPaused event.
+	// 客户端在requestpause事件中收到的id。
 	RequestID FetchRequestID `json:"requestId"`
 
 	// ResponseCode An HTTP response code.
+	// HTTP 响应码
 	ResponseCode int `json:"responseCode"`
 
 	// ResponseHeaders (optional) Response headers.
+	// 响应头
 	ResponseHeaders []*FetchHeaderEntry `json:"responseHeaders,omitempty"`
 
 	// BinaryResponseHeaders (optional) Alternative way of specifying response headers as a \0-separated
 	// series of name: value pairs. Prefer the above method unless you
 	// need to represent some non-UTF8 values that can't be transmitted
 	// over the protocol as text.
+	// 将响应头指定为\0分隔的名称:值对序列的另一种方法。最好使用上面的方法，除非你需要表示一些不能通过协议以文本形式传输的非utf8值。
 	BinaryResponseHeaders []byte `json:"binaryResponseHeaders,omitempty"`
 
 	// Body A response body. If absent, original response body will be used if
 	// the request is intercepted at the response stage and empty body
 	// will be used if the request is intercepted at the request stage.
+	// 响应体。如果不存在，则在响应阶段截获请求将使用原始响应体，在请求阶段截获请求将使用空响应体。
 	Body []byte `json:"body"`
 
 	// ResponsePhrase (optional) A textual representation of responseCode.
 	// If absent, a standard phrase matching responseCode is used.
+	// responseCode的文本表示形式。如果不存在，则使用与responseCode匹配的标准短语。
 	ResponsePhrase string `json:"responsePhrase,omitempty"`
 }
 
@@ -197,24 +226,31 @@ func (m FetchFulfillRequest) Call(c Client) error {
 }
 
 // FetchContinueRequest Continues the request, optionally modifying some of its parameters.
+// 继续请求，可选择性地修改一些参数。
 type FetchContinueRequest struct {
 
 	// RequestID An id the client received in requestPaused event.
+	// 客户端在requestpause事件中收到的id。
 	RequestID FetchRequestID `json:"requestId"`
 
 	// URL (optional) If set, the request url will be modified in a way that's not observable by page.
+	// 如果设置了，请求url会以一种page无法观察到的方式被修改。
 	URL string `json:"url,omitempty"`
 
 	// Method (optional) If set, the request method is overridden.
+	// 如果设置了，请求方法将被覆盖。
 	Method string `json:"method,omitempty"`
 
 	// PostData (optional) If set, overrides the post data in the request.
+	//如果设置了，则覆盖请求中的post数据。
 	PostData []byte `json:"postData,omitempty"`
 
 	// Headers (optional) If set, overrides the request headers.
+	// 如果设置，覆盖请求头。
 	Headers []*FetchHeaderEntry `json:"headers,omitempty"`
 
 	// InterceptResponse (experimental) (optional) If set, overrides response interception behavior for this request.
+	// 如果设置，将覆盖此请求的响应拦截行为。
 	InterceptResponse bool `json:"interceptResponse,omitempty"`
 }
 
@@ -227,12 +263,15 @@ func (m FetchContinueRequest) Call(c Client) error {
 }
 
 // FetchContinueWithAuth Continues a request supplying authChallengeResponse following authRequired event.
+// 在authRequired事件之后继续提供authChallengeResponse的请求
 type FetchContinueWithAuth struct {
 
 	// RequestID An id the client received in authRequired event.
+	// 客户端在authRequired事件中收到的id。
 	RequestID FetchRequestID `json:"requestId"`
 
 	// AuthChallengeResponse Response to  with an authChallenge.
+	// 用 authchallenge 响应
 	AuthChallengeResponse *FetchAuthChallengeResponse `json:"authChallengeResponse"`
 }
 
@@ -247,25 +286,31 @@ func (m FetchContinueWithAuth) Call(c Client) error {
 // FetchContinueResponse (experimental) Continues loading of the paused response, optionally modifying the
 // response headers. If either responseCode or headers are modified, all of them
 // must be present.
+// 继续加载暂停的响应，可选地修改响应头。如果responseCode或headers被修改了，它们都必须同时存在。
 type FetchContinueResponse struct {
 
 	// RequestID An id the client received in requestPaused event.
+	// 客户端在requestpause事件中收到的id。
 	RequestID FetchRequestID `json:"requestId"`
 
 	// ResponseCode (optional) An HTTP response code. If absent, original response code will be used.
+	// HTTP响应代码。如果没有，将使用原始响应码。
 	ResponseCode *int `json:"responseCode,omitempty"`
 
 	// ResponsePhrase (optional) A textual representation of responseCode.
 	// If absent, a standard phrase matching responseCode is used.
+	// responseCode的文本表示形式。如果不存在，则使用与responseCode匹配的标准短语。
 	ResponsePhrase string `json:"responsePhrase,omitempty"`
 
 	// ResponseHeaders (optional) Response headers. If absent, original response headers will be used.
+	// 响应头。如果没有，原始响应头将被使用。
 	ResponseHeaders []*FetchHeaderEntry `json:"responseHeaders,omitempty"`
 
 	// BinaryResponseHeaders (optional) Alternative way of specifying response headers as a \0-separated
 	// series of name: value pairs. Prefer the above method unless you
 	// need to represent some non-UTF8 values that can't be transmitted
 	// over the protocol as text.
+	// 将响应头指定为\0分隔的名称:值对序列的另一种方法。最好使用上面的方法，除非你需要表示一些不能通过协议以文本形式传输的非utf8值。
 	BinaryResponseHeaders []byte `json:"binaryResponseHeaders,omitempty"`
 }
 
@@ -283,9 +328,12 @@ func (m FetchContinueResponse) Call(c Client) error {
 // takeResponseBodyForInterceptionAsStream. Calling other methods that
 // affect the request or disabling fetch domain before body is received
 // results in an undefined behavior.
+// 导致从服务器接收响应体，并作为单个字符串返回。只能用于暂停在响应阶段的请求，并且与takeResponseBodyForInterceptionAsStream互斥。
+// 在接收body之前调用其他影响请求的方法或禁用fetch域会导致未定义的行为。
 type FetchGetResponseBody struct {
 
 	// RequestID Identifier for the intercepted request to get body for.
+	// 要获取请求体的被拦截请求的标识符。
 	RequestID FetchRequestID `json:"requestId"`
 }
 
@@ -302,22 +350,30 @@ func (m FetchGetResponseBody) Call(c Client) (*FetchGetResponseBodyResult, error
 type FetchGetResponseBodyResult struct {
 
 	// Body Response body.
+	// 响应体
 	Body string `json:"body"`
 
 	// Base64Encoded True, if content was sent as base64.
+	// 如果内容以base64格式发送，返回True。
 	Base64Encoded bool `json:"base64Encoded"`
 }
 
 // FetchTakeResponseBodyAsStream Returns a handle to the stream representing the response body.
+// 返回表示响应主体的流句柄。
 // The request must be paused in the HeadersReceived stage.
+// 请求必须在HeadersReceived阶段暂停。
 // Note that after this command the request can't be continued
 // as is -- client either needs to cancel it or to provide the
 // response body.
+// 请注意，在此命令之后，请求不能按原样继续——客户端要么需要取消它，要么需要提供响应主体。
 // The stream only supports sequential read, IO.read will fail if the position
 // is specified.
+// 流只支持顺序读、IO。如果指定了读取位置，读取将失败。
 // This method is mutually exclusive with getResponseBody.
+// 此方法与getResponseBody是互斥的。
 // Calling other methods that affect the request or disabling fetch
 // domain before body is received results in an undefined behavior.
+// 在接收body之前调用其他影响请求的方法或禁用fetch域会导致未定义的行为。
 type FetchTakeResponseBodyAsStream struct {
 
 	// RequestID ...
@@ -346,34 +402,45 @@ type FetchTakeResponseBodyAsStreamResult struct {
 // The stage of the request can be determined by presence of responseErrorReason
 // and responseStatusCode -- the request is at the response stage if either
 // of these fields is present and in the request stage otherwise.
+// 当域名启用且请求URL与指定的过滤器匹配时发出。请求被暂停，直到客户端以continueRequest、failRequest或fulfilled request中的一个来响应。
+// 请求的阶段可以通过responseErrorReason和responseStatusCode来确定——如果这两个字段中的任何一个存在，则请求处于响应阶段，否则处于请求阶段。
 type FetchRequestPaused struct {
 
 	// RequestID Each request the page makes will have a unique id.
+	// 页面发出的每个请求都有一个唯一的id。
 	RequestID FetchRequestID `json:"requestId"`
 
 	// Request The details of the request.
+	// 请求的详细信息
 	Request *NetworkRequest `json:"request"`
 
 	// FrameID The id of the frame that initiated the request.
+	// 发起请求的Frame id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// ResourceType How the requested resource will be used.
+	// 如何使用请求的资源
 	ResourceType NetworkResourceType `json:"resourceType"`
 
 	// ResponseErrorReason (optional) Response error if intercepted at response stage.
+	// 如果在响应阶段截获，则响应错误。
 	ResponseErrorReason NetworkErrorReason `json:"responseErrorReason,omitempty"`
 
 	// ResponseStatusCode (optional) Response code if intercepted at response stage.
+	// 在响应阶段截获的响应代码。
 	ResponseStatusCode *int `json:"responseStatusCode,omitempty"`
 
 	// ResponseStatusText (optional) Response status text if intercepted at response stage.
+	// 响应状态文本(如果在响应阶段截获)。
 	ResponseStatusText string `json:"responseStatusText,omitempty"`
 
 	// ResponseHeaders (optional) Response headers if intercepted at the response stage.
+	// 响应头(如果在响应阶段截获)。
 	ResponseHeaders []*FetchHeaderEntry `json:"responseHeaders,omitempty"`
 
 	// NetworkID (optional) If the intercepted request had a corresponding Network.requestWillBeSent event fired for it,
 	// then this networkId will be the same as the requestId present in the requestWillBeSent event.
+	// 如果截获的请求有对应的网络。触发requestWillBeSent事件，那么这个networkId和requestWillBeSent事件中的requesttid是一样的。
 	NetworkID FetchRequestID `json:"networkId,omitempty"`
 }
 
@@ -384,23 +451,29 @@ func (evt FetchRequestPaused) ProtoEvent() string {
 
 // FetchAuthRequired Issued when the domain is enabled with handleAuthRequests set to true.
 // The request is paused until client responds with continueWithAuth.
+// 当域启用且handleAuthRequests设置为true时发出。请求被暂停，直到客户端用continueWithAuth响应。
 type FetchAuthRequired struct {
 
 	// RequestID Each request the page makes will have a unique id.
+	// 页面发出的每个请求都有一个唯一的id。
 	RequestID FetchRequestID `json:"requestId"`
 
 	// Request The details of the request.
+	// 请求的详细信息
 	Request *NetworkRequest `json:"request"`
 
 	// FrameID The id of the frame that initiated the request.
+	// 发起请求的Frame id。
 	FrameID PageFrameID `json:"frameId"`
 
 	// ResourceType How the requested resource will be used.
+	// 如何使用请求的资源。
 	ResourceType NetworkResourceType `json:"resourceType"`
 
 	// AuthChallenge Details of the Authorization Challenge encountered.
 	// If this is set, client should respond with continueRequest that
 	// contains AuthChallengeResponse.
+	// 遇到的认证质询的详细信息。如果设置了这个属性，客户端应该使用包含AuthChallengeResponse的continueRequest进行响应。
 	AuthChallenge *FetchAuthChallenge `json:"authChallenge"`
 }
 
