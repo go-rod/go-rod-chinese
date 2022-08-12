@@ -7,6 +7,7 @@ package proto
 HeadlessExperimental
 
 This domain provides experimental commands only supported in headless mode.
+// 该域提供了仅在headless模式下支持的实验性命令。
 
 */
 
@@ -22,37 +23,48 @@ const (
 )
 
 // HeadlessExperimentalScreenshotParams Encoding options for a screenshot.
+// 截图的编码选项。
 type HeadlessExperimentalScreenshotParams struct {
 
 	// Format (optional) Image compression format (defaults to png).
+	// 图像压缩格式(默认为png)。
 	Format HeadlessExperimentalScreenshotParamsFormat `json:"format,omitempty"`
 
 	// Quality (optional) Compression quality from range [0..100] (jpeg only).
+	// 压缩质量从范围[0..]100) (jpeg)。
 	Quality *int `json:"quality,omitempty"`
 }
 
 // HeadlessExperimentalBeginFrame Sends a BeginFrame to the target and returns when the frame was completed. Optionally captures a
 // screenshot from the resulting frame. Requires that the target was created with enabled
 // BeginFrameControl. Designed for use with --run-all-compositor-stages-before-draw, see also
+// 向目标发送一个BeginFrame，并在Frame完成时返回。可选地从结果帧捕获屏幕截图。
+// 需要在创建目标时启用BeginFrameControl。设计用于 --run-all-compositor-stages-before-draw，参见：
 // https://goo.gle/chrome-headless-rendering for more background.
 type HeadlessExperimentalBeginFrame struct {
 
 	// FrameTimeTicks (optional) Timestamp of this BeginFrame in Renderer TimeTicks (milliseconds of uptime). If not set,
 	// the current time will be used.
+	// 这个BeginFrame的时间戳，以渲染时间计(运行时间的毫秒)。如果没有设置，则使用当前时间。
 	FrameTimeTicks *float64 `json:"frameTimeTicks,omitempty"`
 
 	// Interval (optional) The interval between BeginFrames that is reported to the compositor, in milliseconds.
+	// 报告给合成器的BeginFrames之间的间隔，单位是毫秒。
 	// Defaults to a 60 frames/second interval, i.e. about 16.666 milliseconds.
+	// 默认为60帧/秒间隔，即大约16.666毫秒。
 	Interval *float64 `json:"interval,omitempty"`
 
 	// NoDisplayUpdates (optional) Whether updates should not be committed and drawn onto the display. False by default. If
 	// true, only side effects of the BeginFrame will be run, such as layout and animations, but
 	// any visual updates may not be visible on the display or in screenshots.
+	// 更新是否不应该被提交并绘制到显示器上。  默认false。  如果为true，只有BeginFrame的副作用会被运行，比如布局和动画，但任何视觉上的更新可能在显示屏上或截图中不可见。
 	NoDisplayUpdates bool `json:"noDisplayUpdates,omitempty"`
 
 	// Screenshot (optional) If set, a screenshot of the frame will be captured and returned in the response. Otherwise,
 	// no screenshot will be captured. Note that capturing a screenshot can fail, for example,
 	// during renderer initialization. In such a case, no screenshot data will be returned.
+	// 如果设置了，则会捕获帧的截图并在响应中返回。否则，不会截图。
+	// 请注意，捕获屏幕截图可能会失败，例如在渲染器初始化期间。在这种情况下，不会返回截图数据。
 	Screenshot *HeadlessExperimentalScreenshotParams `json:"screenshot,omitempty"`
 }
 
@@ -70,13 +82,16 @@ type HeadlessExperimentalBeginFrameResult struct {
 
 	// HasDamage Whether the BeginFrame resulted in damage and, thus, a new frame was committed to the
 	// display. Reported for diagnostic uses, may be removed in the future.
+	// 是否BeginFrame导致损坏，因此，新Frame被提交到显示。用于诊断的报告，将来可能会被删除。
 	HasDamage bool `json:"hasDamage"`
 
 	// ScreenshotData (optional) Base64-encoded image data of the screenshot, if one was requested and successfully taken.
+	// base64编码的截图图像数据(如果请求并成功获取)。
 	ScreenshotData []byte `json:"screenshotData,omitempty"`
 }
 
 // HeadlessExperimentalDisable Disables headless events for the target.
+// 为目标禁用无头事件。
 type HeadlessExperimentalDisable struct {
 }
 
@@ -89,6 +104,7 @@ func (m HeadlessExperimentalDisable) Call(c Client) error {
 }
 
 // HeadlessExperimentalEnable Enables headless events for the target.
+// 为目标启用无头事件。
 type HeadlessExperimentalEnable struct {
 }
 
@@ -101,11 +117,14 @@ func (m HeadlessExperimentalEnable) Call(c Client) error {
 }
 
 // HeadlessExperimentalNeedsBeginFramesChanged (deprecated) Issued when the target starts or stops needing BeginFrames.
+// 当目标启动或停止需要BeginFrames时发出。
 // Deprecated. Issue beginFrame unconditionally instead and use result from
 // beginFrame to detect whether the frames were suppressed.
+// 已弃用。无条件地发出beginFrame，并使用result from beginFrame来检测帧是否被抑制。
 type HeadlessExperimentalNeedsBeginFramesChanged struct {
 
 	// NeedsBeginFrames True if BeginFrames are needed, false otherwise.
+	// 如果需要BeginFrames，则为True，否则为false。
 	NeedsBeginFrames bool `json:"needsBeginFrames"`
 }
 
